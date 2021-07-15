@@ -1,21 +1,9 @@
-// Adapted from Bootstrap v4.4.1 (https://getbootstrap.com/)
-// Copyright 2011-2019 The Bootstrap Authors
+// Adapted from Bootstrap v5.0.2 (https://getbootstrap.com/)
+// See: dist/css/bootstrap-grid.css
+// Copyright 2011-2021 The Bootstrap Authors
 // Copyright 2011-2019 Twitter, Inc.
 // Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 @use 'sass:math';
-
-.mui-container,
-.mui-container-fluid,
-.mui-container-lg,
-.mui-container-md,
-.mui-container-sm,
-.mui-container-xl {
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-  width: 100%;
-}
 
 $media-min-sm: 576px;
 $media-min-md: 768px;
@@ -28,195 +16,179 @@ $media-max-lg: 960px;
 $media-max-xl: 1140px;
 
 $media-widths: (
-  'sm': $media-min-sm,
-  'md': $media-min-md,
-  'lg': $media-min-lg,
-  'xl': $media-min-xl,
+  "sm": $media-min-sm,
+  "md": $media-min-md,
+  "lg": $media-min-lg,
+  "xl": $media-min-xl,
 ) !default;
 
-@media (min-width:$media-min-sm) {
+// TODO merge with pad-width
+$spacer: 1rem;
+$gutter-widths: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+) !default;
+
+.mui-container,
+.mui-container-fluid,
+.mui-container-lg,
+.mui-container-md,
+.mui-container-sm,
+.mui-container-xl {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--mui-gutter-x, 0.75rem);
+  padding-right: var(--mui-gutter-x, 0.75rem);
+  width: 100%;
+}
+
+@media (min-width: $media-min-sm) {
+  .mui-container-sm,
   .mui-container {
     max-width: $media-max-sm;
   }
 }
 
-@media (min-width:$media-min-md) {
-  .mui-container {
+@media (min-width: $media-min-md) {
+  .mui-container-md,
+  .mui-container-sm,
+  .mui-mui-container {
     max-width: $media-max-md;
   }
 }
 
-@media (min-width:$media-min-lg) {
-  .mui-container {
-    max-width: $media-max-lg;
-  }
-}
-
-@media (min-width:$media-min-xl) {
-  .mui-container {
-    max-width: $media-max-xl;
-  }
-}
-
-@media (min-width:$media-min-sm) {
-
-  .mui-container,
-  .mui-container-sm {
-    max-width: $media-max-sm;
-  }
-}
-
-@media (min-width:$media-min-md) {
-
-  .mui-container,
-  .mui-container-md,
-  .mui-container-sm {
-    max-width: $media-max-md;
-  }
-}
-
-@media (min-width:$media-min-lg) {
-
-  .mui-container,
-  .mui-container-lg,
-  .mui-container-md,
-  .mui-container-sm {
-    max-width: $media-max-lg;
-  }
-}
-
-@media (min-width:$media-min-xl) {
-
-  .mui-container,
+@media (min-width: $media-min-lg) {
   .mui-container-lg,
   .mui-container-md,
   .mui-container-sm,
-  .mui-container-xl {
+  .mui-container {
+    max-width: $media-max-lg;
+  }
+}
+
+@media (min-width: $media-min-xl) {
+  .mui-container-xl,
+  .mui-container-lg,
+  .mui-container-md,
+  .mui-container-sm,
+  .mui-container {
     max-width: $media-max-xl;
   }
 }
 
 .mui-row {
+  --mui-gutter-x: 1.5rem;
+  --mui-gutter-y: 0;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  margin-left: -15px;
-  margin-right: -15px;
+  margin-top: calc(var(--mui-gutter-y) * -1);
+  margin-right: calc(var(--mui-gutter-x) * -0.5);
+  margin-left: calc(var(--mui-gutter-x) * -0.5);
+}
+
+.mui-row > * {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--mui-gutter-x) * 0.5);
+  padding-left: calc(var(--mui-gutter-x) * 0.5);
+  margin-top: var(--mui-gutter-y);
 }
 
 .mui-col {
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
+  flex: 1 0 0%;
+  -ms-flex: 1 0 0%;
 }
-
-.mui-col,
-.mui-col-lg,
-.mui-col-lg-1,
-.mui-col-lg-10,
-.mui-col-lg-11,
-.mui-col-lg-12,
-.mui-col-lg-2,
-.mui-col-lg-3,
-.mui-col-lg-4,
-.mui-col-lg-5,
-.mui-col-lg-6,
-.mui-col-lg-7,
-.mui-col-lg-8,
-.mui-col-lg-9,
-.mui-col-lg-auto,
-.mui-col-md,
-.mui-col-md-1,
-.mui-col-md-10,
-.mui-col-md-11,
-.mui-col-md-12,
-.mui-col-md-2,
-.mui-col-md-3,
-.mui-col-md-4,
-.mui-col-md-5,
-.mui-col-md-6,
-.mui-col-md-7,
-.mui-col-md-8,
-.mui-col-md-9,
-.mui-col-md-auto,
-.mui-col-sm,
-.mui-col-sm-1,
-.mui-col-sm-10,
-.mui-col-sm-11,
-.mui-col-sm-12,
-.mui-col-sm-2,
-.mui-col-sm-3,
-.mui-col-sm-4,
-.mui-col-sm-5,
-.mui-col-sm-6,
-.mui-col-sm-7,
-.mui-col-sm-8,
-.mui-col-sm-9,
-.mui-col-sm-auto,
-.mui-col-xl,
-.mui-col-xl-1,
-.mui-col-xl-10,
-.mui-col-xl-11,
-.mui-col-xl-12,
-.mui-col-xl-2,
-.mui-col-xl-3,
-.mui-col-xl-4,
-.mui-col-xl-5,
-.mui-col-xl-6,
-.mui-col-xl-7,
-.mui-col-xl-8,
-.mui-col-xl-9,
-.mui-col-xl-auto {
-  padding-left: 15px;
-  padding-right: 15px;
-  position: relative;
-  width: 100%;
-}
-
 
 @for $i from 1 through 12 {
   .mui-row-cols-#{$i} {
     > * {
-      -ms-flex: 0 0 math.div(100%, $i);
-      flex: 0 0 math.div(100%, $i);
-      max-width: math.div(100%, $i);
+      flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+      width: math.div(100%, $i);
     }
   }
 }
 
 @each $cat, $width in $media-widths {
-  @media (min-width:$width) {
+  @media (min-width: $width) {
+    .mui-col-#{$cat} {
+      flex: 1 0 0%;
+      -ms-flex: 1 0 0%;
+    }
+
+    .mui-row-cols-#{$cat}-auto {
+      flex: 1 0 auto;
+      -ms-flex: 1 0 auto;
+      width: 100%;
+    }
+
     @for $i from 1 through 12 {
       .mui-row-cols-#{$cat}-#{$i} {
         > * {
-          -ms-flex: 0 0 math.div(100%, $i);
-          flex: 0 0 math.div(100%, $i);
-          max-width: math.div(100%, $i);
+          flex: 0 0 auto;
+          -ms-flex: 0 0 auto;
+          width: math.div(100%, $i);
         }
       }
     }
-    .mui-col-#{$cat} {
-      flex-basis: 0;
-      flex-grow: 1;
-      -ms-flex-positive: 1;
-      -ms-flex-preferred-size: 0;
-      max-width: 100%;
-    }
+  }
+}
 
+.mui-col-auto {
+  flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  width: auto;
+}
+
+@for $i from 1 through 12 {
+  .mui-col-#{$i} {
+    flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    width: 100% * math.div($i, 12);
+  }
+}
+
+@each $cat, $width in $gutter-widths {
+  .mui-g-#{$cat},
+  .mui-gy-#{$cat} {
+    --mui-gutter-y: #{$width};
+  }
+  .mui-g-#{$cat},
+  .mui-gx-#{$cat} {
+    --mui-gutter-x: #{$width};
+  }
+}
+
+@each $cat, $width in $media-widths {
+  @media (min-width: $width) {
     .mui-col-#{$cat}-auto {
       -ms-flex: 0 0 auto;
       flex: 0 0 auto;
-      max-width: 100%;
       width: auto;
     }
     @for $i from 1 through 12 {
       .mui-col-#{$cat}-#{$i} {
-          -ms-flex: 0 0 100% * math.div($i, 12);
-          flex: 0 0 100% * math.div($i, 12);
-          max-width: 100% * math.div($i, 12);
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+        width: 100% * math.div($i, 12);
+      }
+    }
+    @each $gcat, $gwidth in $gutter-widths {
+      .mui-g-#{$cat}-#{$gcat},
+      .mui-gy-#{$cat}-#{$gcat} {
+        --mui-gutter-y: #{$gwidth};
+      }
+      .mui-g-#{$cat}-#{$gcat},
+      .mui-gx-#{$cat}-#{$gcat} {
+        --mui-gutter-x: #{$gwidth};
       }
     }
   }

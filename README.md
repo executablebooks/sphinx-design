@@ -1,8 +1,8 @@
 # sphinx-design (IN-DEVELOPMENT)
 
-A sphinx extension for implementing [Material Design](https://material.io) system web components, for building beautiful, responsive, mobile-friendly sites.
+A sphinx extension for designing beautiful, size responsive web components.
 
-Also takes inspiration from [Material-UI](https://material-ui.com/) and [Bootstrap](https://getbootstrap.com/).
+Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
 **NOTE**: This package is a partially an iteration on sphinx-panels.
 
@@ -55,8 +55,12 @@ Content
 
 `````
 
-How to handle the other things in panels, e.g. cards, headers, footers etc?
+naming of directives: standard prefix?
 
 How to handle JS
 
 handle latex
+
+is grid/grid-item both having `columns`, with different meanings, confusing?
+
+card header/footer syntax?

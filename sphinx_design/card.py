@@ -7,7 +7,7 @@ from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
-from .shared import create_component, make_option
+from .shared import create_component, make_option, text_align
 
 DIRECTIVE_NAME_CARD = "card"
 REGEX_HEADER = re.compile(r"^\^{3,}\s*$")
@@ -36,7 +36,7 @@ class CardDirective(SphinxDirective):
     has_content = True
     option_spec = {
         "width": make_option(["auto", "25", "50", "75", "100"]),
-        "text-align": make_option(["left", "right", "center"]),
+        "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "no-shadow": directives.flag,
@@ -56,13 +56,13 @@ class CardDirective(SphinxDirective):
         card_classes = ["mui-card", "mui-sphinx-override"]
         if "width" in options:
             card_classes += [f'mui-w-{options["width"]}']
-        if "text-align" in options:
-            card_classes += [f'mui-text-{options["text-align"]}']
         if "no-shadow" in options:
             card_classes += ["mui-shadow"]
         card = create_component(
             "card",
-            card_classes + options.get("class-card", []),
+            card_classes
+            + options.get("text-align", [])
+            + options.get("class-card", []),
         )
         inst.set_source_info(card)
 

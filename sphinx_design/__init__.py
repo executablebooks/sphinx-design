@@ -1,6 +1,4 @@
-"""A sphinx extension for implementing Material Design system web components,
-for building beautiful, responsive, mobile-friendly sites.
-"""
+"""A sphinx extension for designing beautiful, size responsive web components."""
 from typing import TYPE_CHECKING
 
 __version__ = "0.0.1"

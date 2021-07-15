@@ -12,9 +12,9 @@ from .shared import (
     WARNING_TYPE,
     create_component,
     is_component,
-    make_option,
     margin_option,
     padding_option,
+    text_align,
 )
 
 LOGGER = getLogger(__name__)
@@ -22,7 +22,7 @@ LOGGER = getLogger(__name__)
 
 DIRECTIVE_NAME_GRID = "grid"
 DIRECTIVE_NAME_GRID_ITEM = "grid-item"
-DIRECTIVE_NAME_GRID_ITEM_CARD = "grid-card-item"
+DIRECTIVE_NAME_GRID_ITEM_CARD = "grid-item-card"
 
 
 def setup_grid(app: Sphinx):
@@ -33,20 +33,25 @@ def setup_grid(app: Sphinx):
     # TODO check all grid items have grid parents (or auto wrap in grid?)
 
 
-def _number_columns_option(
-    argument: Optional[str], allow_auto: bool, prefix: str
+def _media_option(
+    argument: Optional[str],
+    prefix: str,
+    *,
+    allow_auto: bool = False,
+    min_num: int = 1,
+    max_num: int = 12,
 ) -> List[str]:
     """Validate the number of columns (out of 12).
 
     One or four integers (for "xs sm md lg") between 1 and 12.
     """
-    if argument is None:
-        return []
-    values = argument.split()
     validate_error_msg = (
-        "argument must be empty, 1 or 4 values: xs sm md lg, "
-        "and each should be either 'auto' or an integer from 1 to 12"
+        "argument must be 1 or 4 (xs sm md lg) values, and each value should be "
+        f"{'either auto or ' if allow_auto else ''}an integer from {min_num} to {max_num}"
     )
+    if argument is None:
+        raise ValueError(validate_error_msg)
+    values = argument.split()
     if len(values) == 1:
         values = [values[0], values[0], values[0], values[0]]
     if len(values) != 4:
@@ -58,20 +63,20 @@ def _number_columns_option(
             int_value = int(value)
         except Exception:
             raise ValueError(validate_error_msg)
-        if not 0 < int_value < 13:
+        if not (min_num <= int_value <= max_num):
             raise ValueError(validate_error_msg)
-    return [
-        f"{prefix}-{size}-{value}"
+    return [f"{prefix}{values[0]}"] + [
+        f"{prefix}{size}-{value}"
         for size, value in zip(["xs", "sm", "md", "lg"], values)
     ]
 
 
-def grid_columns_option(argument: Optional[str]) -> List[str]:
+def row_columns_option(argument: Optional[str]) -> List[str]:
     """Validate the number of columns (out of 12) a grid row will have.
 
     One or four integers (for "xs sm md lg") between 1 and 12.
     """
-    return ["mui-row-cols-1"] + _number_columns_option(argument, False, "mui-row-cols")
+    return _media_option(argument, "mui-row-cols-")
 
 
 def item_columns_option(argument: Optional[str]) -> List[str]:
@@ -79,7 +84,15 @@ def item_columns_option(argument: Optional[str]) -> List[str]:
 
     One or four integers (for "xs sm md lg") between 1 and 12.
     """
-    return _number_columns_option(argument, True, "mui-col")
+    return _media_option(argument, "mui-col-", allow_auto=True)
+
+
+def gutter_option(argument: Optional[str]) -> List[str]:
+    """Validate the gutter size between grid items.
+
+    One or four integers (for "xs sm md lg") between 0 and 5.
+    """
+    return _media_option(argument, "mui-g-", min_num=0, max_num=5)
 
 
 class GridDirective(SphinxDirective):
@@ -87,26 +100,34 @@ class GridDirective(SphinxDirective):
 
     has_content = True
     option_spec = {
-        "columns": grid_columns_option,
-        # TODO gutters
+        "columns": row_columns_option,
+        "gutter": gutter_option,
         "margin": margin_option,
         "padding": padding_option,
-        "class": directives.class_option,
+        "text-align": text_align,
+        "class-grid": directives.class_option,
+        "class-row": directives.class_option,
     }
 
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
+        grid_classes = ["mui-container", "mui-sphinx-override"]
         container = create_component(
             "grid",
-            ["mui-container", "mui-sphinx-override"]
+            grid_classes
             + self.options.get("margin", [])
             + self.options.get("padding", ["mui-pb-4"])
-            + self.options.get("class", []),
+            + self.options.get("text-align", [])
+            + self.options.get("class-grid", []),
         )
         self.set_source_info(container)
         row = create_component(
-            "grid-row", ["mui-row"] + self.options.get("columns", [])
+            "grid-row",
+            ["mui-row"]
+            + self.options.get("columns", [])
+            + self.options.get("gutter", [])
+            + self.options.get("class-row", []),
         )
         self.set_source_info(row)
         container += row
@@ -136,6 +157,7 @@ class GridItemDirective(SphinxDirective):
         "columns": item_columns_option,
         "margin": margin_option,
         "padding": padding_option,
+        "text-align": text_align,
         "class": directives.class_option,
     }
 
@@ -151,6 +173,7 @@ class GridItemDirective(SphinxDirective):
             + self.options.get("columns", [])
             + self.options.get("margin", [])
             + self.options.get("padding", [])
+            + self.options.get("text-align", [])
             + self.options.get("class", []),
         )
         self.set_source_info(column)
@@ -166,13 +189,15 @@ class GridItemCardDirective(SphinxDirective):
         "columns": item_columns_option,
         "margin": margin_option,
         "padding": padding_option,
-        "text-align": make_option(["left", "right", "center"]),
+        "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "no-shadow": directives.flag,
         "class-grid": directives.class_option,
         "class-card": directives.class_option,
         "class-body": directives.class_option,
+        "class-header": directives.class_option,
+        "class-footer": directives.class_option,
     }
 
     def run(self) -> List[nodes.Node]:
@@ -200,6 +225,8 @@ class GridItemCardDirective(SphinxDirective):
                 "no-shadow",
                 "class-card",
                 "class-body",
+                "class-header",
+                "class-footer",
             ]
         }
         card_options["width"] = "100"

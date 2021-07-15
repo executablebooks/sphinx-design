@@ -61,3 +61,9 @@ def padding_option(argument: Optional[str]) -> List[str]:
     between 0 and 5.
     """
     return _margin_or_padding_option(argument, "mui-p")
+
+
+def text_align(argument: Optional[str]) -> List[str]:
+    """Validate the text align is left, right, center or justify."""
+    value = directives.choice(argument, ["left", "right", "center", "justify"])
+    return [f"mui-text-{value}"]
