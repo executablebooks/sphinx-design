@@ -1,0 +1,127 @@
+// Bootstrap v4.4.1 (https://getbootstrap.com/)
+// Copyright 2011-2019 The Bootstrap Authors
+// Copyright 2011-2019 Twitter, Inc.
+// Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+
+.mui-card {
+  background-clip: border-box;
+  background-color: var(--mui-color-card-background);
+  border: 1px solid var(--mui-color-card-border);
+  border-radius: 0.25rem;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+  word-wrap: break-word;
+
+  > hr {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  > .list-group:first-child .list-group-item:first-child {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+
+  > .list-group:last-child .list-group-item:last-child {
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+}
+
+.mui-card-body {
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+}
+
+.mui-card-title {
+  margin-bottom: 0.75rem;
+}
+
+.mui-card-subtitle {
+  margin-bottom: 0;
+  margin-top: -0.375rem;
+}
+
+.mui-card-text:last-child {
+  margin-bottom: 0;
+}
+
+.mui-card-link:hover {
+  text-decoration: none;
+}
+
+.mui-card-link + .card-link {
+  margin-left: 1.25rem;
+}
+
+.mui-card-header {
+  background-color: var(--mui-color-card-header);
+  border-bottom: 1px solid var(--mui-color-card-border);
+  margin-bottom: 0;
+  padding: 0.75rem 1.25rem;
+}
+
+.mui-card-header:first-child {
+  border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+}
+
+.mui-card-header + .list-group .list-group-item:first-child {
+  border-top: 0;
+}
+
+.mui-card-footer {
+  background-color: var(--mui-color-card-footer);
+  border-top: 1px solid var(--mui-color-card-border);
+  padding: 0.75rem 1.25rem;
+}
+
+.mui-card-footer:last-child {
+  border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+}
+
+.mui-card-header-tabs {
+  border-bottom: 0;
+  margin-bottom: -0.75rem;
+  margin-left: -0.625rem;
+  margin-right: -0.625rem;
+}
+
+.mui-card-header-pills {
+  margin-left: -0.625rem;
+  margin-right: -0.625rem;
+}
+
+.mui-card-img-overlay {
+  bottom: 0;
+  left: 0;
+  padding: 1.25rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.mui-card-img,
+.mui-card-img-bottom,
+.mui-card-img-top {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.mui-card-img,
+.mui-card-img-top {
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.mui-card-img,
+.mui-card-img-bottom {
+  border-bottom-left-radius: calc(0.25rem - 1px);
+  border-bottom-right-radius: calc(0.25rem - 1px);
+}

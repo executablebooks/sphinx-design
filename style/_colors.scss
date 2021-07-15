@@ -1,0 +1,108 @@
+$white: #fff !default;
+$white-50: rgba(255, 255, 255, .5) !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+$black-0: rgba(0, 0, 0, 0) !default;
+$black-3: rgba(0, 0, 0, .03) !default;
+$black-12-5: rgba(0, 0, 0, .125) !default;
+$black-15: rgba(0, 0, 0, .15) !default;
+$black-50: rgba(0, 0, 0, .5) !default;
+
+$blue: #007bff !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #d63384 !default;
+$red: #dc3545 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #28a745 !default;
+$teal: #20c997 !default;
+$cyan: #17a2b8 !default;
+
+$semantic-colors: (
+  "primary": $blue,
+  "secondary": $gray-600,
+  "success": $green,
+  "info": $cyan,
+  "warning": $yellow,
+  "danger": $red,
+  "light": $gray-100,
+  "muted": $gray-600,
+  "dark": $gray-800,
+) !default;
+
+@function text-color($value) {
+  // TODO yellow still produces white text
+  @return if(lightness($value) > 70, $gray-900, $white);
+}
+
+:root {
+  // semantic colors
+  @each $color, $value in $semantic-colors {
+    --mui-color-#{$color}: #{$value};
+  }
+  // semantic colors for highlighting (e.g. focus/hover)
+  @each $color, $value in $semantic-colors {
+    --mui-color-#{$color}-highlight: #{darken($value, 15%)};
+  }
+  // colors for text on top of a semantic color background
+  @each $color, $value in $semantic-colors {
+    --mui-color-#{$color}-text: #{text-color($value)};
+  }
+  // shadow
+  --mui-color-shadow: rgba(0, 0, 0, .15);
+  // cards
+  --mui-color-card-border: #{$black-12-5};
+  --mui-color-card-background: #{$white};
+  --mui-color-card-header: #{$black-3};
+  --mui-color-card-footer: #{$black-3};
+}
+
+.mui-bg-transparent {
+  background-color: transparent !important;
+}
+
+@each $color, $value in $semantic-colors {
+  .mui-bg-#{$color} {
+    color: var(--mui-color-#{$color}) !important;
+  }
+  .mui-bg-text-#{$color} {
+    color: var(--mui-color-#{$color}-text) !important;
+  }
+  button {
+    &.mui-bg-#{$color}:focus,
+    &.mui-bg-#{$color}:hover {
+      background-color: var(--mui-color-#{$color}-highlight) !important;
+    }
+  }
+  a {
+    &.mui-bg-#{$color}:focus,
+    &.mui-bg-#{$color}:hover {
+      background-color: var(--mui-color-#{$color}-highlight) !important;
+    }
+  }
+}
+
+@each $color, $value in $semantic-colors {
+  .mui-text-#{$color} {
+    color: var(--mui-color-#{$color}) !important;
+  }
+  a {
+    &.mui-text-#{$color}:focus,
+    &.mui-text-#{$color}:hover {
+      color: var(--mui-color-#{$color}-highlight) !important;
+    }
+  }
+}
+
+.mui-shadow {
+  box-shadow: 0 .5rem 1rem var(--mui-color-shadow) !important;
+}

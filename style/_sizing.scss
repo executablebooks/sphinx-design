@@ -1,0 +1,17 @@
+// Width and height
+
+$sizes: (
+  25: 25%,
+  50: 50%,
+  75: 75%,
+  100: 100%,
+  auto: auto,
+);
+
+@each $prop, $abbrev in (width: w, height: h) {
+  @each $size, $length in $sizes {
+    .mui-#{$abbrev}-#{$size} {
+      #{$prop}: $length !important;
+    }
+  }
+}

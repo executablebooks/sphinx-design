@@ -1,0 +1,60 @@
+$pad-width: (
+  "0": 0,
+  "1": .25rem,
+  "2": .5rem,
+  "3": 1rem,
+  "4": 1.5rem,
+  "5": 3rem,
+) !default;
+
+@each $id, $value in $pad-width {
+  .mui-p-#{$id} {
+    padding: $value !important;
+  }
+
+  .mui-pt-#{$id},
+  .mui-py-#{$id} {
+    padding-top: $value !important;
+  }
+
+  .mui-pr-#{$id},
+  .mui-px-#{$id} {
+    padding-right: $value !important;
+  }
+
+  .mui-pb-#{$id},
+  .mui-py-#{$id} {
+    padding-bottom: $value !important;
+  }
+
+  .mui-pl-#{$id},
+  .mui-px-#{$id} {
+    padding-left: $value !important;
+  }
+}
+
+@each $id, $value in $pad-width {
+  .mui-m-#{$id} {
+    margin: $value !important;
+  }
+
+  .mui-mt-#{$id},
+  .mui-my-#{$id} {
+    margin-top: $value !important;
+  }
+
+  .mui-mr-#{$id},
+  .mui-mx-#{$id} {
+    margin-right: $value !important;
+  }
+
+  .mui-mb-#{$id},
+  .mui-my-#{$id} {
+    margin-bottom: $value !important;
+  }
+
+  .mui-ml-#{$id},
+  .mui-mx-#{$id} {
+    margin-left: $value !important;
+  }
+}

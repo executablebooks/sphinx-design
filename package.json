@@ -1,0 +1,11 @@
+{
+  "name": "sphinx-design-compiler",
+  "version": "0.0.1",
+  "description": "Scripts for compiling the sphinx-design assets",
+  "scripts": {
+    "css": "sass --style=compressed --no-source-map style/index.scss sphinx_design/compiled/style.min.css"
+  },
+  "dependencies": {
+    "sass": "^1.35.2"
+  }
+}

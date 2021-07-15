@@ -1,0 +1,20 @@
+exclude docs
+recursive-exclude docs *
+exclude style
+recursive-exclude style *
+exclude tests
+recursive-exclude tests *
+
+exclude .pre-commit-config.yaml
+exclude .readthedocs.yml
+exclude tox.ini
+exclude codecov.yml
+exclude package.json
+exclude package-lock.json
+
+include LICENSE
+include CHANGELOG.md
+include README.md
+
+include sphinx_design/py.typed
+include sphinx_design/compiled/style.min.css
