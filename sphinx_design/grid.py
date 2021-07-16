@@ -30,7 +30,7 @@ def setup_grid(app: Sphinx):
     app.add_directive(DIRECTIVE_NAME_GRID, GridDirective)
     app.add_directive(DIRECTIVE_NAME_GRID_ITEM, GridItemDirective)
     app.add_directive(DIRECTIVE_NAME_GRID_ITEM_CARD, GridItemCardDirective)
-    # TODO check all grid items have grid parents (or auto wrap in grid?)
+    # TODO check all grid items have grid-row parents (or auto wrap in grid?)
 
 
 def _media_option(
@@ -105,7 +105,7 @@ class GridDirective(SphinxDirective):
         "margin": margin_option,
         "padding": padding_option,
         "text-align": text_align,
-        "class-grid": directives.class_option,
+        "class-container": directives.class_option,
         "class-row": directives.class_option,
     }
 
@@ -116,12 +116,12 @@ class GridDirective(SphinxDirective):
         # rather than the fixed width of the breakpoint (like container)
         grid_classes = ["sd-container-fluid", "sd-sphinx-override"]
         container = create_component(
-            "grid",
+            "grid-container",
             grid_classes
             + self.options.get("margin", [])
             + self.options.get("padding", ["sd-pb-4"])
             + self.options.get("text-align", [])
-            + self.options.get("class-grid", []),
+            + self.options.get("class-container", []),
         )
         self.set_source_info(container)
         row = create_component(
@@ -136,10 +136,10 @@ class GridDirective(SphinxDirective):
         self.state.nested_parse(self.content, self.content_offset, row)
         # each item in a row should be a column
         for item in row.children:
-            if not is_component(item, "grid-column"):
+            if not is_component(item, "grid-item"):
                 LOGGER.warning(
-                    f"All children of a '{DIRECTIVE_NAME_GRID}' "
-                    f"should be '{DIRECTIVE_NAME_GRID_ITEM}' [{WARNING_TYPE}.grid]",
+                    f"All children of a 'grid-row' "
+                    f"should be 'grid-item' [{WARNING_TYPE}.grid]",
                     location=item,
                     type=WARNING_TYPE,
                     subtype="grid",
@@ -167,7 +167,7 @@ class GridItemDirective(SphinxDirective):
         """Run the directive."""
         self.assert_has_content()
         column = create_component(
-            "grid-column",
+            "grid-item",
             [
                 "sd-col",
                 "sd-d-flex",  # TODO is this necessary or should be configurable?
@@ -198,7 +198,7 @@ class GridItemCardDirective(SphinxDirective):
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "no-shadow": directives.flag,
-        "class-grid": directives.class_option,
+        "class-item": directives.class_option,
         "class-card": directives.class_option,
         "class-body": directives.class_option,
         "class-title": directives.class_option,
@@ -210,7 +210,7 @@ class GridItemCardDirective(SphinxDirective):
         """Run the directive."""
         self.assert_has_content()
         column = create_component(
-            "grid-column",
+            "grid-item",
             [
                 "sd-col",
                 "sd-d-flex",  # TODO is this necessary or should be configurable?
@@ -218,7 +218,7 @@ class GridItemCardDirective(SphinxDirective):
             + self.options.get("columns", [])
             + self.options.get("margin", [])
             + self.options.get("padding", [])
-            + self.options.get("class-grid", []),
+            + self.options.get("class-item", []),
         )
         card_options = {
             key: value

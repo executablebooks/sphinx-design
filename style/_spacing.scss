@@ -1,13 +1,14 @@
-$pad-width: (
-  "0": 0,
-  "1": .25rem,
-  "2": .5rem,
-  "3": 1rem,
-  "4": 1.5rem,
-  "5": 3rem,
+$spacer: 1rem;
+$spacings: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
 ) !default;
 
-@each $id, $value in $pad-width {
+@each $id, $value in $spacings {
   .sd-p-#{$id} {
     padding: $value !important;
   }
@@ -57,7 +58,7 @@ $pad-width: (
   margin-left: auto !important;
 }
 
-@each $id, $value in $pad-width {
+@each $id, $value in $spacings {
   .sd-m-#{$id} {
     margin: $value !important;
   }
