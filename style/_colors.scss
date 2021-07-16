@@ -47,62 +47,62 @@ $semantic-colors: (
 :root {
   // semantic colors
   @each $color, $value in $semantic-colors {
-    --mui-color-#{$color}: #{$value};
+    --sd-color-#{$color}: #{$value};
   }
   // semantic colors for highlighting (e.g. focus/hover)
   @each $color, $value in $semantic-colors {
-    --mui-color-#{$color}-highlight: #{darken($value, 15%)};
+    --sd-color-#{$color}-highlight: #{darken($value, 15%)};
   }
   // colors for text on top of a semantic color background
   @each $color, $value in $semantic-colors {
-    --mui-color-#{$color}-text: #{text-color($value)};
+    --sd-color-#{$color}-text: #{text-color($value)};
   }
   // shadow
-  --mui-color-shadow: rgba(0, 0, 0, .15);
+  --sd-color-shadow: rgba(0, 0, 0, .15);
   // cards
-  --mui-color-card-border: #{$black-12-5};
-  --mui-color-card-background: #{$white};
-  --mui-color-card-header: #{$black-3};
-  --mui-color-card-footer: #{$black-3};
+  --sd-color-card-border: #{$black-12-5};
+  --sd-color-card-background: #{$white};
+  --sd-color-card-header: #{$black-3};
+  --sd-color-card-footer: #{$black-3};
 }
 
-.mui-bg-transparent {
+.sd-bg-transparent {
   background-color: transparent !important;
 }
 
 @each $color, $value in $semantic-colors {
-  .mui-bg-#{$color} {
-    color: var(--mui-color-#{$color}) !important;
+  .sd-bg-#{$color} {
+    color: var(--sd-color-#{$color}) !important;
   }
-  .mui-bg-text-#{$color} {
-    color: var(--mui-color-#{$color}-text) !important;
+  .sd-bg-text-#{$color} {
+    color: var(--sd-color-#{$color}-text) !important;
   }
   button {
-    &.mui-bg-#{$color}:focus,
-    &.mui-bg-#{$color}:hover {
-      background-color: var(--mui-color-#{$color}-highlight) !important;
+    &.sd-bg-#{$color}:focus,
+    &.sd-bg-#{$color}:hover {
+      background-color: var(--sd-color-#{$color}-highlight) !important;
     }
   }
   a {
-    &.mui-bg-#{$color}:focus,
-    &.mui-bg-#{$color}:hover {
-      background-color: var(--mui-color-#{$color}-highlight) !important;
+    &.sd-bg-#{$color}:focus,
+    &.sd-bg-#{$color}:hover {
+      background-color: var(--sd-color-#{$color}-highlight) !important;
     }
   }
 }
 
 @each $color, $value in $semantic-colors {
-  .mui-text-#{$color} {
-    color: var(--mui-color-#{$color}) !important;
+  .sd-text-#{$color} {
+    color: var(--sd-color-#{$color}) !important;
   }
   a {
-    &.mui-text-#{$color}:focus,
-    &.mui-text-#{$color}:hover {
-      color: var(--mui-color-#{$color}-highlight) !important;
+    &.sd-text-#{$color}:focus,
+    &.sd-text-#{$color}:hover {
+      color: var(--sd-color-#{$color}-highlight) !important;
     }
   }
 }
 
-.mui-shadow {
-  box-shadow: 0 .5rem 1rem var(--mui-color-shadow) !important;
+.sd-shadow {
+  box-shadow: 0 .5rem 1rem var(--sd-color-shadow) !important;
 }

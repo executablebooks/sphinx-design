@@ -28,22 +28,22 @@ defaults:
 - padding, margin
 
 - directives:
-  - mui-grid (optional), mui-grid-item
-  - mui-dropdowns (optional), mui-dropdown
-  - mui-tabs (optional), mui-tab
-  - mui-link-button
+  - sd-grid (optional), sd-grid-item
+  - sd-dropdowns (optional), sd-dropdown
+  - sd-tabs (optional), sd-tab
+  - sd-link-button
 
 - roles:
-  - badges: mui-badge, mui-link-badge
-  - icons: mui-opticon, mui-fa
+  - badges: sd-badge, sd-link-badge
+  - icons: sd-opticon, sd-fa
 
 `````markdown
 
-````{mui-grid}
+````{sd-grid}
 :padding: <left> <right> <top> <bottom> | <all>
 :margin: <left> <right> <top> <bottom> | <all>
 
-````{mui-grid-item}
+````{sd-grid-item}
 :layout: <sm> <md> <lg> <xl> | <all>
 :padding: <left> <right> <top> <bottom> | <all>
 :margin: <left> <right> <top> <bottom> | <all>
@@ -64,3 +64,5 @@ handle latex
 is grid/grid-item both having `columns`, with different meanings, confusing?
 
 card header/footer syntax?
+
+card title/subtitle (card tite could be argument?, but ideally would also be ~h5 tag)

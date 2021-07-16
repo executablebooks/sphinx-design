@@ -53,17 +53,17 @@ def margin_option(argument: Optional[str]) -> List[str]:
     """Validate the margin is one (all) or four (top bottom left right) integers,
     between 0 and 5.
     """
-    return _margin_or_padding_option(argument, "mui-m")
+    return _margin_or_padding_option(argument, "sd-m")
 
 
 def padding_option(argument: Optional[str]) -> List[str]:
     """Validate the padding is one (all) or four (top bottom left right) integers,
     between 0 and 5.
     """
-    return _margin_or_padding_option(argument, "mui-p")
+    return _margin_or_padding_option(argument, "sd-p")
 
 
 def text_align(argument: Optional[str]) -> List[str]:
     """Validate the text align is left, right, center or justify."""
     value = directives.choice(argument, ["left", "right", "center", "justify"])
-    return [f"mui-text-{value}"]
+    return [f"sd-text-{value}"]

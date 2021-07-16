@@ -53,11 +53,11 @@ class CardDirective(SphinxDirective):
     @classmethod
     def create_card(cls, inst: SphinxDirective, options: dict) -> nodes.Node:
         """Run the directive."""
-        card_classes = ["mui-card", "mui-sphinx-override"]
+        card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
-            card_classes += [f'mui-w-{options["width"]}']
+            card_classes += [f'sd-w-{options["width"]}']
         if "no-shadow" in options:
-            card_classes += ["mui-shadow"]
+            card_classes += ["sd-shadow"]
         card = create_component(
             "card",
             card_classes
@@ -71,7 +71,7 @@ class CardDirective(SphinxDirective):
                 "",
                 uri=options["img-top"],
                 alt="card-img-top",
-                classes=["mui-card-img-top"],
+                classes=["sd-card-img-top"],
             )
             card.append(image_top)
 
@@ -102,7 +102,7 @@ class CardDirective(SphinxDirective):
                 "",
                 uri=options["img-bottom"],
                 alt="card-img-bottom",
-                classes=["mui-card-img-bottom"],
+                classes=["sd-card-img-bottom"],
             )
             card.append(image_bottom)
 
@@ -144,7 +144,7 @@ class CardDirective(SphinxDirective):
     ) -> nodes.container:
         """Create the header, body, or footer."""
         component = create_component(
-            f"card-{name}", [f"mui-card-{name}"] + options.get(f"class-{name}", [])
+            f"card-{name}", [f"sd-card-{name}"] + options.get(f"class-{name}", [])
         )
         inst.set_source_info(component)  # TODO set proper lines
         inst.state.nested_parse(content, offset, component)
@@ -156,9 +156,9 @@ class CardDirective(SphinxDirective):
         """Add classes to specific child nodes."""
         for para in node.traverse(nodes.paragraph):
             para["classes"] = ([] if "classes" not in para else para["classes"]) + [
-                "mui-card-text"
+                "sd-card-text"
             ]
         for title in node.traverse(nodes.title):
             title["classes"] = ([] if "classes" not in title else title["classes"]) + [
-                "mui-card-title"
+                "sd-card-title"
             ]

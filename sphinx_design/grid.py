@@ -76,7 +76,7 @@ def row_columns_option(argument: Optional[str]) -> List[str]:
 
     One or four integers (for "xs sm md lg") between 1 and 12.
     """
-    return _media_option(argument, "mui-row-cols-")
+    return _media_option(argument, "sd-row-cols-")
 
 
 def item_columns_option(argument: Optional[str]) -> List[str]:
@@ -84,7 +84,7 @@ def item_columns_option(argument: Optional[str]) -> List[str]:
 
     One or four integers (for "xs sm md lg") between 1 and 12.
     """
-    return _media_option(argument, "mui-col-", allow_auto=True)
+    return _media_option(argument, "sd-col-", allow_auto=True)
 
 
 def gutter_option(argument: Optional[str]) -> List[str]:
@@ -92,7 +92,7 @@ def gutter_option(argument: Optional[str]) -> List[str]:
 
     One or four integers (for "xs sm md lg") between 0 and 5.
     """
-    return _media_option(argument, "mui-g-", min_num=0, max_num=5)
+    return _media_option(argument, "sd-g-", min_num=0, max_num=5)
 
 
 class GridDirective(SphinxDirective):
@@ -112,19 +112,19 @@ class GridDirective(SphinxDirective):
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
-        grid_classes = ["mui-container", "mui-sphinx-override"]
+        grid_classes = ["sd-container", "sd-sphinx-override"]
         container = create_component(
             "grid",
             grid_classes
             + self.options.get("margin", [])
-            + self.options.get("padding", ["mui-pb-4"])
+            + self.options.get("padding", ["sd-pb-4"])
             + self.options.get("text-align", [])
             + self.options.get("class-grid", []),
         )
         self.set_source_info(container)
         row = create_component(
             "grid-row",
-            ["mui-row"]
+            ["sd-row"]
             + self.options.get("columns", [])
             + self.options.get("gutter", [])
             + self.options.get("class-row", []),
@@ -167,8 +167,8 @@ class GridItemDirective(SphinxDirective):
         column = create_component(
             "grid-column",
             [
-                "mui-col",
-                "mui-d-flex",  # TODO is this necessary or should be configurable?
+                "sd-col",
+                "sd-d-flex",  # TODO is this necessary or should be configurable?
             ]
             + self.options.get("columns", [])
             + self.options.get("margin", [])
@@ -206,8 +206,8 @@ class GridItemCardDirective(SphinxDirective):
         column = create_component(
             "grid-column",
             [
-                "mui-col",
-                "mui-d-flex",  # TODO is this necessary or should be configurable?
+                "sd-col",
+                "sd-d-flex",  # TODO is this necessary or should be configurable?
             ]
             + self.options.get("columns", [])
             + self.options.get("margin", [])

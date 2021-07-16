@@ -3,10 +3,10 @@
 // Copyright 2011-2019 Twitter, Inc.
 // Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 
-.mui-card {
+.sd-card {
   background-clip: border-box;
-  background-color: var(--mui-color-card-background);
-  border: 1px solid var(--mui-color-card-border);
+  background-color: var(--sd-color-card-background);
+  border: 1px solid var(--sd-color-card-border);
   border-radius: 0.25rem;
   display: -ms-flexbox;
   display: flex;
@@ -22,67 +22,67 @@
   }
 }
 
-.mui-card-body {
+.sd-card-body {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1rem 1rem;
 }
 
-.mui-card-title {
+.sd-card-title {
   margin-bottom: 0.5rem;
 }
 
-.mui-card-subtitle {
+.sd-card-subtitle {
   margin-top: -0.25rem;
   margin-bottom: 0;
 }
 
-.mui-card-text:last-child {
+.sd-card-text:last-child {
   margin-bottom: 0;
 }
 
-.mui-card-link:hover {
+.sd-card-link:hover {
   text-decoration: none;
 }
 
-.mui-card-link + .card-link {
+.sd-card-link + .card-link {
   margin-left: 1rem;
 }
 
-.mui-card-header {
+.sd-card-header {
   padding: 0.5rem 1rem;
   margin-bottom: 0;
-  background-color: var(--mui-color-card-header);
-  border-bottom: 1px solid var(--mui-color-card-border);
+  background-color: var(--sd-color-card-header);
+  border-bottom: 1px solid var(--sd-color-card-border);
 }
 
-.mui-card-header:first-child {
+.sd-card-header:first-child {
   border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
 }
 
-.mui-card-footer {
+.sd-card-footer {
   padding: 0.5rem 1rem;
-  background-color: var(--mui-color-card-footer);
-  border-top: 1px solid var(--mui-color-card-border);
+  background-color: var(--sd-color-card-footer);
+  border-top: 1px solid var(--sd-color-card-border);
 }
 
-.mui-card-footer:last-child {
+.sd-card-footer:last-child {
   border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
 }
 
-.mui-card-header-tabs {
+.sd-card-header-tabs {
   margin-right: -0.5rem;
   margin-bottom: -0.5rem;
   margin-left: -0.5rem;
   border-bottom: 0;
 }
 
-.mui-card-header-pills {
+.sd-card-header-pills {
   margin-right: -0.5rem;
   margin-left: -0.5rem;
 }
 
-.mui-card-img-overlay {
+.sd-card-img-overlay {
   position: absolute;
   top: 0;
   right: 0;
@@ -92,20 +92,20 @@
   border-radius: calc(0.25rem - 1px);
 }
 
-.mui-card-img,
-.mui-card-img-bottom,
-.mui-card-img-top {
+.sd-card-img,
+.sd-card-img-bottom,
+.sd-card-img-top {
   width: 100%;
 }
 
-.mui-card-img,
-.mui-card-img-top {
+.sd-card-img,
+.sd-card-img-top {
   border-top-left-radius: calc(0.25rem - 1px);
   border-top-right-radius: calc(0.25rem - 1px);
 }
 
-.mui-card-img,
-.mui-card-img-bottom {
+.sd-card-img,
+.sd-card-img-bottom {
   border-bottom-left-radius: calc(0.25rem - 1px);
   border-bottom-right-radius: calc(0.25rem - 1px);
 }

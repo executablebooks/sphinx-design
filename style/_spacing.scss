@@ -8,53 +8,53 @@ $pad-width: (
 ) !default;
 
 @each $id, $value in $pad-width {
-  .mui-p-#{$id} {
+  .sd-p-#{$id} {
     padding: $value !important;
   }
 
-  .mui-pt-#{$id},
-  .mui-py-#{$id} {
+  .sd-pt-#{$id},
+  .sd-py-#{$id} {
     padding-top: $value !important;
   }
 
-  .mui-pr-#{$id},
-  .mui-px-#{$id} {
+  .sd-pr-#{$id},
+  .sd-px-#{$id} {
     padding-right: $value !important;
   }
 
-  .mui-pb-#{$id},
-  .mui-py-#{$id} {
+  .sd-pb-#{$id},
+  .sd-py-#{$id} {
     padding-bottom: $value !important;
   }
 
-  .mui-pl-#{$id},
-  .mui-px-#{$id} {
+  .sd-pl-#{$id},
+  .sd-px-#{$id} {
     padding-left: $value !important;
   }
 }
 
 @each $id, $value in $pad-width {
-  .mui-m-#{$id} {
+  .sd-m-#{$id} {
     margin: $value !important;
   }
 
-  .mui-mt-#{$id},
-  .mui-my-#{$id} {
+  .sd-mt-#{$id},
+  .sd-my-#{$id} {
     margin-top: $value !important;
   }
 
-  .mui-mr-#{$id},
-  .mui-mx-#{$id} {
+  .sd-mr-#{$id},
+  .sd-mx-#{$id} {
     margin-right: $value !important;
   }
 
-  .mui-mb-#{$id},
-  .mui-my-#{$id} {
+  .sd-mb-#{$id},
+  .sd-my-#{$id} {
     margin-bottom: $value !important;
   }
 
-  .mui-ml-#{$id},
-  .mui-mx-#{$id} {
+  .sd-ml-#{$id},
+  .sd-mx-#{$id} {
     margin-left: $value !important;
   }
 }

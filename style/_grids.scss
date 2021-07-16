@@ -33,82 +33,82 @@ $gutter-widths: (
   5: $spacer * 3,
 ) !default;
 
-.mui-container,
-.mui-container-fluid,
-.mui-container-lg,
-.mui-container-md,
-.mui-container-sm,
-.mui-container-xl {
+.sd-container,
+.sd-container-fluid,
+.sd-container-lg,
+.sd-container-md,
+.sd-container-sm,
+.sd-container-xl {
   margin-left: auto;
   margin-right: auto;
-  padding-left: var(--mui-gutter-x, 0.75rem);
-  padding-right: var(--mui-gutter-x, 0.75rem);
+  padding-left: var(--sd-gutter-x, 0.75rem);
+  padding-right: var(--sd-gutter-x, 0.75rem);
   width: 100%;
 }
 
 @media (min-width: $media-min-sm) {
-  .mui-container-sm,
-  .mui-container {
+  .sd-container-sm,
+  .sd-container {
     max-width: $media-max-sm;
   }
 }
 
 @media (min-width: $media-min-md) {
-  .mui-container-md,
-  .mui-container-sm,
-  .mui-mui-container {
+  .sd-container-md,
+  .sd-container-sm,
+  .sd-container {
     max-width: $media-max-md;
   }
 }
 
 @media (min-width: $media-min-lg) {
-  .mui-container-lg,
-  .mui-container-md,
-  .mui-container-sm,
-  .mui-container {
+  .sd-container-lg,
+  .sd-container-md,
+  .sd-container-sm,
+  .sd-container {
     max-width: $media-max-lg;
   }
 }
 
 @media (min-width: $media-min-xl) {
-  .mui-container-xl,
-  .mui-container-lg,
-  .mui-container-md,
-  .mui-container-sm,
-  .mui-container {
+  .sd-container-xl,
+  .sd-container-lg,
+  .sd-container-md,
+  .sd-container-sm,
+  .sd-container {
     max-width: $media-max-xl;
   }
 }
 
-.mui-row {
-  --mui-gutter-x: 1.5rem;
-  --mui-gutter-y: 0;
+.sd-row {
+  --sd-gutter-x: 1.5rem;
+  --sd-gutter-y: 0;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  margin-top: calc(var(--mui-gutter-y) * -1);
-  margin-right: calc(var(--mui-gutter-x) * -0.5);
-  margin-left: calc(var(--mui-gutter-x) * -0.5);
+  margin-top: calc(var(--sd-gutter-y) * -1);
+  margin-right: calc(var(--sd-gutter-x) * -0.5);
+  margin-left: calc(var(--sd-gutter-x) * -0.5);
 }
 
-.mui-row > * {
+.sd-row > * {
   box-sizing: border-box;
   flex-shrink: 0;
   width: 100%;
   max-width: 100%;
-  padding-right: calc(var(--mui-gutter-x) * 0.5);
-  padding-left: calc(var(--mui-gutter-x) * 0.5);
-  margin-top: var(--mui-gutter-y);
+  padding-right: calc(var(--sd-gutter-x) * 0.5);
+  padding-left: calc(var(--sd-gutter-x) * 0.5);
+  margin-top: var(--sd-gutter-y);
 }
 
-.mui-col {
+.sd-col {
   flex: 1 0 0%;
   -ms-flex: 1 0 0%;
 }
 
 @for $i from 1 through 12 {
-  .mui-row-cols-#{$i} {
+  .sd-row-cols-#{$i} {
     > * {
       flex: 0 0 auto;
       -ms-flex: 0 0 auto;
@@ -119,19 +119,19 @@ $gutter-widths: (
 
 @each $cat, $width in $media-widths {
   @media (min-width: $width) {
-    .mui-col-#{$cat} {
+    .sd-col-#{$cat} {
       flex: 1 0 0%;
       -ms-flex: 1 0 0%;
     }
 
-    .mui-row-cols-#{$cat}-auto {
+    .sd-row-cols-#{$cat}-auto {
       flex: 1 0 auto;
       -ms-flex: 1 0 auto;
       width: 100%;
     }
 
     @for $i from 1 through 12 {
-      .mui-row-cols-#{$cat}-#{$i} {
+      .sd-row-cols-#{$cat}-#{$i} {
         > * {
           flex: 0 0 auto;
           -ms-flex: 0 0 auto;
@@ -142,14 +142,14 @@ $gutter-widths: (
   }
 }
 
-.mui-col-auto {
+.sd-col-auto {
   flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   width: auto;
 }
 
 @for $i from 1 through 12 {
-  .mui-col-#{$i} {
+  .sd-col-#{$i} {
     flex: 0 0 auto;
     -ms-flex: 0 0 auto;
     width: 100% * math.div($i, 12);
@@ -157,44 +157,44 @@ $gutter-widths: (
 }
 
 @each $cat, $width in $gutter-widths {
-  .mui-g-#{$cat},
-  .mui-gy-#{$cat} {
-    --mui-gutter-y: #{$width};
+  .sd-g-#{$cat},
+  .sd-gy-#{$cat} {
+    --sd-gutter-y: #{$width};
   }
-  .mui-g-#{$cat},
-  .mui-gx-#{$cat} {
-    --mui-gutter-x: #{$width};
+  .sd-g-#{$cat},
+  .sd-gx-#{$cat} {
+    --sd-gutter-x: #{$width};
   }
 }
 
 @each $cat, $width in $media-widths {
   @media (min-width: $width) {
-    .mui-col-#{$cat}-auto {
+    .sd-col-#{$cat}-auto {
       -ms-flex: 0 0 auto;
       flex: 0 0 auto;
       width: auto;
     }
     @for $i from 1 through 12 {
-      .mui-col-#{$cat}-#{$i} {
+      .sd-col-#{$cat}-#{$i} {
         -ms-flex: 0 0 auto;
         flex: 0 0 auto;
         width: 100% * math.div($i, 12);
       }
     }
     @each $gcat, $gwidth in $gutter-widths {
-      .mui-g-#{$cat}-#{$gcat},
-      .mui-gy-#{$cat}-#{$gcat} {
-        --mui-gutter-y: #{$gwidth};
+      .sd-g-#{$cat}-#{$gcat},
+      .sd-gy-#{$cat}-#{$gcat} {
+        --sd-gutter-y: #{$gwidth};
       }
-      .mui-g-#{$cat}-#{$gcat},
-      .mui-gx-#{$cat}-#{$gcat} {
-        --mui-gutter-x: #{$gwidth};
+      .sd-g-#{$cat}-#{$gcat},
+      .sd-gx-#{$cat}-#{$gcat} {
+        --sd-gutter-x: #{$gwidth};
       }
     }
   }
 }
 
-.mui-d-flex {
+.sd-d-flex {
   display: -ms-flexbox !important;
   display: flex !important;
 }
