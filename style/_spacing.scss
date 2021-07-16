@@ -33,6 +33,30 @@ $pad-width: (
   }
 }
 
+.sd-m-auto {
+  margin: auto !important;
+}
+
+.sd-mt-auto,
+.sd-my-auto {
+  margin-top: auto !important;
+}
+
+.sd-mr-auto,
+.sd-mx-auto {
+  margin-right: auto !important;
+}
+
+.sd-mb-auto,
+.sd-my-auto {
+  margin-bottom: auto !important;
+}
+
+.sd-ml-auto,
+.sd-mx-auto {
+  margin-left: auto !important;
+}
+
 @each $id, $value in $pad-width {
   .sd-m-#{$id} {
     margin: $value !important;

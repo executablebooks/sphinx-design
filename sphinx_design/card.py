@@ -38,7 +38,9 @@ class CardDirective(SphinxDirective):
     optional_arguments = 1  # card title
     final_argument_whitespace = True
     option_spec = {
+        # TODO adaptive width/ width based on content
         "width": make_option(["auto", "25", "50", "75", "100"]),
+        "align": make_option(["left", "center", "right"]),
         "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
@@ -62,6 +64,13 @@ class CardDirective(SphinxDirective):
         card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
             card_classes += [f'sd-w-{options["width"]}']
+        if "align" in options:
+            align_class = {
+                "center": "sd-mx-auto",
+                "left": "sd-mr-auto",
+                "right": "sd-ml-auto",
+            }[options["align"]]
+            card_classes += [align_class]
         if "no-shadow" in options:
             card_classes += ["sd-shadow"]
         card = create_component(

@@ -112,7 +112,9 @@ class GridDirective(SphinxDirective):
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
-        grid_classes = ["sd-container", "sd-sphinx-override"]
+        # container-fluid is 100% width for all breakpoints,
+        # rather than the fixed width of the breakpoint (like container)
+        grid_classes = ["sd-container-fluid", "sd-sphinx-override"]
         container = create_component(
             "grid",
             grid_classes

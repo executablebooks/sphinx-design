@@ -33,10 +33,14 @@ a footer
 
 :::
 
-:::{grid-item-card} My title
+:::{grid-item-card} Card title
 :columns: 12 6 6 6
 
 bigger
+
++++
+
+Footer
 
 :::
 
@@ -45,20 +49,28 @@ bigger
 
 bigger
 
+more
+
++++
+
+Footer
+
 :::
 
 ::::
 
 :::{card}
 :width: 25
+:align: center
 
-other [abc](https://google.com)
+align center
 :::
 
 :::{card}
-:width: 25
+:width: 50
+:align: right
 
-other [abc](https://google.com)
+align right
 :::
 
 next paragraph 1
