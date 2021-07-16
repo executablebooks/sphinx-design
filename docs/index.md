@@ -33,7 +33,7 @@ a footer
 
 :::
 
-:::{grid-item-card}
+:::{grid-item-card} My title
 :columns: 12 6 6 6
 
 bigger

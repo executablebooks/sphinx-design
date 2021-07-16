@@ -185,6 +185,9 @@ class GridItemCardDirective(SphinxDirective):
     """An item within a grid row, with an internal card."""
 
     has_content = True
+    required_arguments = 0
+    optional_arguments = 1  # card title
+    final_argument_whitespace = True
     option_spec = {
         "columns": item_columns_option,
         "margin": margin_option,
@@ -196,6 +199,7 @@ class GridItemCardDirective(SphinxDirective):
         "class-grid": directives.class_option,
         "class-card": directives.class_option,
         "class-body": directives.class_option,
+        "class-title": directives.class_option,
         "class-header": directives.class_option,
         "class-footer": directives.class_option,
     }
@@ -225,11 +229,12 @@ class GridItemCardDirective(SphinxDirective):
                 "no-shadow",
                 "class-card",
                 "class-body",
+                "class-title",
                 "class-header",
                 "class-footer",
             ]
         }
         card_options["width"] = "100"
-        card = CardDirective.create_card(self, card_options)
+        card = CardDirective.create_card(self, self.arguments, card_options)
         column += card
         return [column]

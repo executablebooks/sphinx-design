@@ -34,6 +34,9 @@ class CardDirective(SphinxDirective):
     """A card component."""
 
     has_content = True
+    required_arguments = 0
+    optional_arguments = 1  # card title
+    final_argument_whitespace = True
     option_spec = {
         "width": make_option(["auto", "25", "50", "75", "100"]),
         "text-align": text_align,
@@ -43,15 +46,18 @@ class CardDirective(SphinxDirective):
         "class-card": directives.class_option,
         "class-header": directives.class_option,
         "class-body": directives.class_option,
+        "class-title": directives.class_option,
         "class-footer": directives.class_option,
     }
 
     def run(self) -> List[nodes.Node]:
         self.assert_has_content()
-        return [self.create_card(self, self.options)]
+        return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
-    def create_card(cls, inst: SphinxDirective, options: dict) -> nodes.Node:
+    def create_card(
+        cls, inst: SphinxDirective, arguments: Optional[list], options: dict
+    ) -> nodes.Node:
         """Run the directive."""
         card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
@@ -84,11 +90,19 @@ class CardDirective(SphinxDirective):
                 )
             )
 
-        card.append(
-            cls._create_component(
-                inst, "body", options, components.body[0], components.body[1]
-            )
+        body = cls._create_component(
+            inst, "body", options, components.body[0], components.body[1]
         )
+        if arguments:
+            title = create_component(
+                "card-title",
+                ["sd-card-title", "sd-font-weight-bold"]
+                + options.get("class-title", []),
+            )
+            textnodes, _ = inst.state.inline_text(arguments[0], inst.lineno)
+            title.extend(textnodes)
+            body.insert(0, title)
+        card.append(body)
 
         if components.footer:
             card.append(
@@ -158,7 +172,7 @@ class CardDirective(SphinxDirective):
             para["classes"] = ([] if "classes" not in para else para["classes"]) + [
                 "sd-card-text"
             ]
-        for title in node.traverse(nodes.title):
-            title["classes"] = ([] if "classes" not in title else title["classes"]) + [
-                "sd-card-title"
-            ]
+        # for title in node.traverse(nodes.title):
+        #     title["classes"] = ([] if "classes" not in title else title["classes"]) + [
+        #         "sd-card-title"
+        #     ]
