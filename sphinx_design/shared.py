@@ -7,6 +7,18 @@ from docutils.parsers.rst import directives
 
 WARNING_TYPE = "design"
 
+SEMANTIC_COLORS = (
+    "primary",
+    "secondary",
+    "success",
+    "info",
+    "warning",
+    "danger",
+    "light",
+    "muted",
+    "dark",
+)
+
 
 def create_component(name: str, classes: List[str]) -> nodes.container:
     """Create a container node for a design component."""

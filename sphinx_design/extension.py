@@ -12,8 +12,9 @@ from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 
 from . import compiled as css_module
-from .card import setup_card
-from .grid import setup_grid
+from .badges import setup_badges
+from .cards import setup_cards
+from .grids import setup_grids
 
 
 def setup_extension(app: Sphinx):
@@ -25,8 +26,9 @@ def setup_extension(app: Sphinx):
     app.add_node(
         nodes.container, override=True, html=(visit_container, depart_container)
     )
-    setup_card(app)
-    setup_grid(app)
+    setup_badges(app)
+    setup_cards(app)
+    setup_grids(app)
 
 
 def update_css(app: Sphinx):

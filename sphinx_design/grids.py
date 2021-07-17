@@ -6,7 +6,7 @@ from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
-from sphinx_design.card import CardDirective
+from sphinx_design.cards import CardDirective
 
 from .shared import (
     WARNING_TYPE,
@@ -25,8 +25,8 @@ DIRECTIVE_NAME_GRID_ITEM = "grid-item"
 DIRECTIVE_NAME_GRID_ITEM_CARD = "grid-item-card"
 
 
-def setup_grid(app: Sphinx):
-    """Setup the card components."""
+def setup_grids(app: Sphinx):
+    """Setup the grid components."""
     app.add_directive(DIRECTIVE_NAME_GRID, GridDirective)
     app.add_directive(DIRECTIVE_NAME_GRID_ITEM, GridItemDirective)
     app.add_directive(DIRECTIVE_NAME_GRID_ITEM_CARD, GridItemCardDirective)

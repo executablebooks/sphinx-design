@@ -72,7 +72,7 @@ $semantic-colors: (
 
 @each $color, $value in $semantic-colors {
   .sd-bg-#{$color} {
-    color: var(--sd-color-#{$color}) !important;
+    background-color: var(--sd-color-#{$color}) !important;
   }
   .sd-bg-text-#{$color} {
     color: var(--sd-color-#{$color}-text) !important;
@@ -99,6 +99,19 @@ $semantic-colors: (
     &.sd-text-#{$color}:focus,
     &.sd-text-#{$color}:hover {
       color: var(--sd-color-#{$color}-highlight) !important;
+    }
+  }
+}
+
+@each $color, $value in $semantic-colors {
+  .sd-outline-#{$color} {
+    border-color: var(--sd-color-#{$color}) !important;
+    border: 1px solid !important;
+  }
+  a {
+    &.sd-outline-#{$color}:focus,
+    &.sd-outline-#{$color}:hover {
+      border-color: var(--sd-color-#{$color}-highlight) !important;
     }
   }
 }

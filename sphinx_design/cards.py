@@ -14,7 +14,7 @@ REGEX_HEADER = re.compile(r"^\^{3,}\s*$")
 REGEX_FOOTER = re.compile(r"^\+{3,}\s*$")
 
 
-def setup_card(app: Sphinx):
+def setup_cards(app: Sphinx):
     """Setup the card components."""
     app.add_directive(DIRECTIVE_NAME_CARD, CardDirective)
 

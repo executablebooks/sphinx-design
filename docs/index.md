@@ -4,6 +4,8 @@ A sphinx extension for designing beautiful, size responsive web components.
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
+## Grids
+
 ::::{grid}
 :columns: 1 2 2 3
 :gutter: 1 3 3 3
@@ -89,3 +91,23 @@ next paragraph 1
 :::
 
 ::::
+
+(badges)=
+
+## Badges
+
+- {bdg}`plain badge`
+- {bdg-primary}`primary` {bdg-primary-line}`primary-line`
+- {bdg-secondary}`secondary` {bdg-secondary-line}`secondary-line`
+- {bdg-success}`success` {bdg-success-line}`success-line`
+- {bdg-info}`info` {bdg-info-line}`info-line`
+- {bdg-warning}`warning` {bdg-warning-line}`warning-line`
+- {bdg-danger}`danger` {bdg-danger-line}`danger-line`
+- {bdg-light}`light` {bdg-light-line}`light-line`
+- {bdg-dark}`dark` {bdg-dark-line}`dark-line`
+
+{bdg-link-primary}`name <https://example.com>`
+
+{bdg-link-primary-line}`name <https://example.com>`
+
+{bdg-ref-primary}`badges`

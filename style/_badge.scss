@@ -1,0 +1,49 @@
+// Adapted from Bootstrap v5.0.2 (https://getbootstrap.com/)
+// Copyright 2011-2019 The Bootstrap Authors
+// Copyright 2011-2019 Twitter, Inc.
+// Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+
+.sd-badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+
+  // Empty badges collapse automatically
+  &:empty {
+    display: none;
+  }
+}
+
+// Remove underline
+a.sd-badge {
+  text-decoration: none;
+}
+
+// Quick fix for badges in buttons
+.sd-btn .sd-badge {
+  position: relative;
+  top: -1px;
+}
+
+$rounded: (
+  0: 0,
+  1: 0.2rem,
+  2: 0.25rem,
+  3: 0.3rem,
+  pill: 50rem,
+  circle: 50%,
+);
+
+@each $name, $value in $rounded {
+  .sd-rounded-#{$name} {
+    border-radius: $value !important;
+  }
+}
+
+// note badge colors were removed in v5
