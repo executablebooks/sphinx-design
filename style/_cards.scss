@@ -8,6 +8,7 @@
   background-color: var(--sd-color-card-background);
   border: 1px solid var(--sd-color-card-border);
   border-radius: 0.25rem;
+  color: var(--sd-color-card-text);
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
@@ -20,6 +21,10 @@
     margin-left: 0;
     margin-right: 0;
   }
+}
+
+.sd-card-hover:hover {
+  border-color: var(--sd-color-card-border-hover);
 }
 
 .sd-card-body {

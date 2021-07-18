@@ -14,6 +14,7 @@ $black-0: rgba(0, 0, 0, 0) !default;
 $black-3: rgba(0, 0, 0, .03) !default;
 $black-12-5: rgba(0, 0, 0, .125) !default;
 $black-15: rgba(0, 0, 0, .15) !default;
+$black-25: rgba(0, 0, 0, .25) !default;
 $black-50: rgba(0, 0, 0, .5) !default;
 
 $blue: #007bff !default;
@@ -61,9 +62,11 @@ $semantic-colors: (
   --sd-color-shadow: #{$black-15};
   // cards
   --sd-color-card-border: #{$black-12-5};
-  --sd-color-card-background: #{$white};
-  --sd-color-card-header: #{$black-3};
-  --sd-color-card-footer: #{$black-3};
+  --sd-color-card-border-hover: #{$black-25};
+  --sd-color-card-background: transparent;
+  --sd-color-card-text: inherit;
+  --sd-color-card-header: transparent;
+  --sd-color-card-footer: transparent;
 }
 
 .sd-bg-transparent {

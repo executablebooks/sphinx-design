@@ -1,6 +1,6 @@
 # sphinx-design (IN-DEVELOPMENT)
 
-A sphinx extension for designing beautiful, size responsive web components.
+A sphinx extension for designing beautiful, view size responsive web components.
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
@@ -53,5 +53,8 @@ card header/footer syntax?
 
 Use autoprefixer when compiling SASS (see <https://getbootstrap.com/docs/5.0/getting-started/browsers-devices/#supported-browsers>)
 
-horizontal card (grid row inside card),
+horizontal card (grid row inside card, picture on left)
+
 avatars (rounded images)
+
+horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)

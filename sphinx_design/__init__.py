@@ -1,4 +1,4 @@
-"""A sphinx extension for designing beautiful, size responsive web components."""
+"""A sphinx extension for designing beautiful, view size responsive web components."""
 from typing import TYPE_CHECKING
 
 __version__ = "0.0.1"

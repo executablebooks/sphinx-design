@@ -4,6 +4,34 @@ A sphinx extension for designing beautiful, size responsive web components.
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
+## Cards
+
+:::{card}
+:width: 25
+:margin: 0 2 auto auto
+:text-align: center
+
+align center
+:::
+
+:::{card}
+:width: 50
+:margin: 0 2 auto 0
+:text-align: right
+
+align right
+:::
+
+:::{card}
+:width: 50
+:margin: 0 2 0 auto
+:text-align: left
+
+align left
+:::
+
+paragraph
+
 ## Grids
 
 ::::{grid}
@@ -78,22 +106,6 @@ next paragraph 1
 
 ::::
 
-## Cards
-
-:::{card}
-:width: 25
-:align: center
-
-align center
-:::
-
-:::{card}
-:width: 50
-:align: right
-
-align right
-:::
-
 (badges)=
 
 ## Badges
@@ -147,6 +159,7 @@ Button text
 ```
 
 :::{card} Card with an expanded button
+:hover:
 
 ```{button-link} https://example.com
 :color: info

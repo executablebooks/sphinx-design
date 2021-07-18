@@ -7,7 +7,7 @@ from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
-from .shared import create_component, make_choice, text_align
+from .shared import create_component, make_choice, margin_option, text_align
 
 DIRECTIVE_NAME_CARD = "card"
 REGEX_HEADER = re.compile(r"^\^{3,}\s*$")
@@ -40,11 +40,12 @@ class CardDirective(SphinxDirective):
     option_spec = {
         # TODO adaptive width/ width based on content
         "width": make_choice(["auto", "25", "50", "75", "100"]),
-        "align": make_choice(["left", "center", "right"]),
+        "margin": margin_option,
         "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "no-shadow": directives.flag,
+        "hover": directives.flag,
         "class-card": directives.class_option,
         "class-header": directives.class_option,
         "class-body": directives.class_option,
@@ -64,15 +65,12 @@ class CardDirective(SphinxDirective):
         card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
             card_classes += [f'sd-w-{options["width"]}']
-        if "align" in options:
-            align_class = {
-                "center": "sd-mx-auto",
-                "left": "sd-mr-auto",
-                "right": "sd-ml-auto",
-            }[options["align"]]
-            card_classes += [align_class]
+        if "margin" in options:
+            card_classes += options["margin"]
         if "no-shadow" not in options:
             card_classes += ["sd-shadow"]
+        if "hover" in options:
+            card_classes += ["sd-card-hover"]
         card = create_component(
             "card",
             card_classes

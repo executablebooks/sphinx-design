@@ -59,19 +59,22 @@
     color: var(--sd-color-#{$color}-text) !important;
     background-color: var(--sd-color-#{$color}) !important;
     border-color: var(--sd-color-#{$color}) !important;
-    border: 1px solid !important;
+    border-width: 1px !important;
+    border-style: solid !important;
   }
   .sd-btn-#{$color}:hover,
   .sd-btn-#{$color}:focus {
     color: var(--sd-color-#{$color}-text) !important;
     background-color: var(--sd-color-#{$color}-highlight) !important;
     border-color: var(--sd-color-#{$color}-highlight) !important;
-    border: 1px solid !important;
+    border-width: 1px !important;
+    border-style: solid !important;
   }
   .sd-btn-outline-#{$color} {
     color: var(--sd-color-#{$color}) !important;
     border-color: var(--sd-color-#{$color}) !important;
-    border: 1px solid !important;
+    border-width: 1px !important;
+    border-style: solid !important;
   }
 }
 
@@ -85,5 +88,3 @@
   z-index: 1;
   content: "";
 }
-
-//

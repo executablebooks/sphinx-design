@@ -147,7 +147,7 @@ class _ButtonDirective(SphinxDirective):
 
     def create_ref_node(
         self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
-    ):
+    ) -> nodes.Node:
         """Create the reference node."""
         raise NotImplementedError
 
@@ -197,7 +197,7 @@ class ButtonLinkDirective(_ButtonDirective):
 
     def create_ref_node(
         self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
-    ):
+    ) -> nodes.Node:
         """Create the reference node."""
         return nodes.reference(
             rawtext,
@@ -211,14 +211,14 @@ class ButtonRefDirective(_ButtonDirective):
 
     def create_ref_node(
         self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
-    ):
+    ) -> nodes.Node:
         """Create the reference node."""
         options = {
             "classes": classes,
             "reftarget": target,
             "refdoc": self.env.docname,
             "refdomain": "",
-            "reftype": "any",
+            "reftype": "any",  # TODO allow for variable ref type
             "refexplicit": explicit_title,
             "refwarn": True,
         }

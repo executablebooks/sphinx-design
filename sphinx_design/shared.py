@@ -35,26 +35,26 @@ def make_choice(choices: Sequence[str]):
     return lambda argument: directives.choice(argument, choices)
 
 
-def _margin_or_padding_option(argument: Optional[str], class_prefix: str) -> List[str]:
+def _margin_or_padding_option(
+    argument: Optional[str],
+    class_prefix: str,
+    allowed: Sequence[str],
+) -> List[str]:
     """Validate the margin/padding is one (all) or four (top bottom left right) integers,
-    between 0 and 5.
+    between 0 and 5 or 'auto'.
     """
     if argument is None:
         raise ValueError("argument required but none supplied")
     values = argument.split()
-    try:
-        int_values = [int(value) for value in values]
-    except Exception:
-        raise ValueError("argument must be space separated list of integers")
-    for value in int_values:
-        if not 0 <= value <= 5:
-            raise ValueError("argument must be integers in range 0 to 5")
+    for value in values:
+        if value not in allowed:
+            raise ValueError(f"{value} is not in: {allowed}")
     if len(values) == 1:
         return [f"{class_prefix}-{values[0]}"]
     if len(values) == 4:
         return [
             f"{class_prefix}{side}-{value}"
-            for side, value in zip(["t", "b", "l", "r"], int_values)
+            for side, value in zip(["t", "b", "l", "r"], values)
         ]
     raise ValueError(
         "argument must be one (all) or four (top bottom left right) integers"
@@ -63,16 +63,18 @@ def _margin_or_padding_option(argument: Optional[str], class_prefix: str) -> Lis
 
 def margin_option(argument: Optional[str]) -> List[str]:
     """Validate the margin is one (all) or four (top bottom left right) integers,
-    between 0 and 5.
+    between 0 and 5 or 'auto'.
     """
-    return _margin_or_padding_option(argument, "sd-m")
+    return _margin_or_padding_option(
+        argument, "sd-m", ("auto", "0", "1", "2", "3", "4", "5")
+    )
 
 
 def padding_option(argument: Optional[str]) -> List[str]:
     """Validate the padding is one (all) or four (top bottom left right) integers,
     between 0 and 5.
     """
-    return _margin_or_padding_option(argument, "sd-p")
+    return _margin_or_padding_option(argument, "sd-p", ("0", "1", "2", "3", "4", "5"))
 
 
 def text_align(argument: Optional[str]) -> List[str]:
