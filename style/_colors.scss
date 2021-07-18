@@ -51,14 +51,14 @@ $semantic-colors: (
   }
   // semantic colors for highlighting (e.g. focus/hover)
   @each $color, $value in $semantic-colors {
-    --sd-color-#{$color}-highlight: #{darken($value, 15%)};
+    --sd-color-#{$color}-highlight: #{mix(black, $value, 15%)};
   }
   // colors for text on top of a semantic color background
   @each $color, $value in $semantic-colors {
     --sd-color-#{$color}-text: #{text-color($value)};
   }
   // shadow
-  --sd-color-shadow: rgba(0, 0, 0, .15);
+  --sd-color-shadow: #{$black-15};
   // cards
   --sd-color-card-border: #{$black-12-5};
   --sd-color-card-background: #{$white};

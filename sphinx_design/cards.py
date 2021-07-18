@@ -71,7 +71,7 @@ class CardDirective(SphinxDirective):
                 "right": "sd-ml-auto",
             }[options["align"]]
             card_classes += [align_class]
-        if "no-shadow" in options:
+        if "no-shadow" not in options:
             card_classes += ["sd-shadow"]
         card = create_component(
             "card",
