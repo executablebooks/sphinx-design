@@ -5,23 +5,6 @@
 // Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
 @use 'sass:math';
 
-$media-min-sm: 576px;
-$media-min-md: 768px;
-$media-min-lg: 992px;
-$media-min-xl: 1200px;
-
-$media-max-sm: 540px;
-$media-max-md: 720px;
-$media-max-lg: 960px;
-$media-max-xl: 1140px;
-
-$media-widths: (
-  "sm": $media-min-sm,
-  "md": $media-min-md,
-  "lg": $media-min-lg,
-  "xl": $media-min-xl,
-) !default;
-
 $gutter-widths: $spacings;
 
 .sd-container,
@@ -183,9 +166,4 @@ $gutter-widths: $spacings;
       }
     }
   }
-}
-
-.sd-d-flex {
-  display: -ms-flexbox !important;
-  display: flex !important;
 }

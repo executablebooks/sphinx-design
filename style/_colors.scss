@@ -36,7 +36,7 @@ $semantic-colors: (
   "danger": $red,
   "light": $gray-100,
   "muted": $gray-600,
-  "dark": $gray-800,
+  "dark": $gray-900,
 ) !default;
 
 @function text-color($value) {

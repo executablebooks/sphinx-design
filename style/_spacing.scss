@@ -1,11 +1,28 @@
 $spacer: 1rem;
 $spacings: (
   0: 0,
-  1: $spacer * .25,
-  2: $spacer * .5,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
   3: $spacer,
   4: $spacer * 1.5,
   5: $spacer * 3,
+) !default;
+
+$media-min-sm: 576px;
+$media-min-md: 768px;
+$media-min-lg: 992px;
+$media-min-xl: 1200px;
+
+$media-max-sm: 540px;
+$media-max-md: 720px;
+$media-max-lg: 960px;
+$media-max-xl: 1140px;
+
+$media-widths: (
+  "sm": $media-min-sm,
+  "md": $media-min-md,
+  "lg": $media-min-lg,
+  "xl": $media-min-xl,
 ) !default;
 
 @each $id, $value in $spacings {

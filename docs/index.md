@@ -61,20 +61,6 @@ Footer
 
 ::::
 
-:::{card}
-:width: 25
-:align: center
-
-align center
-:::
-
-:::{card}
-:width: 50
-:align: right
-
-align right
-:::
-
 next paragraph 1
 
 ::::{grid}
@@ -91,6 +77,22 @@ next paragraph 1
 :::
 
 ::::
+
+## Cards
+
+:::{card}
+:width: 25
+:align: center
+
+align center
+:::
+
+:::{card}
+:width: 50
+:align: right
+
+align right
+:::
 
 (badges)=
 
@@ -111,3 +113,44 @@ next paragraph 1
 {bdg-link-primary-line}`name <https://example.com>`
 
 {bdg-ref-primary}`badges`
+
+(buttons)=
+
+### Buttons
+
+```{button-link} https://example.com
+```
+
+```{button-ref} buttons
+```
+
+```{button-link} https://example.com
+Button text
+```
+
+```{button-ref} buttons
+Button text
+```
+
+```{button-link} https://example.com
+:color: primary
+```
+
+```{button-link} https://example.com
+:color: primary
+:outline:
+```
+
+```{button-link} https://example.com
+:color: secondary
+:expand:
+```
+
+:::{card} Card with an expanded button
+
+```{button-link} https://example.com
+:color: info
+:click-parent:
+```
+
+:::

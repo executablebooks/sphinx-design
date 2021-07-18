@@ -1,0 +1,89 @@
+// Adapted from Bootstrap v5.0.2 (https://getbootstrap.com/)
+// Copyright 2011-2019 The Bootstrap Authors
+// Copyright 2011-2019 Twitter, Inc.
+// Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+
+.sd-btn {
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  //   color: var(--sd-color-dark);
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  vertical-align: middle;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  //   &:focus {
+  //     box-shadow: 0 0 0 0.2rem rgba(mix($blue, $blue, 15%), .25);
+  //     outline: 0;
+  //   }
+
+  //   &:visited {
+  //     color: var(--sd-color-dark);
+  //   }
+
+  //   // override alabaster theme
+  //   &.reference {
+  //     border-bottom: inherit;
+  //   }
+  //   &.reference:hover {
+  //     border-bottom: inherit;
+  //   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-btn {
+    transition: none;
+  }
+}
+
+@each $color, $value in $semantic-colors {
+  .sd-btn-#{$color},
+  .sd-btn-outline-#{$color}:hover,
+  .sd-btn-outline-#{$color}:focus {
+    color: var(--sd-color-#{$color}-text) !important;
+    background-color: var(--sd-color-#{$color}) !important;
+    border-color: var(--sd-color-#{$color}) !important;
+    border: 1px solid !important;
+  }
+  .sd-btn-#{$color}:hover,
+  .sd-btn-#{$color}:focus {
+    color: var(--sd-color-#{$color}-text) !important;
+    background-color: var(--sd-color-#{$color}-highlight) !important;
+    border-color: var(--sd-color-#{$color}-highlight) !important;
+    border: 1px solid !important;
+  }
+  .sd-btn-outline-#{$color} {
+    color: var(--sd-color-#{$color}) !important;
+    border-color: var(--sd-color-#{$color}) !important;
+    border: 1px solid !important;
+  }
+}
+
+// make parent clickable
+.sd-stretched-link::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: "";
+}
+
+//

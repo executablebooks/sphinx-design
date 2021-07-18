@@ -7,7 +7,7 @@ from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
-from .shared import create_component, make_option, text_align
+from .shared import create_component, make_choice, text_align
 
 DIRECTIVE_NAME_CARD = "card"
 REGEX_HEADER = re.compile(r"^\^{3,}\s*$")
@@ -39,8 +39,8 @@ class CardDirective(SphinxDirective):
     final_argument_whitespace = True
     option_spec = {
         # TODO adaptive width/ width based on content
-        "width": make_option(["auto", "25", "50", "75", "100"]),
-        "align": make_option(["left", "center", "right"]),
+        "width": make_choice(["auto", "25", "50", "75", "100"]),
+        "align": make_choice(["left", "center", "right"]),
         "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,

@@ -37,3 +37,34 @@
 .sd-font-italic {
   font-style: italic !important;
 }
+
+.sd-text-decoration-none {
+  text-decoration: none !important;
+}
+
+.sd-text-lowercase {
+  text-transform: lowercase !important;
+}
+
+.sd-text-uppercase {
+  text-transform: uppercase !important;
+}
+
+.sd-text-capitalize {
+  text-transform: capitalize !important;
+}
+
+.sd-text-wrap {
+  white-space: normal !important;
+}
+
+.sd-text-nowrap {
+  white-space: nowrap !important;
+}
+
+// requires `display: inline-block` or `display: block`
+.sd-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

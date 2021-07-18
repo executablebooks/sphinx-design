@@ -1,6 +1,6 @@
 """Shared constants and functions."""
 
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -30,7 +30,7 @@ def is_component(node: nodes.Node, name: str):
     return node.get("design_component") == name
 
 
-def make_option(choices: List[str]):
+def make_choice(choices: Sequence[str]):
     """Create a choice validator."""
     return lambda argument: directives.choice(argument, choices)
 
