@@ -65,8 +65,7 @@ class CardDirective(SphinxDirective):
         card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
             card_classes += [f'sd-w-{options["width"]}']
-        if "margin" in options:
-            card_classes += options["margin"]
+        card_classes += options.get("margin", ["sd-mb-3"])
         if "no-shadow" not in options:
             card_classes += ["sd-shadow"]
         if "hover" in options:

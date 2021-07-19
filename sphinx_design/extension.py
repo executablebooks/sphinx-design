@@ -14,10 +14,12 @@ from sphinx.environment import BuildEnvironment
 from . import compiled as css_module
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
+from .dropdown import setup_dropdown
 from .grids import setup_grids
+from .icons import setup_icons
 
 
-def setup_extension(app: Sphinx):
+def setup_extension(app: Sphinx) -> None:
     """Set up the sphinx extension."""
     app.connect("builder-inited", update_css)
     app.connect("env-updated", update_css_links)
@@ -29,6 +31,8 @@ def setup_extension(app: Sphinx):
     setup_badges_and_buttons(app)
     setup_cards(app)
     setup_grids(app)
+    setup_dropdown(app)
+    setup_icons(app)
 
 
 def update_css(app: Sphinx):

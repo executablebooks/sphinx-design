@@ -1,0 +1,124 @@
+details.sd-dropdown {
+
+  position: relative;
+  width: 100%;
+
+  .sd-summary-title {
+    // don't overlap the chevron
+    padding-right: 3em !important;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .sd-summary-content {
+    cursor: default;
+  }
+
+  summary {
+    // hide the default triangle marker
+    list-style: none;
+    padding: 1em;
+
+    // Ellipsis added when no title
+    .sd-octicon.no-title {
+      vertical-align: middle;
+    }
+  }
+
+  &[open] summary .sd-octicon.no-title {
+    visibility: hidden;
+  }
+
+  // chrome doesn't yet support list-style
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:focus {
+    outline: none;
+  }
+
+  .sd-summary-icon {
+    margin-right: 0.5rem;
+  }
+
+  .sd-summary-icon svg {
+    opacity: 0.8;
+  }
+
+  summary:hover .sd-summary-up svg,
+  summary:hover .sd-summary-down svg {
+    opacity: 1;
+  }
+
+  .sd-summary-up svg,
+  .sd-summary-down svg {
+    display: block;
+    opacity: 0.6;
+  }
+
+  .sd-summary-up,
+  .sd-summary-down {
+    pointer-events: none;
+    position: absolute;
+    right: 1em;
+    top: 0.75em;
+  }
+
+  &[open] > .sd-summary-title .sd-summary-down {
+    visibility: hidden;
+  }
+
+  &:not([open]) > .sd-summary-title .sd-summary-up {
+    visibility: hidden;
+  }
+
+  // Hide the card body border when not open
+  &:not([open]).sd-card {
+    border-color: transparent;
+  }
+  &:not([open]) > .sd-card-header {
+    border: 1px solid var(--sd-color-card-border);
+    border-radius: 0.25rem;
+  }
+
+  // Transition animation
+  &.sd-fade-in[open] summary ~ * {
+    -moz-animation: sd-fade-in 0.5s ease-in-out;
+    -webkit-animation: sd-fade-in 0.5s ease-in-out;
+    animation: sd-fade-in 0.5s ease-in-out;
+  }
+
+  &.sd-fade-in-slide-down[open] summary ~ * {
+    -moz-animation: sd-fade-in 0.5s ease-in-out, sd-slide-down 0.5s ease-in-out;
+    -webkit-animation: sd-fade-in 0.5s ease-in-out,
+      sd-slide-down 0.5s ease-in-out;
+    animation: sd-fade-in 0.5s ease-in-out, sd-slide-down 0.5s ease-in-out;
+  }
+}
+
+@keyframes sd-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes sd-slide-down {
+  0% {
+    transform: translate(0, -10px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}

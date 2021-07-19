@@ -239,6 +239,7 @@ class GridItemCardDirective(SphinxDirective):
             ]
         }
         card_options["width"] = "100"
+        card_options["margin"] = []
         card = CardDirective.create_card(self, self.arguments, card_options)
         column += card
         return [column]

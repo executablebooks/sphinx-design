@@ -34,6 +34,11 @@ This package is an iteration on sphinx-panels and intends to replace it.
 
 ## TODO
 
+note that directly using classes should be used as a "last resort",
+and to please open an issue if you find you are commonly using a certain class.
+
+grids items cannot contain headers, is this in anyway possible with docutils structure?
+
 - directives:
   - dropdowns (optional), dropdown
   - tabs (optional), tab
@@ -58,3 +63,5 @@ horizontal card (grid row inside card, picture on left)
 avatars (rounded images)
 
 horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)
+
+align icon and text in dropdown title

@@ -106,6 +106,64 @@ next paragraph 1
 
 ::::
 
+### Nested grids
+
+::::::{grid}
+:columns: 1 1 2 2
+:gutter: 1
+
+:::::{grid-item}
+
+::::{grid}
+:columns: 1 1 1 1
+:gutter: 1
+
+:::{grid-item-card}
+
+{{ loremipsum }}
+
+:::
+
+:::{grid-item-card}
+
+B
+
+:::
+
+::::
+
+:::::
+
+:::::{grid-item}
+
+::::{grid}
+:columns: 1 1 1 1
+:gutter: 1
+
+:::{grid-item-card}
+
+C
+
+:::
+
+:::{grid-item-card}
+
+D
+
+:::
+
+:::{grid-item-card}
+
+E
+
+:::
+
+::::
+
+:::::
+
+::::::
+
 (badges)=
 
 ## Badges
@@ -167,3 +225,50 @@ Button text
 ```
 
 :::
+
+## Dropdown
+
+:::{dropdown} Dropdown title
+Dropdown content
+:::
+
+:::{dropdown}
+Dropdown content
+:::
+
+::::{dropdown} Parent dropdown title (open by default)
+:open:
+
+:::{dropdown} Child dropdown title
+:color: warning
+:icon: alert
+
+Dropdown content
+:::
+::::
+
+### Dropdowns in a grid
+
+:::::{grid}
+:columns: 1 1 2 2
+:gutter: 1
+
+::::{grid-item}
+:::{dropdown} Dropdown title
+Dropdown content
+:::
+::::
+
+::::{grid-item}
+:::{dropdown} Dropdown title
+Dropdown content
+:::
+::::
+
+:::::
+
+## Icons
+
+Some {opticon-16}`report;sd-text-info` middle {opticon-24}`report` more text
+
+{fas}`spinner;sd-bg-primary sd-bg-text-primary fa-2x`

@@ -20,14 +20,27 @@ SEMANTIC_COLORS = (
 )
 
 
-def create_component(name: str, classes: List[str]) -> nodes.container:
+def create_component(
+    name: str,
+    classes: Sequence[str] = (),
+    *,
+    children: Sequence[nodes.Node] = (),
+    **attributes,
+) -> nodes.container:
     """Create a container node for a design component."""
-    return nodes.container("", is_div=True, design_component=name, classes=classes)
+    node = nodes.container(
+        "", is_div=True, design_component=name, classes=list(classes), **attributes
+    )
+    node.extend(children)
+    return node
 
 
 def is_component(node: nodes.Node, name: str):
     """Check if a node is a certain design component."""
-    return node.get("design_component") == name
+    try:
+        return node.get("design_component") == name
+    except AttributeError:
+        return False
 
 
 def make_choice(choices: Sequence[str]):
