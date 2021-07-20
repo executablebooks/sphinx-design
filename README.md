@@ -26,6 +26,10 @@ This package is an iteration on sphinx-panels and intends to replace it.
   - less "bespoke" syntax
   - `grid-item` can be used when no card is needed
   - `card` can be used independently of grids
+- tabs changed:
+  - top-level `tab-set`
+  - `tabbed` -> `tab-item`
+  - include `:sync:` option to synchronize tab selection across sets
 - Minimises direct use of CSS classes (encourage to not use them)
   - More declarative, easy to understand options
   - Easier to work with non-HTML outputs
@@ -40,22 +44,11 @@ This package is an iteration on sphinx-panels and intends to replace it.
 note that directly using classes should be used as a "last resort",
 and to please open an issue if you find you are commonly using a certain class.
 
-grids items cannot contain headers, is this in anyway possible with docutils structure?
-
-- directives:
-  - dropdowns (optional), dropdown
-  - tabs (optional), tab
-
-- roles:
-  - icons: opticon, fa
+grids items cannot contain headers; is this in anyway possible with docutils structure?
 
 naming of directives/roles: standard prefix?
 
-How to handle JS
-
 handle latex
-
-is `grid`/`grid-item` both having `columns`, with different meanings, confusing?
 
 card header/footer syntax?
 
@@ -67,4 +60,8 @@ avatars (rounded images)
 
 horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)
 
-align icon and text in dropdown title
+from inline-tabs:
+
+- **Elegant design**: Small footprint in the markup and generated website, while looking good.
+- **Configurable**: All the colors can be configured using CSS variables.
+- **Works without JavaScript**: JavaScript is not required for "essential" functionality, only for tab synchronisation.

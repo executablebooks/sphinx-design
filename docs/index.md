@@ -6,28 +6,28 @@ Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Mate
 
 ## Cards
 
-:::{card}
+:::{card} Align Center
 :width: 25
 :margin: 0 2 auto auto
 :text-align: center
 
-align center
+Content
 :::
 
-:::{card}
+:::{card} Align Right
 :width: 50
 :margin: 0 2 auto 0
 :text-align: right
 
-align right
+Content
 :::
 
-:::{card}
+:::{card} Align Left
 :width: 50
 :margin: 0 2 0 auto
 :text-align: left
 
-align left
+Content
 :::
 
 paragraph
@@ -272,10 +272,30 @@ Some {opticon-16}`report;sd-text-info` middle {opticon-24}`report` more text
 ::::{tab-set}
 
 :::{tab-item} Label1
+:sync: a
+
 Content 1
 :::
 
 :::{tab-item} Label2
+:sync: b
+
+Content 2
+:::
+
+::::
+
+::::{tab-set}
+
+:::{tab-item} Label1
+:sync: a
+
+Content 1
+:::
+
+:::{tab-item} Label2
+:sync: b
+
 Content 2
 :::
 
@@ -285,6 +305,8 @@ Content 2
 
 :::::{dropdown} Tabs in dropdown
 :open:
+
+Paragraph
 
 ::::{tab-set}
 

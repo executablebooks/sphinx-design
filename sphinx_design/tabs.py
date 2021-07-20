@@ -72,6 +72,7 @@ class TabItemDirective(SphinxDirective):
     has_content = True
     option_spec = {
         "selected": directives.flag,
+        "sync": directives.unchanged_required,
         "name": directives.unchanged,
         "class": directives.class_option,
         "class-label": directives.class_option,
@@ -94,6 +95,8 @@ class TabItemDirective(SphinxDirective):
             *textnodes,
             classes=["sd-tab-label"] + self.options.get("class-label", []),
         )
+        if "sync" in self.options:
+            tab_label["sync_id"] = self.options["sync"]
         self.add_name(tab_label)
         tab_item += tab_label
 
@@ -129,6 +132,8 @@ def depart_tab_input(self, node):
 
 def visit_tab_label(self, node):
     attributes = {"for": node["input_id"]}
+    if "sync_id" in node:
+        attributes["data-sync-id"] = node["sync_id"]
     self.body.append(self.starttag(node, "label", **attributes))
 
 
@@ -160,7 +165,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
                         selected_idx = idx
                     else:
                         LOGGER.warning(
-                            "Multiple selected 'tab-item' directives [{WARNING_TYPE}.tab]",
+                            f"Multiple selected 'tab-item' directives [{WARNING_TYPE}.tab]",
                             location=tab_item,
                             type=WARNING_TYPE,
                             subtype="tab",
@@ -189,6 +194,8 @@ class TabSetHtmlTransform(SphinxPostTransform):
                     input_id=tab_item_identity,
                     classes=tab_label["classes"],
                 )
+                if "sync_id" in tab_label:
+                    label_node["sync_id"] = tab_label["sync_id"]
                 label_node.source, label_node.line = tab_item.source, tab_item.line
                 children.append(label_node)
 
