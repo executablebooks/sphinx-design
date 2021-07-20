@@ -48,6 +48,8 @@ grids items cannot contain headers; is this in anyway possible with docutils str
 
 naming of directives/roles: standard prefix?
 
+check grid-items and tab-items are inside parents (or auto-wrap?)
+
 handle latex
 
 card header/footer syntax?

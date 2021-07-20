@@ -38,7 +38,7 @@ class CardDirective(SphinxDirective):
     optional_arguments = 1  # card title
     final_argument_whitespace = True
     option_spec = {
-        # TODO adaptive width/ width based on content
+        # TODO adaptive width based on content
         "width": make_choice(["auto", "25", "50", "75", "100"]),
         "margin": margin_option,
         "text-align": text_align,

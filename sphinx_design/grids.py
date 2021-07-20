@@ -30,7 +30,6 @@ def setup_grids(app: Sphinx):
     app.add_directive(DIRECTIVE_NAME_GRID, GridDirective)
     app.add_directive(DIRECTIVE_NAME_GRID_ITEM, GridItemDirective)
     app.add_directive(DIRECTIVE_NAME_GRID_ITEM_CARD, GridItemCardDirective)
-    # TODO check all grid items have grid-row parents (or auto wrap in grid?)
 
 
 def _media_option(
@@ -169,6 +168,13 @@ class GridItemDirective(SphinxDirective):
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
+        if not is_component(self.state_machine.node, "grid-row"):
+            LOGGER.warning(
+                f"The parent of a 'grid-item' should be a 'grid-row' [{WARNING_TYPE}.grid]",
+                location=(self.env.docname, self.lineno),
+                type=WARNING_TYPE,
+                subtype="grid",
+            )
         column = create_component(
             "grid-item",
             [
@@ -213,6 +219,13 @@ class GridItemCardDirective(SphinxDirective):
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
+        if not is_component(self.state_machine.node, "grid-row"):
+            LOGGER.warning(
+                f"The parent of a 'grid-item' should be a 'grid-row' [{WARNING_TYPE}.grid]",
+                location=(self.env.docname, self.lineno),
+                type=WARNING_TYPE,
+                subtype="grid",
+            )
         column = create_component(
             "grid-item",
             [

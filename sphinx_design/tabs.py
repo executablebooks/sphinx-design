@@ -82,6 +82,13 @@ class TabItemDirective(SphinxDirective):
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
+        if not is_component(self.state_machine.node, "tab-set"):
+            LOGGER.warning(
+                f"The parent of a 'tab-item' should be a 'tab-set' [{WARNING_TYPE}.tab]",
+                location=(self.env.docname, self.lineno),
+                type=WARNING_TYPE,
+                subtype="tab",
+            )
         tab_item = create_component(
             "tab-item",
             classes=["sd-tab-item"] + self.options.get("class", []),
