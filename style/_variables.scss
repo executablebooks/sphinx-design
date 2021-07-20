@@ -1,0 +1,29 @@
+:root {
+  // semantic colors
+  @each $color, $value in $semantic-colors {
+    --sd-color-#{$color}: #{$value};
+  }
+  // semantic colors for highlighting (e.g. focus/hover)
+  @each $color, $value in $semantic-colors {
+    --sd-color-#{$color}-highlight: #{mix(black, $value, 15%)};
+  }
+  // colors for text on top of a semantic color background
+  @each $color, $value in $semantic-colors {
+    --sd-color-#{$color}-text: #{text-color($value)};
+  }
+  // shadow
+  --sd-color-shadow: #{$black-15};
+  // cards
+  --sd-color-card-border: #{$black-12-5};
+  --sd-color-card-border-hover: #{$black-25};
+  --sd-color-card-background: transparent;
+  --sd-color-card-text: inherit;
+  --sd-color-card-header: transparent;
+  --sd-color-card-footer: transparent;
+  // tabs
+  --tabs-color-label-active: hsla(231, 99%, 66%, 1);
+  --tabs-color-label-inactive: rgba(178, 206, 245, 0.62);
+  --tabs-color-overline: rgb(207, 236, 238);
+  --tabs-color-underline: rgb(207, 236, 238);
+  --tabs-size-label: 1rem;
+}

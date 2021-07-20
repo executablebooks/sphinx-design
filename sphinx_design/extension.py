@@ -17,6 +17,7 @@ from .cards import setup_cards
 from .dropdown import setup_dropdown
 from .grids import setup_grids
 from .icons import setup_icons
+from .tabs import setup_tabs
 
 
 def setup_extension(app: Sphinx) -> None:
@@ -33,6 +34,7 @@ def setup_extension(app: Sphinx) -> None:
     setup_grids(app)
     setup_dropdown(app)
     setup_icons(app)
+    setup_tabs(app)
 
 
 def update_css(app: Sphinx):

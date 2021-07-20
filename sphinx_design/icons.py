@@ -9,6 +9,7 @@ except ImportError:
     import importlib_resources as resources  # type: ignore[no-redef]
 
 from docutils import nodes
+from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxRole
 
 from . import compiled
@@ -23,7 +24,7 @@ OPTICON_CSS = """\
 }"""
 
 
-def setup_icons(app):
+def setup_icons(app: Sphinx) -> None:
     app.add_role("opticon-16", OpticonRole(16))
     app.add_role("opticon-24", OpticonRole(24))
     for style in ["fa", "fas", "fab"]:
@@ -100,7 +101,10 @@ def get_opticon(
 
 
 class OpticonRole(SphinxRole):
-    """Role to display a GitHub opticon SVG."""
+    """Role to display a GitHub opticon SVG.
+
+    Additional classes can be added to the element after a semicolon.
+    """
 
     def __init__(self, size: int) -> None:
         super().__init__()
@@ -128,7 +132,10 @@ class fontawesome(nodes.Element, nodes.General):
 
 
 class FontawesomeRole(SphinxRole):
-    """Role to display a Fontawesome icon."""
+    """Role to display a Fontawesome icon.
+
+    Additional classes can be added to the element after a semicolon.
+    """
 
     def __init__(self, style: str) -> None:
         super().__init__()

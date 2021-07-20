@@ -2,6 +2,7 @@
 """
 from docutils import nodes
 from docutils.parsers.rst import directives
+from sphinx.application import Sphinx
 from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.docutils import SphinxDirective
 
@@ -15,7 +16,7 @@ from sphinx_design.shared import (
 from .icons import get_opticon, list_opticons
 
 
-def setup_dropdown(app):
+def setup_dropdown(app: Sphinx) -> None:
     app.add_node(dropdown_main, html=(visit_dropdown_main, depart_dropdown_main))
     app.add_node(dropdown_title, html=(visit_dropdown_title, depart_dropdown_title))
     app.add_directive("dropdown", DropdownDirective)

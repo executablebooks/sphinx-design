@@ -19,7 +19,7 @@ DIRECTIVE_NAME_BUTTON_REF = "button-ref"
 # in particular for rounded-pill class etc
 
 
-def setup_badges_and_buttons(app: Sphinx):
+def setup_badges_and_buttons(app: Sphinx) -> None:
     """Setup the badge components."""
     app.add_role(ROLE_NAME_BADGE_PREFIX, BadgeRole())
     app.add_role(ROLE_NAME_LINK_PREFIX, LinkBadgeRole())

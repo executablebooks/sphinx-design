@@ -272,3 +272,73 @@ Dropdown content
 Some {opticon-16}`report;sd-text-info` middle {opticon-24}`report` more text
 
 {fas}`spinner;sd-bg-primary sd-bg-text-primary fa-2x`
+
+
+## Tabs
+
+::::{tab-set}
+
+:::{tab-item} Label1
+Content 1
+:::
+
+:::{tab-item} Label2
+Content 2
+:::
+
+::::
+
+### Tabs in other components
+
+:::::{dropdown} Tabs in dropdown
+:open:
+
+::::{tab-set}
+
+:::{tab-item} Label1
+Content 1
+:::
+
+:::{tab-item} Label2
+Content 2
+:::
+
+::::
+:::::
+
+::::::{grid}
+:columns: 1 1 2 2
+
+:::::{grid-item}
+
+::::{tab-set}
+
+:::{tab-item} Label1
+Content 1
+:::
+
+:::{tab-item} Label2
+Content 2
+:::
+
+::::
+
+:::::
+
+:::::{grid-item}
+
+::::{tab-set}
+
+:::{tab-item} Label1
+Content 1
+:::
+
+:::{tab-item} Label2
+Content 2
+:::
+
+::::
+
+:::::
+
+::::::

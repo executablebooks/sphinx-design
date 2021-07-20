@@ -1,7 +1,6 @@
 details.sd-dropdown {
 
   position: relative;
-  width: 100%;
 
   .sd-summary-title {
     // don't overlap the chevron
@@ -101,6 +100,10 @@ details.sd-dropdown {
       sd-slide-down 0.5s ease-in-out;
     animation: sd-fade-in 0.5s ease-in-out, sd-slide-down 0.5s ease-in-out;
   }
+}
+
+.sd-col > .sd-dropdown {
+  width: 100%;
 }
 
 @keyframes sd-fade-in {

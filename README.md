@@ -4,6 +4,9 @@ A sphinx extension for designing beautiful, view size responsive web components.
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
+All components are principally based on CSS (not JavaScript),
+meaning they will be responsively rendered on any device.
+
 ## Supported browsers
 
 - Chrome >= 60
