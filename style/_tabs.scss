@@ -13,13 +13,17 @@
 
     // Active tab label
     &:checked + label {
-      border-color: var(--tabs-color-label-active);
-      color: var(--tabs-color-label-active);
+      border-color: var(--sd-color-tabs-label-active);
+      color: var(--sd-color-tabs-label-active);
 
       // Show tabbed block content
       + .sd-tab-content {
         display: block;
       }
+    }
+
+    &:not(:checked) + label:hover {
+        border-color: var(--sd-color-tabs-label-inactive);
     }
 
     // Focused tab label
@@ -37,30 +41,31 @@
   // Tab label
   > label {
     border-bottom: 0.125rem solid transparent;
-    color: var(--tabs-color-label-inactive);
+    margin-bottom: 0;
+    color: var(--sd-color-tabs-label-inactive);
     cursor: pointer;
-    font-size: var(--tabs-size-label);
+    font-size: var(--sd-fontsize-tabs-label);
     font-weight: 700;
-    padding: 1em 1.25em .5em;
+    padding: 1em 1.25em 0.5em;
     transition: color 250ms;
     width: auto;
     z-index: 1;
 
     // Hovered label
     html &:hover {
-      color: var(--tabs-color-label-active);
+      color: var(--sd-color-tabs-label-active);
     }
   }
 }
 
 .sd-col > .sd-tab-set {
-    width: 100%;
+  width: 100%;
 }
 
 // Tabbed block content
 .sd-tab-content {
-  box-shadow: 0 -0.0625rem var(--tabs-color-overline),
-    0 0.0625rem var(--tabs-color-underline);
+  box-shadow: 0 -0.0625rem var(--sd-color-tabs-overline),
+    0 0.0625rem var(--sd-color-tabs-underline);
   display: none;
   order: 99;
   padding-bottom: 0.75rem;
