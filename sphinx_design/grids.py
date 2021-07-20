@@ -51,7 +51,7 @@ def _media_option(
     )
     if argument is None:
         raise ValueError(validate_error_msg)
-    values = argument.split()
+    values = argument.strip().split()
     if len(values) == 1:
         values = [values[0], values[0], values[0], values[0]]
     if len(values) != 4:
@@ -99,8 +99,10 @@ class GridDirective(SphinxDirective):
     """A grid component, which is a container for grid items (i.e. columns)."""
 
     has_content = True
+    required_arguments = 0
+    optional_arguments = 1  # columns
+    final_argument_whitespace = True
     option_spec = {
-        "columns": row_columns_option,
         "gutter": gutter_option,
         "margin": margin_option,
         "padding": padding_option,
@@ -111,6 +113,7 @@ class GridDirective(SphinxDirective):
 
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
+        column_classes = row_columns_option(self.arguments[0]) if self.arguments else []
         self.assert_has_content()
         # container-fluid is 100% width for all breakpoints,
         # rather than the fixed width of the breakpoint (like container)
@@ -127,7 +130,7 @@ class GridDirective(SphinxDirective):
         row = create_component(
             "grid-row",
             ["sd-row"]
-            + self.options.get("columns", [])
+            + column_classes
             + self.options.get("gutter", [])
             + self.options.get("class-row", []),
         )

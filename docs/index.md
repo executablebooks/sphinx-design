@@ -34,8 +34,7 @@ paragraph
 
 ## Grids
 
-::::{grid}
-:columns: 1 2 2 3
+::::{grid} 1 2 2 3
 :gutter: 1 3 3 3
 
 :::{grid-item}
@@ -91,8 +90,7 @@ Footer
 
 next paragraph 1
 
-::::{grid}
-:columns: 1 1 2 2
+::::{grid} 1 1 2 2
 :gutter: 0 0 2 4
 :text-align: justify
 
@@ -108,14 +106,12 @@ next paragraph 1
 
 ### Nested grids
 
-::::::{grid}
-:columns: 1 1 2 2
+::::::{grid} 1 1 2 2
 :gutter: 1
 
 :::::{grid-item}
 
-::::{grid}
-:columns: 1 1 1 1
+::::{grid} 1 1 1 1
 :gutter: 1
 
 :::{grid-item-card}
@@ -136,8 +132,7 @@ B
 
 :::::{grid-item}
 
-::::{grid}
-:columns: 1 1 1 1
+::::{grid} 1 1 1 1
 :gutter: 1
 
 :::{grid-item-card}
@@ -249,8 +244,7 @@ Dropdown content
 
 ### Dropdowns in a grid
 
-:::::{grid}
-:columns: 1 1 2 2
+:::::{grid} 1 1 2 2
 :gutter: 1
 
 ::::{grid-item}
@@ -272,7 +266,6 @@ Dropdown content
 Some {opticon-16}`report;sd-text-info` middle {opticon-24}`report` more text
 
 {fas}`spinner;sd-bg-primary sd-bg-text-primary fa-2x`
-
 
 ## Tabs
 
@@ -306,8 +299,7 @@ Content 2
 ::::
 :::::
 
-::::::{grid}
-:columns: 1 1 2 2
+::::::{grid} 1 1 2 2
 
 :::::{grid-item}
 
