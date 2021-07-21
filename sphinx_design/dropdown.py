@@ -13,7 +13,7 @@ from sphinx_design.shared import (
     make_choice,
 )
 
-from .icons import get_opticon, list_opticons
+from .icons import get_octicon, list_octicons
 
 
 def setup_dropdown(app: Sphinx) -> None:
@@ -73,7 +73,7 @@ class DropdownDirective(SphinxDirective):
     option_spec = {
         "open": directives.flag,  # make open by default
         "color": make_choice(SEMANTIC_COLORS),
-        "icon": make_choice(list_opticons()),
+        "icon": make_choice(list_octicons()),
         "animate": make_choice(("fade-in", "fade-in-slide-down")),
         "name": directives.unchanged,
         "class-container": directives.class_option,
@@ -122,8 +122,8 @@ class DropdownDirective(SphinxDirective):
         return [container]
 
 
-# Note the custom opticon here has thicker dots than:
-# get_opticon("kebab-horizontal", classes="no-title", size=24)
+# Note the custom octicon here has thicker dots than:
+# get_octicon("kebab-horizontal", classes="no-title", size=24)
 KEBAB = """\
 <svg viewBox="0 0 36 24" width="36" height="16" xmlns="http://www.w3.org/2000/svg"
     class="octicon no-title" aria-hidden="true">
@@ -162,7 +162,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=[
                     nodes.raw(
                         "",
-                        nodes.Text(get_opticon("chevron-up", size=24)),
+                        nodes.Text(get_octicon("chevron-up", size=24)),
                         format="html",
                     )
                 ],
@@ -173,7 +173,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=[
                     nodes.raw(
                         "",
-                        nodes.Text(get_opticon("chevron-down", size=24)),
+                        nodes.Text(get_octicon("chevron-down", size=24)),
                         format="html",
                     )
                 ],
@@ -203,7 +203,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                     0,
                     nodes.raw(
                         "",
-                        nodes.Text(get_opticon(node["icon"], size=16)),
+                        nodes.Text(get_octicon(node["icon"], size=16)),
                         classes=["sd-summary-icon"],
                         format="html",
                     ),

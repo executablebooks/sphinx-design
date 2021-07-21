@@ -14,9 +14,9 @@ from sphinx.util.docutils import SphinxRole
 
 from . import compiled
 
-OPTICON_VERSION = "0.0.0-dd899ea"
+OCTICON_VERSION = "0.0.0-dd899ea"
 
-OPTICON_CSS = """\
+OCTICON_CSS = """\
 .octicon {
   display: inline-block;
   vertical-align: text-top;
@@ -25,8 +25,8 @@ OPTICON_CSS = """\
 
 
 def setup_icons(app: Sphinx) -> None:
-    app.add_role("opticon-16", OpticonRole(16))
-    app.add_role("opticon-24", OpticonRole(24))
+    app.add_role("octicon-16", OcticonRole(16))
+    app.add_role("octicon-24", OcticonRole(24))
     for style in ["fa", "fas", "fab"]:
         # note: fa is deprecated in v5, fas is the default and fab is the other free option
         app.add_role(style, FontawesomeRole(style))
@@ -43,18 +43,18 @@ def setup_icons(app: Sphinx) -> None:
 
 
 @lru_cache(1)
-def get_opticon_data() -> Dict[str, Any]:
+def get_octicon_data() -> Dict[str, Any]:
     """Load all octicon data."""
-    content = resources.read_text(compiled, "opticons.json")
+    content = resources.read_text(compiled, "octicons.json")
     return json.loads(content)
 
 
-def list_opticons() -> List[str]:
+def list_octicons() -> List[str]:
     """List available octicon names."""
-    return list(get_opticon_data().keys())
+    return list(get_octicon_data().keys())
 
 
-def get_opticon(
+def get_octicon(
     name: str,
     classes: Optional[str] = None,
     width: Optional[Union[int, float]] = None,
@@ -65,9 +65,9 @@ def get_opticon(
     """Return the HTML for an GitHub octicon SVG icon."""
     assert size in [16, 24], "size must be 16 or 24"
     try:
-        data = get_opticon_data()[name]
+        data = get_octicon_data()[name]
     except KeyError:
-        raise KeyError(f"Unrecognised opticon: {name}")
+        raise KeyError(f"Unrecognised octicon: {name}")
 
     content = data["heights"][str(size)]["path"]
     options = {
@@ -100,8 +100,8 @@ def get_opticon(
     return f"<svg {opt_string}>{content}</svg>"
 
 
-class OpticonRole(SphinxRole):
-    """Role to display a GitHub opticon SVG.
+class OcticonRole(SphinxRole):
+    """Role to display a GitHub octicon SVG.
 
     Additional classes can be added to the element after a semicolon.
     """
@@ -115,10 +115,10 @@ class OpticonRole(SphinxRole):
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
         try:
-            svg = get_opticon(icon, size=self.size, classes=classes)
+            svg = get_octicon(icon, size=self.size, classes=classes)
         except KeyError:
             msg = self.inliner.reporter.error(
-                f"Unknown opticon name: {self.content}", line=self.lineno
+                f"Unknown octicon name: {icon}", line=self.lineno
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
             return [prb], [msg]

@@ -100,3 +100,15 @@ $media-widths: (
     margin-left: $value !important;
   }
 }
+
+.sd-align-items-start {
+  align-items: flex-start !important;
+}
+
+.sd-align-items-end {
+  align-items: flex-end !important;
+}
+
+.sd-align-items-center {
+  align-items: center !important;
+}

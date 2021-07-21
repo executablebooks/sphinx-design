@@ -19,5 +19,5 @@ include README.md
 include sphinx_design/py.typed
 include sphinx_design/compiled/style.min.css
 include sphinx_design/compiled/sd_tabs.js
-include sphinx_design/compiled/opticon_LICENSE
-include sphinx_design/compiled/opticons.json
+include sphinx_design/compiled/octicon_LICENSE
+include sphinx_design/compiled/octicons.json

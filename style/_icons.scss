@@ -3,3 +3,21 @@
   fill: currentColor;
   vertical-align: middle;
 }
+
+$avatar-sizes: (
+  xs: 1rem,
+  sm: 3rem,
+  md: 5rem,
+  lg: 7rem,
+  xl: 10rem,
+);
+
+@each $size, $value in $avatar-sizes {
+  .sd-avatar-#{$size} {
+    border-radius: 50%;
+    object-fit: cover; /* Keep the image aspect ratio */
+    object-position: center; /* Center the image within the element */
+    width: $value;
+    height: $value;
+  }
+}

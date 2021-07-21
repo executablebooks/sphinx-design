@@ -12,6 +12,7 @@ from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 
 from . import compiled as static_module
+from .article_info import setup_article_info
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
 from .dropdown import setup_dropdown
@@ -35,6 +36,7 @@ def setup_extension(app: Sphinx) -> None:
     setup_dropdown(app)
     setup_icons(app)
     setup_tabs(app)
+    setup_article_info(app)
 
 
 def update_css_js(app: Sphinx):
