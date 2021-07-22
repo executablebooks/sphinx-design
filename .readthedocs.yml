@@ -11,7 +11,7 @@ python:
         path: .
         extra_requirements:
           - rtd
-
+          - theme_rtd
 sphinx:
   configuration: docs/conf.py
   builder: html
