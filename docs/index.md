@@ -33,6 +33,17 @@ tabs
 other
 ```
 
+```{toctree}
+:caption: Themes
+:hidden:
+
+alabaster <https://sphinx-design.readthedocs.io/en/latest>
+sphinx-book-theme <https://sphinx-design.readthedocs.io/en/sbt-theme>
+pydata-sphinx-theme <https://sphinx-design.readthedocs.io/en/pydata-theme>
+sphinx-rtd-theme <https://sphinx-design.readthedocs.io/en/rtd-theme>
+furo <https://sphinx-design.readthedocs.io/en/furo-theme>
+```
+
 ::::{grid} 1 2 2 3
 :margin: 4 4 0 0
 :gutter: 1
