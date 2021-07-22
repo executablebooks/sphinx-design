@@ -26,7 +26,7 @@ extlinks = {
     "user": ("https://github.com/%s", "@%s"),
 }
 
-html_theme = os.environ.get("SPHINX_THEME", "alabaster")
+html_theme = os.environ.get("SPHINX_THEME", "sphinx_rtd_theme")
 html_title = f"Sphinx Design ({html_theme.replace('_', '-')})"
 
 html_static_path = ["_static"]
