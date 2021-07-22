@@ -214,6 +214,7 @@ class ButtonRefDirective(_ButtonDirective):
     ) -> nodes.Node:
         """Create the reference node."""
         options = {
+            # TODO the presence of classes raises an error if the link cannot be found
             "classes": classes,
             "reftarget": target,
             "refdoc": self.env.docname,

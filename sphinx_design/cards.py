@@ -4,10 +4,17 @@ from typing import List, NamedTuple, Optional, Tuple
 from docutils import nodes
 from docutils.parsers.rst import directives
 from docutils.statemachine import StringList
+from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
-from .shared import create_component, make_choice, margin_option, text_align
+from .shared import (
+    PassthroughTextElement,
+    create_component,
+    make_choice,
+    margin_option,
+    text_align,
+)
 
 DIRECTIVE_NAME_CARD = "card"
 REGEX_HEADER = re.compile(r"^\^{3,}\s*$")
@@ -38,14 +45,14 @@ class CardDirective(SphinxDirective):
     optional_arguments = 1  # card title
     final_argument_whitespace = True
     option_spec = {
-        # TODO adaptive width based on content
-        "width": make_choice(["auto", "25", "50", "75", "100"]),
+        "width": make_choice(["auto", "25%", "50%", "75%", "100%"]),
         "margin": margin_option,
         "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
+        "link": directives.uri,
+        "link-type": make_choice(["url", "any", "ref", "doc"]),
         "no-shadow": directives.flag,
-        "hover": directives.flag,
         "class-card": directives.class_option,
         "class-header": directives.class_option,
         "class-body": directives.class_option,
@@ -62,13 +69,14 @@ class CardDirective(SphinxDirective):
         cls, inst: SphinxDirective, arguments: Optional[list], options: dict
     ) -> nodes.Node:
         """Run the directive."""
+        # TODO better degradation for latex
         card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
-            card_classes += [f'sd-w-{options["width"]}']
+            card_classes += [f'sd-w-{options["width"].rstrip("%")}']
         card_classes += options.get("margin", ["sd-mb-3"])
         if "no-shadow" not in options:
             card_classes += ["sd-shadow"]
-        if "hover" in options:
+        if "link" in options:
             card_classes += ["sd-card-hover"]
         card = create_component(
             "card",
@@ -125,6 +133,31 @@ class CardDirective(SphinxDirective):
                 classes=["sd-card-img-bottom"],
             )
             card.append(image_bottom)
+
+        if "link" in options:
+            link_container = PassthroughTextElement()
+            if options.get("link-type", "url") == "url":
+                link = nodes.reference(
+                    "",
+                    "",
+                    refuri=options["link"],
+                    classes=["sd-stretched-link"],
+                )
+            else:
+                options = {
+                    # TODO the presence of classes raises an error if the link cannot be found
+                    "classes": ["sd-stretched-link"],
+                    "reftarget": options["link"],
+                    "refdoc": inst.env.docname,
+                    "refdomain": "" if options["link-type"] == "any" else "std",
+                    "reftype": options["link-type"],
+                    "refexplicit": True,
+                    "refwarn": True,
+                }
+                link = addnodes.pending_xref("", nodes.Text(""), **options)
+            inst.set_source_info(link)
+            link_container += link
+            card.append(link_container)
 
         return card
 

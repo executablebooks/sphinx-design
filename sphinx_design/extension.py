@@ -18,6 +18,7 @@ from .cards import setup_cards
 from .dropdown import setup_dropdown
 from .grids import setup_grids
 from .icons import setup_icons
+from .shared import PassthroughTextElement
 from .tabs import setup_tabs
 
 
@@ -29,6 +30,14 @@ def setup_extension(app: Sphinx) -> None:
     # of adding the `container` class to all nodes.container
     app.add_node(
         nodes.container, override=True, html=(visit_container, depart_container)
+    )
+    app.add_node(
+        PassthroughTextElement,
+        html=(visit_depart_null, visit_depart_null),
+        latex=(visit_depart_null, visit_depart_null),
+        text=(visit_depart_null, visit_depart_null),
+        man=(visit_depart_null, visit_depart_null),
+        texinfo=(visit_depart_null, visit_depart_null),
     )
     setup_badges_and_buttons(app)
     setup_cards(app)
@@ -85,3 +94,7 @@ def visit_container(self, node: nodes.Node):
 
 def depart_container(self, node: nodes.Node):
     self.body.append("</div>\n")
+
+
+def visit_depart_null(self, node: nodes.Element) -> None:
+    """visit/depart passthrough"""

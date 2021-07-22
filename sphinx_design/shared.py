@@ -94,3 +94,10 @@ def text_align(argument: Optional[str]) -> List[str]:
     """Validate the text align is left, right, center or justify."""
     value = directives.choice(argument, ["left", "right", "center", "justify"])
     return [f"sd-text-{value}"]
+
+
+class PassthroughTextElement(nodes.TextElement):
+    """A text element which will not render anything.
+
+    This is required for reference node to render correctly outside of paragraphs.
+    """

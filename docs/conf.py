@@ -11,7 +11,7 @@ html_theme = os.environ.get("SPHINX_THEME", "alabaster")
 html_title = f"Sphinx Design ({html_theme})"
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-myst_enable_extensions = ["colon_fence", "substitution"]
+myst_enable_extensions = ["colon_fence", "deflist", "substitution"]
 
 myst_substitutions = {
     "loremipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "

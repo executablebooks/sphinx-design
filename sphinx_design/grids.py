@@ -6,12 +6,12 @@ from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
-from sphinx_design.cards import CardDirective
-
+from .cards import CardDirective
 from .shared import (
     WARNING_TYPE,
     create_component,
     is_component,
+    make_choice,
     margin_option,
     padding_option,
     text_align,
@@ -81,7 +81,7 @@ def row_columns_option(argument: Optional[str]) -> List[str]:
 def item_columns_option(argument: Optional[str]) -> List[str]:
     """Validate the number of columns (out of 12) a grid-item will take up.
 
-    One or four integers (for "xs sm md lg") between 1 and 12.
+    One or four integers (for "xs sm md lg") between 1 and 12 (or 'auto').
     """
     return _media_option(argument, "sd-col-", allow_auto=True)
 
@@ -106,6 +106,7 @@ class GridDirective(SphinxDirective):
         "margin": margin_option,
         "padding": padding_option,
         "text-align": text_align,
+        "outline": directives.flag,
         "class-container": directives.class_option,
         "class-row": directives.class_option,
     }
@@ -120,9 +121,10 @@ class GridDirective(SphinxDirective):
         container = create_component(
             "grid-container",
             grid_classes
-            + self.options.get("margin", [])
-            + self.options.get("padding", ["sd-pb-4"])
+            + self.options.get("margin", ["sd-mb-4"])
+            + self.options.get("padding", [])
             + self.options.get("text-align", [])
+            + (["sd-border"] if "outline" in self.options else [])
             + self.options.get("class-container", []),
         )
         self.set_source_info(container)
@@ -161,6 +163,7 @@ class GridItemDirective(SphinxDirective):
         "columns": item_columns_option,
         "margin": margin_option,
         "padding": padding_option,
+        "outline": directives.flag,
         "text-align": text_align,
         "class": directives.class_option,
     }
@@ -185,6 +188,7 @@ class GridItemDirective(SphinxDirective):
             + self.options.get("margin", [])
             + self.options.get("padding", [])
             + self.options.get("text-align", [])
+            + (["sd-border"] if "outline" in self.options else [])
             + self.options.get("class", []),
         )
         self.set_source_info(column)
@@ -206,8 +210,9 @@ class GridItemCardDirective(SphinxDirective):
         "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
+        "link": directives.uri,
+        "link-type": make_choice(["url", "any", "ref", "doc"]),
         "no-shadow": directives.flag,
-        "hover": directives.flag,
         "class-item": directives.class_option,
         "class-card": directives.class_option,
         "class-body": directives.class_option,
@@ -245,8 +250,9 @@ class GridItemCardDirective(SphinxDirective):
                 "text-align",
                 "img-top",
                 "img-bottom",
+                "link",
+                "link-type",
                 "no-shadow",
-                "hover",
                 "class-card",
                 "class-body",
                 "class-title",
@@ -254,7 +260,7 @@ class GridItemCardDirective(SphinxDirective):
                 "class-footer",
             ]
         }
-        card_options["width"] = "100"
+        card_options["width"] = "100%"
         card_options["margin"] = []
         card = CardDirective.create_card(self, self.arguments, card_options)
         column += card

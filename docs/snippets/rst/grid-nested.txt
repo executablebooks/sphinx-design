@@ -1,0 +1,34 @@
+.. grid:: 1 1 2 2
+    :gutter: 1
+
+    .. grid-item::
+
+        .. grid:: 1 1 1 1
+            :gutter: 1
+
+            .. grid-item-card:: Item 1.1
+
+                Multi-line
+
+                content
+
+            .. grid-item-card:: Item 1.2
+
+                Content
+
+    .. grid-item::
+
+        .. grid:: 1 1 1 1
+            :gutter: 1
+
+            .. grid-item-card:: Item 2.1
+
+                Content
+
+            .. grid-item-card:: Item 2.2
+
+                Content
+
+            .. grid-item-card:: Item 2.3
+
+                Content

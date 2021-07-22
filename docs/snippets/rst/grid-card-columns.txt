@@ -1,0 +1,16 @@
+.. grid:: 2
+
+    .. grid-item-card::
+        :columns: auto
+
+        A
+
+    .. grid-item-card::
+        :columns: 12 6 6 6
+
+        B
+
+    .. grid-item-card::
+        :columns: 12
+
+        C

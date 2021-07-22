@@ -16,6 +16,7 @@ LOGGER = getLogger(__name__)
 def setup_tabs(app: Sphinx) -> None:
     app.add_directive("tab-set", TabSetDirective)
     app.add_directive("tab-item", TabItemDirective)
+    app.add_directive("tab-set-code", TabSetCodeDirective)
     app.add_post_transform(TabSetHtmlTransform)
     app.add_node(sd_tab_input, html=(visit_tab_input, depart_tab_input))
     app.add_node(sd_tab_label, html=(visit_tab_label, depart_tab_label))
@@ -35,6 +36,7 @@ class TabSetDirective(SphinxDirective):
         tab_set = create_component(
             "tab-set", classes=["sd-tab-set"] + self.options.get("class", [])
         )
+        self.set_source_info(tab_set)
         self.state.nested_parse(self.content, self.content_offset, tab_set)
         for item in tab_set.children:
             if not is_component(item, "tab-item"):
@@ -96,7 +98,7 @@ class TabItemDirective(SphinxDirective):
         )
 
         # add tab label
-        textnodes, messages = self.state.inline_text(self.arguments[0], self.lineno)
+        textnodes, _ = self.state.inline_text(self.arguments[0], self.lineno)
         tab_label = nodes.rubric(
             self.arguments[0],
             *textnodes,
@@ -116,6 +118,58 @@ class TabItemDirective(SphinxDirective):
         tab_item += tab_content
 
         return [tab_item]
+
+
+class TabSetCodeDirective(SphinxDirective):
+    """A container for a set of tab items, generated from code blocks."""
+
+    has_content = True
+    option_spec = {
+        "no-sync": directives.flag,
+        "class-set": directives.class_option,
+        "class-item": directives.class_option,
+    }
+
+    def run(self) -> List[nodes.Node]:
+        """Run the directive."""
+        self.assert_has_content()
+        tab_set = create_component(
+            "tab-set", classes=["sd-tab-set"] + self.options.get("class-set", [])
+        )
+        self.set_source_info(tab_set)
+        self.state.nested_parse(self.content, self.content_offset, tab_set)
+        new_children = []
+        for item in tab_set.children:
+            if not isinstance(item, nodes.literal_block):
+                LOGGER.warning(
+                    f"All children of a 'tab-code-set' "
+                    f"should be a 'literal_block' [{WARNING_TYPE}.tab_code]",
+                    location=tab_set,
+                    type=WARNING_TYPE,
+                    subtype="tab_code",
+                )
+                continue
+            language = item.get("language", "unknown")
+            tab_label = nodes.rubric(
+                language.upper(),
+                nodes.Text(language.upper()),
+                classes=["sd-tab-label"] + self.options.get("class-label", []),
+            )
+            if "no-sync" not in self.options:
+                tab_label["sync_id"] = f"tabcode-{language}"
+            tab_content = create_component(
+                "tab-content",
+                children=[item],
+                classes=["sd-tab-content"] + self.options.get("class-content", []),
+            )
+            tab_item = create_component(
+                "tab-item",
+                children=[tab_label, tab_content],
+                classes=["sd-tab-item"] + self.options.get("class-item", []),
+            )
+            new_children.append(tab_item)
+        tab_set.children = new_children
+        return [tab_set]
 
 
 class sd_tab_input(nodes.Element, nodes.General):
@@ -157,7 +211,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
     def get_unique_key(self):
         return str(uuid4())
 
-    def apply(self) -> None:
+    def run(self) -> None:
         """Run the transform."""
         for tab_set in self.document.traverse(
             lambda node: is_component(node, "tab-set")
@@ -167,7 +221,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
             # get the first selected node
             selected_idx = None
             for idx, tab_item in enumerate(tab_set.children):
-                if tab_item["selected"]:
+                if tab_item.get("selected", False):
                     if selected_idx is None:
                         selected_idx = idx
                     else:
@@ -180,7 +234,11 @@ class TabSetHtmlTransform(SphinxPostTransform):
             selected_idx = 0 if selected_idx is None else selected_idx
 
             for idx, tab_item in enumerate(tab_set.children):
-                tab_label, tab_content = tab_item.children
+                try:
+                    tab_label, tab_content = tab_item.children
+                except ValueError:
+                    print(tab_item)
+                    raise
                 tab_item_identity = self.get_unique_key()
 
                 # create: <input checked="checked" id="id" type="radio">

@@ -39,6 +39,8 @@ class ArticleInfoDirective(SphinxDirective):
         else:
             text_nodes, _ = self.state.inline_text(text, self.lineno)
             text_nodes = ([icon] if icon else []) + text_nodes
+            # note certain nodes (like references) need to be nested in a TextElement node
+            # (e.g. a pargraph)
             para = nodes.paragraph("", "", *text_nodes, classes=["sd-p-0", "sd-m-0"])
             self.set_source_info(para)
             output = [para]
@@ -74,6 +76,7 @@ class ArticleInfoDirective(SphinxDirective):
 
         avatar_uri = self.options.get("avatar")
         if avatar_uri:
+            # TODO only in html (hide in latex)
             avatar_column = create_component(
                 "grid-item",
                 ["sd-col", "sd-col-auto", "sd-d-flex", "sd-align-items-center"],

@@ -1,0 +1,21 @@
+::::{grid} 2
+:gutter: 1
+
+:::{grid-item-card}
+A
+:::
+:::{grid-item-card}
+B
+:::
+::::
+
+::::{grid} 2
+:gutter: 3 3 4 5
+
+:::{grid-item-card}
+A
+:::
+:::{grid-item-card}
+B
+:::
+::::
