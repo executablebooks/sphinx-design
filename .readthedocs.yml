@@ -11,6 +11,7 @@ python:
         path: .
         extra_requirements:
           - rtd
+          - theme_sbt
 
 sphinx:
   builder: html
