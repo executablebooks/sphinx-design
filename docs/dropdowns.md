@@ -2,7 +2,9 @@
 
 # Dropdowns
 
-Dropdowns can be used to hide, usually *non-essential*, content and show it only when a user clicks on the header panel.
+Dropdowns can be used to toggle, usually *non-essential*, content and show it only when a user clicks on the header panel.
+
+The dropdown can have a title, as the directive argument, and the `open` option can be used to initialise the dropdown in the open state.
 
 :::{dropdown}
 Dropdown content
@@ -39,17 +41,13 @@ Use `:animate: fade-in` or `:animate: fade-in-slide-down` options to animate the
 :::{dropdown} Dropdown `fade-in`
 :animate: fade-in
 
-Dropdown
-
-content
+{{ loremipsum }}
 :::
 
 :::{dropdown} Dropdown `fade-in-slide-down`
 :animate: fade-in-slide-down
 
-Dropdown
-
-content
+{{ loremipsum }}
 :::
 
 ## Dropdowns in other components

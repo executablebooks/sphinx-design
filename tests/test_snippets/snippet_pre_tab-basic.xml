@@ -1,0 +1,17 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container classes="sd-tab-set" design_component="tab-set" is_div="True">
+            <container classes="sd-tab-item" design_component="tab-item" is_div="True" selected="False">
+                <rubric classes="sd-tab-label">
+                    Label1
+                <container classes="sd-tab-content" design_component="tab-content" is_div="True">
+                    <paragraph>
+                        Content 1
+            <container classes="sd-tab-item" design_component="tab-item" is_div="True" selected="False">
+                <rubric classes="sd-tab-label">
+                    Label2
+                <container classes="sd-tab-content" design_component="tab-content" is_div="True">
+                    <paragraph>
+                        Content 2

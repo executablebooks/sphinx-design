@@ -76,7 +76,7 @@ class TabItemDirective(SphinxDirective):
         "selected": directives.flag,
         "sync": directives.unchanged_required,
         "name": directives.unchanged,
-        "class": directives.class_option,
+        "class-container": directives.class_option,
         "class-label": directives.class_option,
         "class-content": directives.class_option,
     }
@@ -93,7 +93,7 @@ class TabItemDirective(SphinxDirective):
             )
         tab_item = create_component(
             "tab-item",
-            classes=["sd-tab-item"] + self.options.get("class", []),
+            classes=["sd-tab-item"] + self.options.get("class-container", []),
             selected=("selected" in self.options),
         )
 
