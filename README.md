@@ -71,3 +71,9 @@ horizontal card (grid row inside card, picture on left)
 horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)
 
 div directive
+
+subtitle for card (see <https://material.io/components/cards#anatomy>)
+
+paragraph and tab-set in grid-item
+
+finalise/document tab-set-code

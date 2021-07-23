@@ -2,15 +2,16 @@
 
 # Cards
 
-A card is a flexible and extensible content container.
-It can be formatted with components including headers and footers, titles and images.
+Cards contain content and actions about a single subject.
+A card is a flexible and extensible content container,
+it can be formatted with components including headers and footers, titles and images.
 
 :::{card} Card Title
 
 Card content
 :::
 
-See the [Bootstrap card](https://getbootstrap.com/docs/5.0/layout/grid/) for further details.
+See the [Material Design](https://material.io/components/cards) and [Bootstrap card](https://getbootstrap.com/docs/5.0/layout/grid/) descriptions for further details.
 
 `````{dropdown} Syntax
 :icon: code

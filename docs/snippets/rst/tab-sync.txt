@@ -1,0 +1,23 @@
+.. tab-set::
+
+    .. tab-item:: Label1
+        :sync: key1
+
+        Content 1
+
+    .. tab-item:: Label2
+        :sync: key2
+
+        Content 2
+
+.. tab-set::
+
+    .. tab-item:: Label1
+        :sync: key1
+
+        Content 1
+
+    .. tab-item:: Label2
+        :sync: key2
+
+        Content 2
