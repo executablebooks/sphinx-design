@@ -48,6 +48,11 @@ This package is an iteration on sphinx-panels and intends to replace it.
 
 ## TODO
 
+- note design goal; to be flexible, but limit the amount of directive nesting required.
+  This factors in to
+  - card header/footer syntax? (don't really want to have to use separate directives for these, hence `^^^`/`+++` syntax)
+  - auto-wrap `grid-item` and `tab-item`, if not already inside `grid` or `tab-set`?
+
 note that directly using classes should be used as a "last resort",
 and to please open an issue if you find you are commonly using a certain class.
 
@@ -57,11 +62,7 @@ naming of directives/roles: standard prefix?
 
 why are cards setup with "word-wrap: break-word;"?
 
-check grid-items and tab-items are inside parents (or auto-wrap?)
-
 handle latex
-
-card header/footer syntax?
 
 Use autoprefixer when compiling SASS (see <https://getbootstrap.com/docs/5.0/getting-started/browsers-devices/#supported-browsers>)
 
@@ -69,8 +70,4 @@ horizontal card (grid row inside card, picture on left)
 
 horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)
 
-from inline-tabs:
-
-- **Elegant design**: Small footprint in the markup and generated website, while looking good.
-- **Configurable**: All the colors can be configured using CSS variables.
-- **Works without JavaScript**: JavaScript is not required for "essential" functionality, only for tab synchronisation.
+div directive
