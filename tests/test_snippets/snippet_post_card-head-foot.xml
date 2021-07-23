@@ -1,0 +1,16 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow" design_component="card" is_div="True">
+            <container classes="sd-card-header" design_component="card-header" is_div="True">
+                <paragraph classes="sd-card-text">
+                    Header
+            <container classes="sd-card-body" design_component="card-body" is_div="True">
+                <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
+                    Card Title
+                <paragraph classes="sd-card-text">
+                    Card content
+            <container classes="sd-card-footer" design_component="card-footer" is_div="True">
+                <paragraph classes="sd-card-text">
+                    Footer

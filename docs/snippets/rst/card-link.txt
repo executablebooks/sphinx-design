@@ -1,0 +1,15 @@
+.. _cards-clickable:
+
+Cards Clickable
+...............
+
+.. card:: Clickable Card (external)
+    :link: https://example.com
+
+    The entire card can be clicked to navigate to https://example.com.
+
+.. card:: Clickable Card (internal)
+    :link: cards-clickable
+    :link-type: ref
+
+    The entire card can be clicked to navigate to the ``cards`` reference target.
