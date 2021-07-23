@@ -11,6 +11,7 @@ from sphinx_design.shared import (
     create_component,
     is_component,
     make_choice,
+    margin_option,
 )
 
 from .icons import get_octicon, list_octicons
@@ -75,6 +76,7 @@ class DropdownDirective(SphinxDirective):
         "color": make_choice(SEMANTIC_COLORS),
         "icon": make_choice(list_octicons()),
         "animate": make_choice(("fade-in", "fade-in-slide-down")),
+        "margin": margin_option,
         "name": directives.unchanged,
         "class-container": directives.class_option,
         "class-title": directives.class_option,
@@ -85,7 +87,8 @@ class DropdownDirective(SphinxDirective):
         """Run the directive"""
         # default classes
         classes = {
-            "container_classes": self.options.get("class-container", ["sd-mb-3"]),
+            "container_classes": self.options.get("margin", ["sd-mb-3"])
+            + self.options.get("class-container", []),
             "title_classes": self.options.get("class-title", []),
             "body_classes": self.options.get("class-body", []),
         }

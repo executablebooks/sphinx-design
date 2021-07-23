@@ -123,6 +123,9 @@ The entire card can be clicked to navigate to the `cards-clickable` reference ta
 
 ## Aligning cards
 
+You can use the `text-align` option to align the text in a card,
+and also `auto` margins to align the cards horizontally.
+
 :::{card} Align Center
 :width: 75%
 :margin: 0 2 auto auto
