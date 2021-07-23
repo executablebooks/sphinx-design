@@ -1,0 +1,30 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <target refid="cards-clickable">
+        <section ids="cards-clickable id1" names="cards\ clickable cards-clickable">
+            <title>
+                Cards Clickable
+            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow sd-card-hover" design_component="card" is_div="True">
+                <container classes="sd-card-body" design_component="card-body" is_div="True">
+                    <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
+                        Clickable Card (external)
+                    <paragraph classes="sd-card-text">
+                        The entire card can be clicked to navigate to 
+                        <reference refuri="https://example.com">
+                            https://example.com
+                        .
+                <PassthroughTextElement>
+                    <reference classes="sd-stretched-link" refuri="https://example.com">
+            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow sd-card-hover" design_component="card" is_div="True">
+                <container classes="sd-card-body" design_component="card-body" is_div="True">
+                    <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
+                        Clickable Card (internal)
+                    <paragraph classes="sd-card-text">
+                        The entire card can be clicked to navigate to the 
+                        <literal>
+                            cards
+                         reference target.
+                <PassthroughTextElement>
+                    <pending_xref classes="sd-stretched-link" refdoc="index" refdomain="std" refexplicit="True" reftarget="cards-clickable" reftype="ref" refwarn="True">

@@ -10,7 +10,23 @@ It can be formatted with components including headers and footers, titles and im
 Card content
 :::
 
-All content before the first occurrence three or more `^^^` is considered as a header,
+See the [Bootstrap card](https://getbootstrap.com/docs/5.0/layout/grid/) for further details.
+
+`````{dropdown} Syntax
+:icon: code
+:color: light
+
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/card-basic.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/card-basic.txt
+:language: rst
+```
+````
+`````
+
+All content before the first occurrence of three or more `^^^` is considered as a header,
 and all content after the final occurrence of three or more `+++` is considered as a footer:
 
 :::{card} Card Title
@@ -21,19 +37,42 @@ Card content
 Footer
 :::
 
-:::{card} Clickable Card (external)
-:link: https://example.com
+`````{dropdown} Syntax
+:icon: code
+:color: light
 
-The entire card can be clicked to navigate to <https://example.com>.
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/card-head-foot.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/card-head-foot.txt
+:language: rst
+```
+````
+`````
+
+When using cards in grids (see [`grid-item-card`](./grids.md)) footers can be aligned.
+
+::::{grid} 2
+:::{grid-item-card} Card Title
+Header
+^^^
+Card content
++++
+Footer
 :::
+:::{grid-item-card} Card Title
+Header
+^^^
+Longer
 
-:::{card} Clickable Card (internal)
-:link: cards
-:link-type: ref
-
-The entire card can be clicked to navigate to the `cards` reference target.
+Card content
++++
+Footer
 :::
+::::
 
+You can also add images to the top and bottom of the card, with the `img-top` and `img-bottom` options:
 
 ::::{grid} 1 2 2 2
 :::{grid-item-card} Card Title
@@ -48,6 +87,41 @@ Footer
 :::
 ::::
 
+(cards-clickable)=
+
+## Clickable cards
+
+Using the `link` and `link-type` options, you can turn an entire card into a clickable link.
+Try hovering over then clicking on the cards below:
+
+:::{card} Clickable Card (external)
+:link: https://example.com
+
+The entire card can be clicked to navigate to <https://example.com>.
+:::
+
+:::{card} Clickable Card (internal)
+:link: cards-clickable
+:link-type: ref
+
+The entire card can be clicked to navigate to the `cards-clickable` reference target.
+:::
+
+`````{dropdown} Syntax
+:icon: code
+:color: light
+
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/card-link.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/card-link.txt
+:language: rst
+```
+````
+`````
+
+## Aligning cards
 
 :::{card} Align Center
 :width: 75%
@@ -72,8 +146,6 @@ Content
 
 Content
 :::
-
-See the [Bootstrap card](https://getbootstrap.com/docs/5.0/layout/grid/) for further details.
 
 ## `card` options
 
