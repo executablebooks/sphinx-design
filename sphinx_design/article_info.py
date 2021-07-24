@@ -6,7 +6,7 @@ from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
 from .icons import get_octicon
-from .shared import create_component
+from .shared import SEMANTIC_COLORS, create_component, make_choice
 
 
 def setup_article_info(app: Sphinx):
@@ -24,10 +24,12 @@ class ArticleInfoDirective(SphinxDirective):
         "avatar": directives.uri,
         "avatar-alt": directives.unchanged,
         "avatar-link": directives.uri,
+        "avatar-outline": make_choice(SEMANTIC_COLORS),
         "author": directives.unchanged_required,
         "date": directives.unchanged_required,
         "read-time": directives.unchanged_required,
-        "class": directives.class_option,
+        "class-container": directives.class_option,
+        "class-avatar": directives.class_option,
     }
 
     def _parse_text(
@@ -59,17 +61,13 @@ class ArticleInfoDirective(SphinxDirective):
                 "sd-mt-2",
                 "sd-mb-4",
             ]
-            + self.options.get("class", []),
+            + self.options.get("class-container", []),
         )
         self.set_source_info(top_grid)
 
         top_row = create_component(
             "grid-row",
-            [
-                "sd-row",
-                "sd-row-cols-2",
-                "sd-g-1",
-            ],
+            ["sd-row", "sd-row-cols-2", "sd-gx-2", "sd-gy-1"],
         )
         self.set_source_info(top_row)
         top_grid += top_row
@@ -82,11 +80,16 @@ class ArticleInfoDirective(SphinxDirective):
                 ["sd-col", "sd-col-auto", "sd-d-flex", "sd-align-items-center"],
             )
             self.set_source_info(avatar_column)
+            avatar_classes = ["sd-avatar-sm"]
+            if "avatar-outline" in self.options:
+                avatar_classes.append(f"sd-outline-{self.options['avatar-outline']}")
+            if "class-avatar" in self.options:
+                avatar_classes += self.options["class-avatar"]
             avatar_image = nodes.image(
                 "",
                 uri=avatar_uri,
                 alt=self.options.get("avatar-alt", ""),
-                classes=["sd-avatar-sm"],
+                classes=avatar_classes,
             )
             self.set_source_info(avatar_image)
             if self.options.get("avatar-link"):

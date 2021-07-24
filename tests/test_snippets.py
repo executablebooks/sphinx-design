@@ -14,6 +14,7 @@ SNIPPETS_GLOB_MYST = list((SNIPPETS_PATH / "myst").glob("[!_]*"))
 def write_assets(src_path: Path):
     """Write additional assets to the src directory."""
     src_path.joinpath("snippet.py").write_text("a = 1")
+    src_path.joinpath("ebp-logo.png").touch()
 
 
 @pytest.mark.parametrize(
