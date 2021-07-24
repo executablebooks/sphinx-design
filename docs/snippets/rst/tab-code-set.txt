@@ -1,0 +1,8 @@
+.. tab-set-code::
+
+    .. literalinclude:: ./snippet.py
+        :language: python
+
+    .. code-block:: javascript
+
+        a = 1;

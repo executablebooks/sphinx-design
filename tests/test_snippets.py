@@ -11,6 +11,11 @@ SNIPPETS_GLOB_RST = list((SNIPPETS_PATH / "rst").glob("[!_]*"))
 SNIPPETS_GLOB_MYST = list((SNIPPETS_PATH / "myst").glob("[!_]*"))
 
 
+def write_assets(src_path: Path):
+    """Write additional assets to the src directory."""
+    src_path.joinpath("snippet.py").write_text("a = 1")
+
+
 @pytest.mark.parametrize(
     "path",
     SNIPPETS_GLOB_RST,
@@ -23,6 +28,7 @@ def test_snippets_rst(
     builder = sphinx_builder()
     content = "Heading\n-------" + "\n\n" + path.read_text(encoding="utf8")
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
+    write_assets(builder.src_path)
     builder.build()
     file_regression.check(
         builder.get_doctree("index").pformat(),
@@ -44,6 +50,7 @@ def test_snippets_myst(
     builder = sphinx_builder()
     content = "# Heading" + "\n\n\n" + path.read_text(encoding="utf8")
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
+    write_assets(builder.src_path)
     builder.build()
     file_regression.check(
         builder.get_doctree("index").pformat(),
@@ -65,6 +72,7 @@ def test_snippets_rst_post(
     builder = sphinx_builder()
     content = "Heading\n-------" + "\n\n" + path.read_text(encoding="utf8")
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
+    write_assets(builder.src_path)
     builder.build()
     file_regression.check(
         builder.get_doctree("index", post_transforms=True).pformat(),
@@ -86,6 +94,7 @@ def test_snippets_myst_post(
     builder = sphinx_builder()
     content = "# Heading" + "\n\n\n" + path.read_text(encoding="utf8")
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
+    write_assets(builder.src_path)
     builder.build()
     file_regression.check(
         builder.get_doctree("index", post_transforms=True).pformat(),
