@@ -1,0 +1,1 @@
+A coloured icon: :octicon-16:`report;sd-text-info`, some more text.

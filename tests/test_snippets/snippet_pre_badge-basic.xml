@@ -1,0 +1,55 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge">
+                plain badge
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary">
+                primary
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">
+                primary-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">
+                secondary
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">
+                secondary-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-success sd-bg-text-success">
+                success
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-success sd-text-success">
+                success-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-info sd-bg-text-info">
+                info
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-info sd-text-info">
+                info-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">
+                warning
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">
+                warning-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-danger sd-bg-text-danger">
+                danger
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-danger sd-text-danger">
+                danger-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-light sd-bg-text-light">
+                light
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-light sd-text-light">
+                light-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-dark sd-bg-text-dark">
+                dark
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-dark sd-text-dark">
+                dark-line

@@ -1,0 +1,24 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <paragraph>
+            <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
+                <inline>
+                    https://example.com
+        <paragraph>
+            <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
+                Button text
+        <paragraph>
+            <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow" refuri="https://example.com">
+                <inline>
+                    https://example.com
+        <paragraph>
+            <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary" refuri="https://example.com">
+                <inline>
+                    https://example.com
+        <paragraph>
+            <inline classes="sd-d-grid">
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary" refuri="https://example.com">
+                    <inline>
+                        https://example.com

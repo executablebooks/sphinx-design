@@ -1,0 +1,1 @@
+An icon :fas:`spinner;sd-bg-primary sd-bg-text-primary`, some more text.

@@ -142,6 +142,7 @@ class _ButtonDirective(SphinxDirective):
         # make parent also clickable
         "click-parent": directives.flag,
         "tooltip": directives.unchanged_required,
+        "shadow": directives.flag,
         "class": directives.class_option,
     }
 
@@ -163,6 +164,8 @@ class _ButtonDirective(SphinxDirective):
                 classes.append(f"sd-btn-{self.options['color']}")
         if "click-parent" in self.options:
             classes.append("sd-stretched-link")
+        if "shadow" in self.options:
+            classes.append("sd-shadow")
         if "class" in self.options:
             classes.extend(self.options["class"])
         node = self.create_ref_node(rawtext, target, bool(self.content), classes)

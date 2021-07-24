@@ -9,10 +9,12 @@ except ImportError:
     import importlib_resources as resources  # type: ignore[no-redef]
 
 from docutils import nodes
+from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
-from sphinx.util.docutils import SphinxRole
+from sphinx.util.docutils import SphinxDirective, SphinxRole
 
 from . import compiled
+from .shared import make_choice
 
 OCTICON_VERSION = "0.0.0-dd899ea"
 
@@ -27,6 +29,7 @@ OCTICON_CSS = """\
 def setup_icons(app: Sphinx) -> None:
     app.add_role("octicon-16", OcticonRole(16))
     app.add_role("octicon-24", OcticonRole(24))
+    app.add_directive("_all-octicon", AllOcticons)
     for style in ["fa", "fas", "fab"]:
         # note: fa is deprecated in v5, fas is the default and fab is the other free option
         app.add_role(style, FontawesomeRole(style))
@@ -49,9 +52,13 @@ def get_octicon_data() -> Dict[str, Any]:
     return json.loads(content)
 
 
-def list_octicons() -> List[str]:
+def list_octicons(size: int = 16) -> List[str]:
     """List available octicon names."""
-    return list(get_octicon_data().keys())
+    return [
+        key
+        for key, data in get_octicon_data().items()
+        if str(size) in data.get("heights", [])
+    ]
 
 
 def get_octicon(
@@ -118,13 +125,47 @@ class OcticonRole(SphinxRole):
             svg = get_octicon(icon, size=self.size, classes=classes)
         except KeyError:
             msg = self.inliner.reporter.error(
-                f"Unknown octicon name: {icon}", line=self.lineno
+                f"Unknown octicon name: {icon}",
+                line=self.lineno,
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
             return [prb], [msg]
         node = nodes.raw("", nodes.Text(svg), format="html")
         self.set_source_info(node)
         return [node], []
+
+
+class AllOcticons(SphinxDirective):
+    """Directive to generate all octicon icons.
+
+    Primarily for self documentation.
+    """
+
+    option_spec = {
+        "size": make_choice(["16", "24"]),
+        "class": directives.class_option,
+    }
+
+    def run(self) -> List[nodes.Node]:
+        """Run the directive."""
+        size = int(self.options.get("size", "16"))
+        classes = " ".join(self.options.get("class", []))
+        list_node = nodes.bullet_list()
+        for icon in list_octicons(size):
+            item_node = nodes.list_item()
+            item_node.extend(
+                (
+                    nodes.literal(icon, icon),
+                    nodes.Text(": "),
+                    nodes.raw(
+                        "",
+                        nodes.Text(get_octicon(icon, size=size, classes=classes)),
+                        format="html",
+                    ),
+                )
+            )
+            list_node += item_node
+        return [list_node]
 
 
 class fontawesome(nodes.Element, nodes.General):

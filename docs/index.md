@@ -30,7 +30,7 @@ grids
 cards
 dropdowns
 tabs
-other
+badges_buttons
 ```
 
 ```{toctree}
@@ -77,7 +77,7 @@ Synchronisable, tabbed content sets.
 :::
 
 :::{grid-item-card} {octicon-16}`plus-circle` Badges, Buttons & Icons
-:link: other
+:link: badges_buttons
 :link-type: doc
 
 Roles and directives for {bdg-primary}`badges` and other components.
