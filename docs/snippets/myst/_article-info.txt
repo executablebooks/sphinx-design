@@ -1,7 +1,0 @@
-```{article-info}
-:avatar: images/mugshot.jpeg
-:avatar-link: https://github.com/chrisjsewell
-:author: "[Chris Sewell](https://github.com/chrisjsewell)"
-:date: "{sub-ref}`today`"
-:read-time: "{sub-ref}`wordcount-minutes` min read"
-```

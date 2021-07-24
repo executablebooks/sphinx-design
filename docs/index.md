@@ -31,6 +31,7 @@ cards
 dropdowns
 tabs
 badges_buttons
+additional
 ```
 
 ```{toctree}
