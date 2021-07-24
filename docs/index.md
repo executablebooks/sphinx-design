@@ -88,6 +88,21 @@ Roles and directives for {bdg-primary}`badges` and other components.
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
+## Usage
+
+Simply pip install `sphinx-design` and add the extension to your `conf.py`:
+
+```python
+extensions = ["sphinx_design"]
+```
+
+For using with [MyST Parser](https://github.com/executablebooks/myst-parser), for Markdown documentation, it is recommended to use the `colon_fence` syntax extension:
+
+```python
+extensions = ["myst_parser", "sphinx_design"]
+myst_enable_extensions = ["colon_fence"]
+```
+
 ## Supported browsers
 
 - Chrome >= 60
