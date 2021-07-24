@@ -83,6 +83,32 @@ Content 2
 ````
 `````
 
+## Tabbed code examples
+
+The `tab-set-code` directive provides a shorthand for synced code examples.
+You can place any directives in a `tab-set-code` that produce a `literal_block` node with a `language` attribute, for example `code`, `code-block` and `literalinclude`.
+Tabs will be labelled and synchronised by the `language` attribute (in upper-case).
+
+```````{tab-set}
+
+``````{tab-item} Markdown
+:sync: markdown
+
+````{literalinclude} ./snippets/myst/tab-code-set.txt
+:language: markdown
+````
+``````
+
+``````{tab-item} RST
+:sync: rst
+
+````{literalinclude} ./snippets/rst/tab-code-set.txt
+:language: rst
+````
+``````
+
+```````
+
 ## Tabs in other components
 
 Tabs can be nested inside other components, such as inside [dropdowns](./dropdowns.md) or within [grid items](./grids.md).

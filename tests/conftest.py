@@ -46,13 +46,14 @@ class SphinxBuilder:
         if post_transforms:
             self.app.env.apply_post_transforms(doctree, docname)
         # make source path consistent for test comparisons
-        doctree["source"] = (
-            Path(doctree["source"]).relative_to(self.src_path).as_posix()
-        )
-        if doctree["source"].endswith(".rst"):
-            doctree["source"] = doctree["source"][:-4]
-        elif doctree["source"].endswith(".md"):
-            doctree["source"] = doctree["source"][:-3]
+        for node in doctree.traverse(include_self=True):
+            if not ("source" in node and node["source"]):
+                continue
+            node["source"] = Path(node["source"]).relative_to(self.src_path).as_posix()
+            if node["source"].endswith(".rst"):
+                node["source"] = node["source"][:-4]
+            elif node["source"].endswith(".md"):
+                node["source"] = node["source"][:-3]
         # remove mathjax classes added by myst parser
         if doctree.children and isinstance(doctree.children[0], nodes.section):
             doctree.children[0]["classes"] = []
