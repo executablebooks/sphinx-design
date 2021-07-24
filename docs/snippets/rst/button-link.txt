@@ -1,0 +1,17 @@
+.. button-link:: https://example.com
+
+.. button-link:: https://example.com
+
+    Button text
+
+.. button-link:: https://example.com
+    :color: primary
+    :shadow:
+
+.. button-link:: https://example.com
+    :color: primary
+    :outline:
+
+.. button-link:: https://example.com
+    :color: secondary
+    :expand:

@@ -1,0 +1,8 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <paragraph>
+            An icon 
+            <fontawesome classes="fas fa-spinner sd-bg-primary sd-bg-text-primary" icon="spinner">
+            , some more text.

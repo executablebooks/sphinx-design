@@ -1,0 +1,12 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <paragraph>
+            <reference classes="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary" refuri="https://example.com">
+                <inline>
+                    https://example.com
+        <paragraph>
+            <reference classes="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary" refuri="https://example.com">
+                <inline>
+                    explicit title
