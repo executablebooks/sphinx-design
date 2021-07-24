@@ -35,6 +35,13 @@ additional
 ```
 
 ```{toctree}
+:caption: Styling
+:hidden:
+
+css
+```
+
+```{toctree}
 :caption: Themes
 :hidden:
 
@@ -82,6 +89,13 @@ Synchronisable, tabbed content sets.
 :link-type: doc
 
 Roles and directives for {bdg-primary}`badges` and other components.
+:::
+
+:::{grid-item-card} {octicon-16}`image` CSS Styling
+:link: css
+:link-type: doc
+
+Change the default colors and other CSS.
 :::
 
 ::::
