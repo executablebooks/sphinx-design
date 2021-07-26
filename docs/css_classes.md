@@ -254,7 +254,7 @@ These classes center an image, set their size and add a circular crop:
 - `sd-avatar-lg`
 - `sd-avatar-xl`
 
-````{grid} 1 2 3 5
+````{grid} 1 2 3 3
 :gutter: 1
 
 ```{grid-item-card} sd-avatar-xs
