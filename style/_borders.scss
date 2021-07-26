@@ -1,0 +1,58 @@
+$borders: (
+  0: 0,
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px,
+);
+
+@each $name, $value in $borders {
+  .sd-border-#{$name} {
+    border: $value solid !important;
+  }
+  .sd-border-top-#{$name} {
+    border-top: $value solid !important;
+  }
+  .sd-border-bottom-#{$name} {
+    border-bottom: $value solid !important;
+  }
+  .sd-border-right-#{$name} {
+    border-right: $value solid !important;
+  }
+  .sd-border-left-#{$name} {
+    border-left: $value solid !important;
+  }
+}
+
+$rounded: (
+  0: 0,
+  1: 0.2rem,
+  2: 0.3rem,
+  3: 0.5rem,
+  pill: 50rem,
+  circle: 50%,
+);
+
+@each $name, $value in $rounded {
+  .sd-rounded-#{$name} {
+    border-radius: $value !important;
+  }
+}
+
+// shadows
+.shadow-none {
+  box-shadow: none !important;
+}
+
+.sd-shadow-sm {
+  box-shadow: 0 .125rem 0.25rem var(--sd-color-shadow) !important;
+}
+
+.sd-shadow-md {
+  box-shadow: 0 .5rem 1rem var(--sd-color-shadow) !important;
+}
+
+.sd-shadow-lg {
+  box-shadow: 0 1rem 3rem var(--sd-color-shadow) !important;
+}

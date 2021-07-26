@@ -6,7 +6,7 @@
         <section ids="cards-clickable id1" names="cards\ clickable cards-clickable">
             <title>
                 Cards Clickable
-            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow sd-card-hover" design_component="card" is_div="True">
+            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
                         Clickable Card (external)
@@ -17,7 +17,7 @@
                         .
                 <PassthroughTextElement>
                     <reference classes="sd-stretched-link" refuri="https://example.com">
-            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow sd-card-hover" design_component="card" is_div="True">
+            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
                         Clickable Card (internal)

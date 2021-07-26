@@ -175,8 +175,8 @@ link
 link-type
 : Type of link: `url` (default), `ref`, `doc`, `any`.
 
-no-shadow
-: Do not draw a shadow around the card.
+shadow
+: The size of the shadow below the card: `none`, `sm` (default), `md`, `lg`.
 
 class-card
 : Additional CSS classes for the card container element.

@@ -38,7 +38,8 @@ additional
 :caption: Styling
 :hidden:
 
-css
+css_variables
+css_classes
 ```
 
 ```{toctree}
@@ -92,7 +93,7 @@ Roles and directives for {bdg-primary}`badges` and other components.
 :::
 
 :::{grid-item-card} {octicon-16}`image` CSS Styling
-:link: css
+:link: css_variables
 :link-type: doc
 
 Change the default colors and other CSS.

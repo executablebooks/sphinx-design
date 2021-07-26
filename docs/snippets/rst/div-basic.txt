@@ -1,0 +1,3 @@
+.. div:: sd-text-center sd-font-italic sd-text-primary
+
+    Some CSS styled text

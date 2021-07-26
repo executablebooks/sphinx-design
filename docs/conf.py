@@ -16,7 +16,7 @@ if html_theme == "alabaster":
     ]
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-myst_enable_extensions = ["colon_fence", "deflist", "substitution"]
+myst_enable_extensions = ["colon_fence", "deflist", "substitution", "html_image"]
 
 myst_substitutions = {
     "loremipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "

@@ -44,10 +44,6 @@ $semantic-colors: (
   @return if(lightness($value) > 70, $gray-900, $white);
 }
 
-.sd-bg-transparent {
-  background-color: transparent !important;
-}
-
 @each $color, $value in $semantic-colors {
   .sd-bg-#{$color} {
     background-color: var(--sd-color-#{$color}) !important;
@@ -94,6 +90,13 @@ $semantic-colors: (
   }
 }
 
-.sd-shadow {
-  box-shadow: 0 .5rem 1rem var(--sd-color-shadow) !important;
+// transparent color
+.sd-bg-transparent {
+  background-color: transparent !important;
+}
+.sd-outline-transparent {
+  border-color: transparent !important;
+}
+.sd-text-transparent {
+  color: transparent !important;
 }

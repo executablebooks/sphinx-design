@@ -7,7 +7,7 @@ These are additional components that are not part of the standard Materials Desi
 ## `article-info`
 
 This directive is used to display a block of information about an article,
-normally positioned just below the title of the article (show below with non-standard outline).
+normally positioned just below the title of the article (shown below with non-standard outline).
 
 ```{article-info}
 :avatar: images/ebp-logo.png
@@ -45,7 +45,7 @@ so you can use substitutions like:
 ### options
 
 avatar
-: A URI (relative file path or URL) to an image for use as the avatar.
+: A URI (relative file path or URL) to an image for use as the avatar (a user portrait, logo or branded graphic).
 
 avatar-alt
 : Alternative text for the avatar.
