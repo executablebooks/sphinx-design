@@ -2,7 +2,7 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <container classes="sd-container-fluid sd-sphinx-override sd-mb-4 sd-border" design_component="grid-container" is_div="True">
+        <container classes="sd-container-fluid sd-sphinx-override sd-mb-4 sd-border-1" design_component="grid-container" is_div="True">
             <container classes="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-4" design_component="grid-row" is_div="True">
                 <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
                     <paragraph>

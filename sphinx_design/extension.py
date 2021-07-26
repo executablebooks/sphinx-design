@@ -8,8 +8,10 @@ except ImportError:
     import importlib_resources as resources  # type: ignore[no-redef]
 
 from docutils import nodes
+from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
+from sphinx.util.docutils import SphinxDirective
 
 from . import compiled as static_module
 from .article_info import setup_article_info
@@ -18,7 +20,7 @@ from .cards import setup_cards
 from .dropdown import setup_dropdown
 from .grids import setup_grids
 from .icons import setup_icons
-from .shared import PassthroughTextElement
+from .shared import PassthroughTextElement, create_component
 from .tabs import setup_tabs
 
 
@@ -39,6 +41,9 @@ def setup_extension(app: Sphinx) -> None:
         man=(visit_depart_null, visit_depart_null),
         texinfo=(visit_depart_null, visit_depart_null),
     )
+    app.add_directive(
+        "div", Div, override=True
+    )  # override sphinx-panels implementation
     setup_badges_and_buttons(app)
     setup_cards(app)
     setup_grids(app)
@@ -98,3 +103,32 @@ def depart_container(self, node: nodes.Node):
 
 def visit_depart_null(self, node: nodes.Element) -> None:
     """visit/depart passthrough"""
+
+
+class Div(SphinxDirective):
+    """Same as the ``container`` directive, but does not add the ``container`` class in HTML outputs,
+    which can interfere with Bootstrap CSS.
+    """
+
+    optional_arguments = 1  # css classes
+    final_argument_whitespace = True
+    option_spec = {"name": directives.unchanged}
+    has_content = True
+
+    def run(self):
+        self.assert_has_content()
+        try:
+            if self.arguments:
+                classes = directives.class_option(self.arguments[0])
+            else:
+                classes = []
+        except ValueError:
+            raise self.error(
+                'Invalid class attribute value for "%s" directive: "%s".'
+                % (self.name, self.arguments[0])
+            )
+        node = create_component("div", rawtext="\n".join(self.content), classes=classes)
+        self.set_source_info(node)
+        self.add_name(node)
+        self.state.nested_parse(self.content, self.content_offset, node)
+        return [node]

@@ -31,19 +31,4 @@ a.sd-badge {
   top: -1px;
 }
 
-$rounded: (
-  0: 0,
-  1: 0.2rem,
-  2: 0.25rem,
-  3: 0.3rem,
-  pill: 50rem,
-  circle: 50%,
-);
-
-@each $name, $value in $rounded {
-  .sd-rounded-#{$name} {
-    border-radius: $value !important;
-  }
-}
-
 // note badge colors were removed in v5

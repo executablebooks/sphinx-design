@@ -165,7 +165,7 @@ class _ButtonDirective(SphinxDirective):
         if "click-parent" in self.options:
             classes.append("sd-stretched-link")
         if "shadow" in self.options:
-            classes.append("sd-shadow")
+            classes.append("sd-shadow-sm")
         if "class" in self.options:
             classes.extend(self.options["class"])
         node = self.create_ref_node(rawtext, target, bool(self.content), classes)

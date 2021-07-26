@@ -50,7 +50,7 @@ This package is an iteration on sphinx-panels and intends to replace it.
   - `tabbed` -> `tab-item`
   - include `:sync:` option to synchronize tab selection across sets
 - Minimises direct use of CSS classes (encourage to not use them)
-  - More declarative, easy to understand options
+  - More declarative, easy to understand options, easier to validate
   - Easier to work with non-HTML outputs
   - Easier to improve/refactor
 - Updated Bootstrap CSS v4 -> v5
@@ -65,9 +65,6 @@ This package is an iteration on sphinx-panels and intends to replace it.
   - card header/footer syntax? (don't really want to have to use separate directives for these, hence `^^^`/`+++` syntax)
   - auto-wrap `grid-item` and `tab-item`, if not already inside `grid` or `tab-set`?
 
-note that directly using classes should be used as a "last resort",
-and to please open an issue if you find you are commonly using a certain class.
-
 grids items cannot contain headers; is this in anyway possible with docutils structure?
 
 naming of directives/roles: standard prefix?
@@ -81,8 +78,6 @@ Use autoprefixer when compiling SASS (see <https://getbootstrap.com/docs/5.0/get
 horizontal card (grid row inside card, picture on left)
 
 horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)
-
-div directive
 
 subtitle for card (see <https://material.io/components/cards#anatomy>)
 

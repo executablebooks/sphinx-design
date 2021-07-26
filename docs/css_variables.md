@@ -8,6 +8,15 @@ html_static_path = ['_static']
 html_css_files = ['custom.css']
 ```
 
+For colors, there are nine semantic colors that can be defined.
+For each of these colors you should define:
+
+- `--sd-color-{name}` as the actual color
+- `--sd-color-{name}-highlight` as the color used when the component is highlighted
+  (e.g. if hovering over a button). By default, this is a 15% darker version of the original color.
+- `--sd-color-{name}-text` as the color to use for text displayed on top of the color.
+  By default, this is dark grey for light colors and white for dark colors.
+
 The defaults are:
 
 ```css

@@ -10,7 +10,7 @@
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
                 Button text
         <paragraph>
-            <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow" refuri="https://example.com">
+            <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow-sm" refuri="https://example.com">
                 <inline>
                     https://example.com
         <paragraph>

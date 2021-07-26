@@ -52,7 +52,7 @@ class CardDirective(SphinxDirective):
         "img-bottom": directives.uri,
         "link": directives.uri,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
-        "no-shadow": directives.flag,
+        "shadow": make_choice(["none", "sm", "md", "lg"]),
         "class-card": directives.class_option,
         "class-header": directives.class_option,
         "class-body": directives.class_option,
@@ -74,8 +74,7 @@ class CardDirective(SphinxDirective):
         if "width" in options:
             card_classes += [f'sd-w-{options["width"].rstrip("%")}']
         card_classes += options.get("margin", ["sd-mb-3"])
-        if "no-shadow" not in options:
-            card_classes += ["sd-shadow"]
+        card_classes += [f"sd-shadow-{options.get('shadow', 'sm')}"]
         if "link" in options:
             card_classes += ["sd-card-hover"]
         card = create_component(

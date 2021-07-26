@@ -1,0 +1,7 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container classes="sd-text-center sd-font-italic sd-text-primary" design_component="div" is_div="True">
+            <paragraph>
+                Some CSS styled text

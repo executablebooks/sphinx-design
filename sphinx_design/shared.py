@@ -24,12 +24,13 @@ def create_component(
     name: str,
     classes: Sequence[str] = (),
     *,
+    rawtext: str = "",
     children: Sequence[nodes.Node] = (),
     **attributes,
 ) -> nodes.container:
     """Create a container node for a design component."""
     node = nodes.container(
-        "", is_div=True, design_component=name, classes=list(classes), **attributes
+        rawtext, is_div=True, design_component=name, classes=list(classes), **attributes
     )
     node.extend(children)
     return node

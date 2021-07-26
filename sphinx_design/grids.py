@@ -124,7 +124,7 @@ class GridDirective(SphinxDirective):
             + self.options.get("margin", ["sd-mb-4"])
             + self.options.get("padding", [])
             + self.options.get("text-align", [])
-            + (["sd-border"] if "outline" in self.options else [])
+            + (["sd-border-1"] if "outline" in self.options else [])
             + self.options.get("class-container", []),
         )
         self.set_source_info(container)
@@ -188,7 +188,7 @@ class GridItemDirective(SphinxDirective):
             + self.options.get("margin", [])
             + self.options.get("padding", [])
             + self.options.get("text-align", [])
-            + (["sd-border"] if "outline" in self.options else [])
+            + (["sd-border-1"] if "outline" in self.options else [])
             + self.options.get("class", []),
         )
         self.set_source_info(column)
@@ -212,7 +212,7 @@ class GridItemCardDirective(SphinxDirective):
         "img-bottom": directives.uri,
         "link": directives.uri,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
-        "no-shadow": directives.flag,
+        "shadow": make_choice(["none", "sm", "md", "lg"]),
         "class-item": directives.class_option,
         "class-card": directives.class_option,
         "class-body": directives.class_option,
@@ -252,7 +252,7 @@ class GridItemCardDirective(SphinxDirective):
                 "img-bottom",
                 "link",
                 "link-type",
-                "no-shadow",
+                "shadow",
                 "class-card",
                 "class-body",
                 "class-title",

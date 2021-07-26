@@ -2,7 +2,7 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow" design_component="card" is_div="True">
+        <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
             <container classes="sd-card-header" design_component="card-header" is_div="True">
                 <paragraph classes="sd-card-text">
                     Header
