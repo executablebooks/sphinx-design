@@ -90,7 +90,7 @@ Padding (`p`) and margins (`m`) can be controlled with these classes for; (`t`)o
 
 Spacing are defined on a scale of 0 to 5, for example `sd-px-1` or `sd-mt-5`.
 
-Note, for grids the special gutter classes `sd-g-{screen-size}-{spacing}` are used to set margins.
+Note, for grids the special gutter classes `sd-g-{screen-size}-{spacing}` are used to set margins, or for only `x`/`y`; `sd-gx-{screen-size}-{spacing}`.
 
 ## Colors
 
