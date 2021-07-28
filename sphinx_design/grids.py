@@ -73,9 +73,9 @@ def _media_option(
 def row_columns_option(argument: Optional[str]) -> List[str]:
     """Validate the number of columns (out of 12) a grid row will have.
 
-    One or four integers (for "xs sm md lg") between 1 and 12.
+    One or four integers (for "xs sm md lg") between 1 and 12  (or 'auto').
     """
-    return _media_option(argument, "sd-row-cols-")
+    return _media_option(argument, "sd-row-cols-", allow_auto=True)
 
 
 def item_columns_option(argument: Optional[str]) -> List[str]:

@@ -23,7 +23,7 @@ Some CSS styled text
 ````
 `````
 
-If you find yourself using a class(es) often, consider openeing an issue to request a new role/directive or option!
+If you find yourself using a class(es) often, consider opening an issue to request a new role/directive or option!
 
 ## Text
 

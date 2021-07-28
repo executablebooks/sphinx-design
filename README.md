@@ -87,6 +87,8 @@ rtd PRs not working
 
 size octicons to 1rem etc
 
+empty grid item
+
 [github-ci]: https://github.com/executablebooks/sphinx-design/workflows/continuous-integration/badge.svg?branch=main
 [github-link]: https://github.com/executablebooks/sphinx-design
 [codecov-badge]: https://codecov.io/gh/executablebooks/sphinx-design/branch/main/graph/badge.svg
