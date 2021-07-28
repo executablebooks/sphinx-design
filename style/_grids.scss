@@ -81,6 +81,11 @@ $gutter-widths: $spacings;
   -ms-flex: 1 0 0%;
 }
 
+.sd-row-cols-auto > * {
+  flex: 0 0 auto;
+  width: auto;
+}
+
 @for $i from 1 through 12 {
   .sd-row-cols-#{$i} {
     > * {

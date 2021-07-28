@@ -41,6 +41,30 @@ D
 ````
 `````
 
+You can also use the `auto` value for the column width(s), to size columns based on the natural width of their content.
+
+::::{grid} auto
+
+:::{grid-item}
+:outline:
+:padding: 2
+
+short text content
+:::
+:::{grid-item}
+:outline:
+:padding: 2
+
+some longer text content
+:::
+:::{grid-item}
+:outline:
+:padding: 2
+
+short text content
+:::
+::::
+
 The `grid-item-card` directive is a short-hand for placing a card content container inside a grid item (see [Cards](./cards.md)). Most of the `card` directive's options can be used also here:
 
 ::::{grid} 2

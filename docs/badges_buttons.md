@@ -166,13 +166,13 @@ A coloured icon: :octicon-16:`report;sd-text-info`, some more text.
 ```
 ````
 
-````{Dropdown} All Octicons (16px)
+````{dropdown} All Octicons (16px)
 ```{_all-octicon}
 :size: 16
 ```
 ````
 
-````{Dropdown} All Octicons (24px)
+````{dropdown} All Octicons (24px)
 ```{_all-octicon}
 :size: 24
 ```
