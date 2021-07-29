@@ -1,1 +1,1 @@
-A coloured icon: {octicon-16}`report;sd-text-info`, some more text.
+A coloured icon: {octicon}`report;1em;sd-text-info`, some more text.

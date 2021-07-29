@@ -1,6 +1,7 @@
 import json
+import re
 from functools import lru_cache
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 try:
     import importlib.resources as resources
@@ -14,7 +15,6 @@ from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective, SphinxRole
 
 from . import compiled
-from .shared import make_choice
 
 OCTICON_VERSION = "0.0.0-dd899ea"
 
@@ -27,8 +27,7 @@ OCTICON_CSS = """\
 
 
 def setup_icons(app: Sphinx) -> None:
-    app.add_role("octicon-16", OcticonRole(16))
-    app.add_role("octicon-24", OcticonRole(24))
+    app.add_role("octicon", OcticonRole())
     app.add_directive("_all-octicon", AllOcticons)
     for style in ["fa", "fas", "fab"]:
         # note: fa is deprecated in v5, fas is the default and fab is the other free option
@@ -52,50 +51,57 @@ def get_octicon_data() -> Dict[str, Any]:
     return json.loads(content)
 
 
-def list_octicons(size: int = 16) -> List[str]:
+def list_octicons() -> List[str]:
     """List available octicon names."""
-    return [
-        key
-        for key, data in get_octicon_data().items()
-        if str(size) in data.get("heights", [])
-    ]
+    return list(get_octicon_data().keys())
+
+
+HEIGHT_REGEX = re.compile(r"^(?P<value>\d+)(?P<unit>px|em|rem)$")
 
 
 def get_octicon(
     name: str,
-    classes: Optional[str] = None,
-    width: Optional[Union[int, float]] = None,
-    height: Optional[Union[int, float]] = None,
+    height: str = "1em",
+    classes: Sequence[str] = (),
     aria_label: Optional[str] = None,
-    size: int = 16,
 ) -> str:
-    """Return the HTML for an GitHub octicon SVG icon."""
-    assert size in [16, 24], "size must be 16 or 24"
+    """Return the HTML for an GitHub octicon SVG icon.
+
+    :height: the height of the octicon, with suffix unit 'px', 'em' or 'rem'.
+    """
     try:
         data = get_octicon_data()[name]
     except KeyError:
         raise KeyError(f"Unrecognised octicon: {name}")
 
-    content = data["heights"][str(size)]["path"]
+    match = HEIGHT_REGEX.match(height)
+    if not match:
+        raise ValueError(
+            f"Invalid height: '{height}', must be format <integer><px|em|rem>"
+        )
+    height_value = int(match.group("value"))
+    height_unit = match.group("unit")
+
+    original_height = 16
+    if "16" not in data["heights"]:
+        original_height = int(list(data["heights"].keys())[0])
+    elif "24" in data["heights"]:
+        if height_unit == "px":
+            if height_value >= 24:
+                original_height = 24
+        elif height_value >= 1.5:
+            original_height = 24
+    original_width = data["heights"][str(original_height)]["width"]
+    width_value = round(original_width * height_value / original_height, 2)
+    content = data["heights"][str(original_height)]["path"]
     options = {
         "version": "1.1",
-        "width": data["heights"][str(size)]["width"],
-        "height": int(size),
-        "class": f"sd-octicon sd-octicon-{name}",
+        "width": f"{width_value}{height_unit}",
+        "height": f"{height_value}{height_unit}",
+        "class": " ".join(("sd-octicon", f"sd-octicon-{name}", *classes)),
     }
 
-    if width is not None or height is not None:
-        if width is None and height is not None:
-            width = round((int(height) * options["width"]) / options["height"], 2)
-        if height is None and width is not None:
-            height = round((int(width) * options["height"]) / options["width"], 2)
-        options["width"] = width
-        options["height"] = height
-
-    options["viewBox"] = f'0 0 {options["width"]} {options["height"]}'
-
-    if classes is not None:
-        options["class"] += " " + classes.strip()
+    options["viewBox"] = f"0 0 {original_width} {original_height}"
 
     if aria_label is not None:
         options["aria-label"] = aria_label
@@ -113,19 +119,18 @@ class OcticonRole(SphinxRole):
     Additional classes can be added to the element after a semicolon.
     """
 
-    def __init__(self, size: int) -> None:
-        super().__init__()
-        self.size = size
-
     def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
         """Run the role."""
-        icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
+        values = self.text.split(";") if ";" in self.text else [self.text]
+        icon = values[0]
+        height = "1em" if len(values) < 2 else values[1]
+        classes = "" if len(values) < 3 else values[2]
         icon = icon.strip()
         try:
-            svg = get_octicon(icon, size=self.size, classes=classes)
-        except KeyError:
+            svg = get_octicon(icon, height=height, classes=classes.split())
+        except Exception as exc:
             msg = self.inliner.reporter.error(
-                f"Unknown octicon name: {icon}",
+                f"Invalid octicon content: {exc}",
                 line=self.lineno,
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
@@ -142,16 +147,14 @@ class AllOcticons(SphinxDirective):
     """
 
     option_spec = {
-        "size": make_choice(["16", "24"]),
         "class": directives.class_option,
     }
 
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
-        size = int(self.options.get("size", "16"))
-        classes = " ".join(self.options.get("class", []))
+        classes = self.options.get("class", [])
         list_node = nodes.bullet_list()
-        for icon in list_octicons(size):
+        for icon in list_octicons():
             item_node = nodes.list_item()
             item_node.extend(
                 (
@@ -159,7 +162,7 @@ class AllOcticons(SphinxDirective):
                     nodes.Text(": "),
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon(icon, size=size, classes=classes)),
+                        nodes.Text(get_octicon(icon, classes=classes)),
                         format="html",
                     ),
                 )
