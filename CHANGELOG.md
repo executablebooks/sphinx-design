@@ -1,13 +1,16 @@
 # Change Log
 
+## v0.0.5 - 2021-28-07
+
+👌 IMPROVE: Make octicon's size variable
+
 ## v0.0.4 - 2021-28-07
 
 👌 IMPROVE: Allow `auto` for grid columns.
 
 ## v0.0.3 - 2021-26-07
 
-- Add more CSS classes 👌
-- Improve documentation 📚
+👌 IMPROVE: Add more CSS classes and add documentation 📚
 
 ## v0.0.2 - 2021-23-07
 
