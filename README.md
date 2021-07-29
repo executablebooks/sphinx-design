@@ -31,7 +31,7 @@ extensions = ["sphinx_design"]
 
 View the documentation in multiple themes:
 
-- [alabaster](https://sphinx-design.readthedocs.io/en/latest)
+- [alabaster](https://sphinx-design.readthedocs.io/en/alabaster-theme)
 - [sphinx-book-theme](https://sphinx-design.readthedocs.io/en/sbt-theme)
 - [pydata-sphinx-theme](https://sphinx-design.readthedocs.io/en/pydata-theme)
 - [sphinx-rtd-theme](https://sphinx-design.readthedocs.io/en/rtd-theme)
