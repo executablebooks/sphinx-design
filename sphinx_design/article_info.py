@@ -154,7 +154,7 @@ class ArticleInfoDirective(SphinxDirective):
             self.set_source_info(date_column)
             date_icon = nodes.raw(
                 "",
-                nodes.Text(get_octicon("calendar", size=16)),
+                nodes.Text(get_octicon("calendar", height="16px")),
                 classes=["sd-pr-2"],
                 format="html",
             )
@@ -171,7 +171,7 @@ class ArticleInfoDirective(SphinxDirective):
             self.set_source_info(read_time_column)
             read_time_icon = nodes.raw(
                 "",
-                nodes.Text(get_octicon("clock", size=16)),
+                nodes.Text(get_octicon("clock", height="16px")),
                 classes=["sd-pr-2"],
                 format="html",
             )

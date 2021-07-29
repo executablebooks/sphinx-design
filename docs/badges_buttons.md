@@ -1,4 +1,4 @@
-# Badges, Buttons & Icons
+# Badges, Buttons & Icons {octicon}`rocket`
 
 (badges)=
 
@@ -152,29 +152,27 @@ class
 
 Inline icon roles are available for both the [GitHub octicon](https://octicons-git-v2.primer.now.sh/octicons/) or [FontAwesome](https://fontawesome.com/icons?d=gallery&m=free) libraries.
 
-Octicon icons are added as SVG's directly into the page, for either 16px (`octicon-16`) or 24px (`octicon-24`) sizes.
-Additional CSS classes can be added to the SVG after a semi-colon (`;`) delimiter.
+Octicon icons are added as SVG's directly into the page with the `octicon` role.
 
-A coloured icon: {octicon-16}`report;sd-text-info`, some more text.
+By default the icon will be of height `1em` (i.e. the height of the font).
+A specific height can be set after a semi-colon (`;`) with units of either `px`, `em` or `rem`.
+Additional CSS classes can also be added to the SVG after a second semi-colon (`;`) delimiter.
+
+A coloured icon: {octicon}`report;1em;sd-text-info`, some more text.
 
 ````{tab-set-code}
-```markdown
-A coloured icon: {octicon-16}`report;sd-text-info`, some more text.
+```{literalinclude} ./snippets/myst/icon-octicon.txt
+:language: markdown
 ```
-```rst
-A coloured icon: :octicon-16:`report;sd-text-info`, some more text.
-```
-````
-
-````{dropdown} All Octicons (16px)
-```{_all-octicon}
-:size: 16
+```{literalinclude} ./snippets/rst/icon-octicon.txt
+:language: rst
 ```
 ````
 
-````{dropdown} All Octicons (24px)
+````{dropdown} All Octicons
+:open:
+
 ```{_all-octicon}
-:size: 24
 ```
 ````
 

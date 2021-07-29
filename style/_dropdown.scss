@@ -45,7 +45,7 @@ details.sd-dropdown {
   }
 
   .sd-summary-icon {
-    margin-right: 0.5rem;
+    margin-right: 0.5em;
   }
 
   .sd-summary-icon svg {
@@ -105,6 +105,10 @@ details.sd-dropdown {
 
 .sd-col > .sd-dropdown {
   width: 100%;
+}
+
+.sd-summary-content > .sd-tab-set:first-child {
+  margin-top: 0;
 }
 
 @keyframes sd-fade-in {

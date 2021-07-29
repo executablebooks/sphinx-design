@@ -126,7 +126,7 @@ class DropdownDirective(SphinxDirective):
 
 
 # Note the custom octicon here has thicker dots than:
-# get_octicon("kebab-horizontal", classes="no-title", size=24)
+# get_octicon("kebab-horizontal", classes=["no-title"])
 KEBAB = """\
 <svg viewBox="0 0 36 24" width="36" height="16" xmlns="http://www.w3.org/2000/svg"
     class="octicon no-title" aria-hidden="true">
@@ -165,7 +165,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=[
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon("chevron-up", size=24)),
+                        nodes.Text(get_octicon("chevron-up", height="24px")),
                         format="html",
                     )
                 ],
@@ -176,7 +176,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=[
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon("chevron-down", size=24)),
+                        nodes.Text(get_octicon("chevron-down", height="24px")),
                         format="html",
                     )
                 ],
@@ -206,7 +206,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                     0,
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon(node["icon"], size=16)),
+                        nodes.Text(get_octicon(node["icon"], height="1em")),
                         classes=["sd-summary-icon"],
                         format="html",
                     ),

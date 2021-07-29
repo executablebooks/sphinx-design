@@ -151,6 +151,8 @@ Content
 Content
 :::
 
+(cards:options)=
+
 ## `card` options
 
 width

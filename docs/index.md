@@ -57,42 +57,42 @@ furo <https://sphinx-design.readthedocs.io/en/furo-theme>
 :margin: 4 4 0 0
 :gutter: 1
 
-:::{grid-item-card} {octicon-16}`table` Grids
+:::{grid-item-card} {octicon}`table` Grids
 :link: grids
 :link-type: doc
 
 Screen size adaptable grid layouts.
 :::
 
-:::{grid-item-card} {octicon-16}`note` Cards
+:::{grid-item-card} {octicon}`note` Cards
 :link: cards
 :link-type: doc
 
 Flexible and extensible content containers.
 :::
 
-:::{grid-item-card} {octicon-16}`chevron-down` Dropdowns
+:::{grid-item-card} {octicon}`chevron-down` Dropdowns
 :link: dropdowns
 :link-type: doc
 
 Hide content in expandable containers.
 :::
 
-:::{grid-item-card} {octicon-16}`duplicate` Tabs
+:::{grid-item-card} {octicon}`duplicate` Tabs
 :link: tabs
 :link-type: doc
 
 Synchronisable, tabbed content sets.
 :::
 
-:::{grid-item-card} {octicon-16}`plus-circle` Badges, Buttons & Icons
+:::{grid-item-card} {octicon}`plus-circle` Badges, Buttons & Icons
 :link: badges_buttons
 :link-type: doc
 
 Roles and directives for {bdg-primary}`badges` and other components.
 :::
 
-:::{grid-item-card} {octicon-16}`image` CSS Styling
+:::{grid-item-card} {octicon}`image` CSS Styling
 :link: css_variables
 :link-type: doc
 

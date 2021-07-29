@@ -287,3 +287,22 @@ text-align
 
 class
 : Additional CSS classes for the grid item element.
+
+## `grid-item-card` options
+
+columns
+: The number of columns (out of 12) a grid-item will take up.
+  One or four integers (for "xs sm md lg") between 1 and 12 (or `auto` to adapt to the content).
+
+margin
+: Outer margin of grid item.
+  One (all) or four (top bottom left right) values from: 0, 1, 2, 3, 4, 5, auto.
+
+padding
+: Inner padding of grid item.
+  One (all) or four (top bottom left right) values from: 0, 1, 2, 3, 4, 5.
+
+class-item
+: Additional CSS classes for the grid item element.
+
+Plus all options from [](cards:options).
