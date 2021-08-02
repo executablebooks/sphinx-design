@@ -11,7 +11,7 @@ exclude: >
 repos:
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
+    rev: v4.0.1
     hooks:
     - id: check-json
     - id: check-yaml
@@ -26,29 +26,29 @@ repos:
       additional_dependencies: [setuptools>=46.4.0]
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.8.0
+    rev: 5.9.3
     hooks:
     - id: isort
 
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.7b0
     hooks:
     - id: black
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.4
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
     hooks:
     - id: flake8
       additional_dependencies: [flake8-bugbear==21.3.1]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.790
+    rev: v0.910
     hooks:
     - id: mypy
       additional_dependencies: []
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v1.16.0
+    rev: v1.17.0
     hooks:
     - id: setup-cfg-fmt
 
