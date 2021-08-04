@@ -113,7 +113,12 @@ class GridDirective(SphinxDirective):
 
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
-        column_classes = row_columns_option(self.arguments[0]) if self.arguments else []
+        try:
+            column_classes = (
+                row_columns_option(self.arguments[0]) if self.arguments else []
+            )
+        except ValueError as exc:
+            raise self.error(f"Invalid directive argument: {exc}")
         self.assert_has_content()
         # container-fluid is 100% width for all breakpoints,
         # rather than the fixed width of the breakpoint (like container)
@@ -170,7 +175,6 @@ class GridItemDirective(SphinxDirective):
 
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
-        self.assert_has_content()
         if not is_component(self.state_machine.node, "grid-row"):
             LOGGER.warning(
                 f"The parent of a 'grid-item' should be a 'grid-row' [{WARNING_TYPE}.grid]",
@@ -223,7 +227,6 @@ class GridItemCardDirective(SphinxDirective):
 
     def run(self) -> List[nodes.Node]:
         """Run the directive."""
-        self.assert_has_content()
         if not is_component(self.state_machine.node, "grid-row"):
             LOGGER.warning(
                 f"The parent of a 'grid-item' should be a 'grid-row' [{WARNING_TYPE}.grid]",

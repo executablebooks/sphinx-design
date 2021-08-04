@@ -7,16 +7,22 @@ from docutils.statemachine import StringList
 from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
+from sphinx.util.logging import getLogger
 
 from .shared import (
+    WARNING_TYPE,
     PassthroughTextElement,
     create_component,
+    is_component,
     make_choice,
     margin_option,
     text_align,
 )
 
+LOGGER = getLogger(__name__)
+
 DIRECTIVE_NAME_CARD = "card"
+DIRECTIVE_NAME_CAROUSEL = "card-carousel"
 REGEX_HEADER = re.compile(r"^\^{3,}\s*$")
 REGEX_FOOTER = re.compile(r"^\+{3,}\s*$")
 
@@ -24,6 +30,7 @@ REGEX_FOOTER = re.compile(r"^\+{3,}\s*$")
 def setup_cards(app: Sphinx) -> None:
     """Setup the card components."""
     app.add_directive(DIRECTIVE_NAME_CARD, CardDirective)
+    app.add_directive(DIRECTIVE_NAME_CAROUSEL, CardCarouselDirective)
 
 
 class CardContent(NamedTuple):
@@ -61,7 +68,6 @@ class CardDirective(SphinxDirective):
     }
 
     def run(self) -> List[nodes.Node]:
-        self.assert_has_content()
         return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
@@ -214,3 +220,42 @@ class CardDirective(SphinxDirective):
         #     title["classes"] = ([] if "classes" not in title else title["classes"]) + [
         #         "sd-card-title"
         #     ]
+
+
+class CardCarouselDirective(SphinxDirective):
+    """A component, which is a container for cards in a single scrollable row."""
+
+    has_content = True
+    required_arguments = 1  # columns
+    optional_arguments = 0
+    option_spec = {
+        "class": directives.class_option,
+    }
+
+    def run(self) -> List[nodes.Node]:
+        """Run the directive."""
+        self.assert_has_content()
+        try:
+            cols = make_choice([str(i) for i in range(1, 13)])(
+                self.arguments[0].strip()
+            )
+        except ValueError as exc:
+            raise self.error(f"Invalid directive argument: {exc}")
+        container = create_component(
+            "card-carousel",
+            ["sd-sphinx-override", "sd-cards-carousel", f"sd-card-cols-{cols}"]
+            + self.options.get("class", []),
+        )
+        self.set_source_info(container)
+        self.state.nested_parse(self.content, self.content_offset, container)
+        for item in container.children:
+            if not is_component(item, "card"):
+                LOGGER.warning(
+                    "All children of a 'card-carousel' "
+                    f"should be 'card' [{WARNING_TYPE}.card]",
+                    location=item,
+                    type=WARNING_TYPE,
+                    subtype="card",
+                )
+                break
+        return [container]

@@ -1,0 +1,19 @@
+.. card-carousel:: 2
+
+    .. card:: card 1
+
+        content
+
+    .. card:: card 2
+
+        Longer
+
+        content
+
+    .. card:: card 3
+
+    .. card:: card 4
+
+    .. card:: card 5
+
+    .. card:: card 6

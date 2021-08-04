@@ -77,17 +77,11 @@ Use autoprefixer when compiling SASS (see <https://getbootstrap.com/docs/5.0/get
 
 horizontal card (grid row inside card, picture on left)
 
-horizontally scrollable cards: (see <https://stackoverflow.com/questions/35993300/horizontally-scrollable-list-of-cards-in-bootstrap>)
-
 subtitle for card (see <https://material.io/components/cards#anatomy>)
 
 paragraph and tab-set in grid-item
 
 rtd PRs not working
-
-size octicons to 1rem etc
-
-empty grid item
 
 [github-ci]: https://github.com/executablebooks/sphinx-design/workflows/continuous-integration/badge.svg?branch=main
 [github-link]: https://github.com/executablebooks/sphinx-design
