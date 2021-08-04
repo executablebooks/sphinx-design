@@ -151,6 +151,49 @@ Content
 Content
 :::
 
+(cards:carousel)=
+
+## Card carousels
+
+The `card-carousel` directive can be used to create a single row of fixed width, scrollable cards.
+The argument should be a number between 1 and 12, to denote the number of cards to display.
+
+When scrolling a carousel, the scroll will snap to the start of the nearest card:
+
+::::{card-carousel} 2
+
+:::{card} card 1
+content
+:::
+:::{card} card 2
+Longer
+
+content
+:::
+:::{card} card 3
+:::
+:::{card} card 4
+:::
+:::{card} card 5
+:::
+:::{card} card 6
+:::
+::::
+
+`````{dropdown} Syntax
+:icon: code
+:color: light
+
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/card-carousel.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/card-carousel.txt
+:language: rst
+```
+````
+`````
+
 (cards:options)=
 
 ## `card` options

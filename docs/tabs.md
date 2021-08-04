@@ -167,6 +167,11 @@ Content 2
 
 ::::::
 
+## `tab-set` options
+
+class
+: Additional CSS classes for the container element.
+
 ## `tab-item` options
 
 selected

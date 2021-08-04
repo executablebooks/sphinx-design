@@ -2,6 +2,7 @@
 // Copyright 2011-2019 The Bootstrap Authors
 // Copyright 2011-2019 Twitter, Inc.
 // Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+@use 'sass:math';
 
 .sd-card {
   background-clip: border-box;
@@ -113,4 +114,44 @@
 .sd-card-img-bottom {
   border-bottom-left-radius: calc(0.25rem - 1px);
   border-bottom-right-radius: calc(0.25rem - 1px);
+}
+
+// sd-cards-carousel is not part of bootstrap
+// it is intended to create a single row of scrollable cards
+// with a standard width for each card
+
+.sd-cards-carousel {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  overflow-x: hidden;
+  scroll-snap-type: x mandatory;
+}
+
+// use to always show the scroll bar
+.sd-cards-carousel.sd-show-scrollbar {
+  overflow-x: auto;
+}
+
+.sd-cards-carousel:hover, .sd-cards-carousel:focus {
+  overflow-x: auto;
+}
+
+.sd-cards-carousel > .sd-card {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.sd-cards-carousel > .sd-card:not(:last-child) {
+  margin-right: 3px;
+}
+
+@for $i from 1 through 12 {
+  .sd-card-cols-#{$i} > .sd-card {
+    // we use less than 100% here, so that the (i+1)th card will be slightly visible,
+    // so the user is aware that there are more cards available
+    width: math.div(90%, $i);
+  }
 }
