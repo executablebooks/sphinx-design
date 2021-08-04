@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.0.6 - 2021-04-08
+
+✨ NEW: Add `card-carousel` directive
+
 ## v0.0.5 - 2021-28-07
 
 👌 IMPROVE: Make octicon's size variable
