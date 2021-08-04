@@ -1,4 +1,4 @@
-# sphinx-design (IN-DEVELOPMENT)
+# sphinx-design
 
 [![Github-CI][github-ci]][github-link]
 [![Coverage Status][codecov-badge]][codecov-link]
