@@ -6,7 +6,7 @@ from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.util.docutils import ReferenceRole, SphinxDirective, SphinxRole
 
-from sphinx_design.shared import SEMANTIC_COLORS, make_choice
+from sphinx_design.shared import SEMANTIC_COLORS, make_choice, text_align
 
 ROLE_NAME_BADGE_PREFIX = "bdg"
 ROLE_NAME_LINK_PREFIX = "bdg-link"
@@ -137,6 +137,7 @@ class _ButtonDirective(SphinxDirective):
     option_spec = {
         "color": make_choice(SEMANTIC_COLORS),
         "outline": directives.flag,
+        "align": text_align,
         # expand to fit parent width
         "expand": directives.flag,
         # make parent also clickable
@@ -188,7 +189,7 @@ class _ButtonDirective(SphinxDirective):
             node = grid_container
 
         # `visit_reference` requires that a reference be inside a `TextElement` parent
-        container = nodes.paragraph()
+        container = nodes.paragraph(classes=self.options.get("align", []))
         self.set_source_info(container)
         container += node
 

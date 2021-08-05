@@ -24,6 +24,7 @@ A sphinx extension for designing beautiful, screen-size responsive web-component
 
 ```{button-ref} get_started
 :color: primary
+:align: center
 :class: sd-fs-5
 
 Get Started

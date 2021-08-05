@@ -131,6 +131,9 @@ color
 outline
 : Outline color variant
 
+align
+: Align the button on the page; left, right, center or justify
+
 expand
 : Expand to fit parent width
 
