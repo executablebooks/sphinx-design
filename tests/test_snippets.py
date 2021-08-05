@@ -103,3 +103,20 @@ def test_snippets_myst_post(
         extension=".xml",
         encoding="utf8",
     )
+
+
+def test_sd_hide_root_title(
+    sphinx_builder: Callable[..., SphinxBuilder], file_regression
+):
+    """Test that the root title is hidden."""
+    builder = sphinx_builder(
+        conf_kwargs={"extensions": ["sphinx_design"], "sd_hide_root_title": True}
+    )
+    content = "Heading\n-------" + "\n\ncontent"
+    builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
+    builder.build()
+    file_regression.check(
+        builder.get_doctree("index", post_transforms=False).pformat(),
+        extension=".xml",
+        encoding="utf8",
+    )

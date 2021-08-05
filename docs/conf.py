@@ -37,7 +37,7 @@ if html_theme == "sphinx_book_theme":
         "use_issues_button": True,
         "repository_branch": "main",
         "path_to_docs": "docs",
-        "home_page_in_toc": True,
+        "home_page_in_toc": False,
         "logo_only": True,
     }
 if html_theme == "furo":
@@ -65,3 +65,5 @@ myst_substitutions = {
     "Nam sed arcu dignissim, ultrices quam sit amet, commodo ipsum. "
     "Etiam quis nunc at ligula tincidunt eleifend."
 }
+
+sd_hide_root_title = True

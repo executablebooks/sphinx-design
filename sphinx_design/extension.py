@@ -11,6 +11,7 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
+from sphinx.transforms import SphinxTransform
 from sphinx.util.docutils import SphinxDirective
 
 from . import compiled as static_module
@@ -26,6 +27,7 @@ from .tabs import setup_tabs
 
 def setup_extension(app: Sphinx) -> None:
     """Set up the sphinx extension."""
+    app.add_config_value("sd_hide_root_title", False, "env")
     app.connect("builder-inited", update_css_js)
     app.connect("env-updated", update_css_links)
     # we override container html visitors, to stop the default behaviour
@@ -44,6 +46,7 @@ def setup_extension(app: Sphinx) -> None:
     app.add_directive(
         "div", Div, override=True
     )  # override sphinx-panels implementation
+    app.add_transform(AddFirstTitleCss)
     setup_badges_and_buttons(app)
     setup_cards(app)
     setup_grids(app)
@@ -132,3 +135,27 @@ class Div(SphinxDirective):
         self.add_name(node)
         self.state.nested_parse(self.content, self.content_offset, node)
         return [node]
+
+
+class AddFirstTitleCss(SphinxTransform):
+    """Add a CSS class to to the first sections title."""
+
+    default_priority = 699  # priority main
+
+    def apply(self):
+        if not self.app.config.sd_hide_root_title:
+            return
+        # from sphinx 4 master_doc is deprecated for root_doc
+        try:
+            if self.env.docname != self.config.root_doc:
+                return
+        except Exception:
+            if self.env.docname != self.config.master_doc:
+                return
+        for section in self.document.traverse(nodes.section):
+            if isinstance(section.children[0], nodes.title):
+                if "classes" in section.children[0]:
+                    section.children[0]["classes"].append("sd-d-none")
+                else:
+                    section.children[0]["classes"] = ["sd-d-none"]
+            break

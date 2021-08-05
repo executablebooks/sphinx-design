@@ -1,15 +1,34 @@
 # sphinx-design
 
-```{article-info}
-:avatar: images/ebp-logo.png
-:avatar-link: https://executablebooks.org
-:author: "[Chris Sewell](https://github.com/chrisjsewell)"
-:date: "{sub-ref}`today`"
-:read-time: "5 min read"
-:class-avatar: sd-animate-grow50-rot20
-```
+::::{grid}
+:reverse:
+:gutter: 2 1 1 1
+:margin: 4 1 1 1
 
-A sphinx extension for designing beautiful, screen-size responsive web components.
+:::{grid-item}
+:columns: 12 4 4 4
+
+```{image} ./_static/logo_square.svg
+:width: 200px
+:class: sd-m-auto sd-animate-grow50-rot20
+```
+:::
+
+:::{grid-item}
+:columns: 12 8 8 8
+:class: sd-align-items-center sd-fs-3
+
+A sphinx extension for designing beautiful, screen-size responsive web-components.
+:::
+::::
+
+```{button-ref} get_started
+:color: primary
+:align: center
+:class: sd-fs-5
+
+Get Started
+```
 
 Conflict free CSS
 : All CSS classes are prefixed, to avoid conflicts with other frameworks.
@@ -22,6 +41,12 @@ Configurable
 
 Supports non-HTML output formats
 : Components degrade gracefully for non-HTML formats.
+
+```{toctree}
+:hidden:
+
+get_started
+```
 
 ```{toctree}
 :caption: Components
@@ -103,29 +128,3 @@ Change the default colors and other CSS.
 ::::
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
-
-## Usage
-
-Simply pip install `sphinx-design` and add the extension to your `conf.py`:
-
-```python
-extensions = ["sphinx_design"]
-```
-
-For using with [MyST Parser](https://github.com/executablebooks/myst-parser), for Markdown documentation, it is recommended to use the `colon_fence` syntax extension:
-
-```python
-extensions = ["myst_parser", "sphinx_design"]
-myst_enable_extensions = ["colon_fence"]
-```
-
-## Supported browsers
-
-- Chrome >= 60
-- Firefox >= 60
-- Firefox ESR
-- iOS >= 12
-- Safari >= 12
-- Explorer >= 12
-
-(Mirrors: <https://github.com/twbs/bootstrap/blob/v5.0.2/.browserslistrc>)
