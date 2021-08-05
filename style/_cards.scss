@@ -26,6 +26,7 @@
 
 .sd-card-hover:hover {
   border-color: var(--sd-color-card-border-hover);
+  transform: scale(1.01);
 }
 
 .sd-card-body {
