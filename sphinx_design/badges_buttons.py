@@ -128,7 +128,7 @@ class XRefBadgeRole(ReferenceRole):
 
 
 class _ButtonDirective(SphinxDirective):
-    """A base button directivek."""
+    """A base button directive."""
 
     required_arguments = 1
     optional_arguments = 0

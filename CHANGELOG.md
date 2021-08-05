@@ -1,5 +1,13 @@
 # Change Log
 
+## v0.0.8 - 2021-06-08
+
+✨ NEW: Add `test_sd_hide_root_title` config option to hide the root title.
+
+👌 IMPROVE: `sd-card-hover:hover` add scale 101%
+
+📚 DOCS: Update landing page
+
 ## v0.0.7 - 2021-05-08
 
 ✨ NEW: Add `reverse` option for `grid` directive

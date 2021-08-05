@@ -83,6 +83,9 @@ paragraph and tab-set in grid-item
 
 rtd PRs not working
 
+octicon in button text shown as raw HTML
+
+
 [github-ci]: https://github.com/executablebooks/sphinx-design/workflows/continuous-integration/badge.svg?branch=main
 [github-link]: https://github.com/executablebooks/sphinx-design
 [codecov-badge]: https://codecov.io/gh/executablebooks/sphinx-design/branch/main/graph/badge.svg
