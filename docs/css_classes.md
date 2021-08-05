@@ -34,6 +34,13 @@ Classes are available for styling and alignment:
   - `sd-text-left`
   - `sd-text-right`
   - `sd-text-center`
+- Size (size decreases from 1 to 6):
+  - `sd-fs-1`
+  - `sd-fs-2`
+  - `sd-fs-3`
+  - `sd-fs-4`
+  - `sd-fs-5`
+  - `sd-fs-6`
 - Weight:
   - `sd-font-weight-light`
   - `sd-font-weight-lighter`
