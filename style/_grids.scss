@@ -172,3 +172,7 @@ $gutter-widths: $spacings;
     }
   }
 }
+
+.sd-flex-row-reverse {
+  flex-direction: row-reverse !important;
+}

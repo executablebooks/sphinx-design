@@ -1,11 +1,12 @@
 # sphinx-design
 
 ```{article-info}
-:avatar: images/mugshot.jpeg
-:avatar-link: https://github.com/chrisjsewell
+:avatar: images/ebp-logo.png
+:avatar-link: https://executablebooks.org
 :author: "[Chris Sewell](https://github.com/chrisjsewell)"
 :date: "{sub-ref}`today`"
 :read-time: "5 min read"
+:class-avatar: sd-animate-grow50-rot20
 ```
 
 A sphinx extension for designing beautiful, screen-size responsive web components.

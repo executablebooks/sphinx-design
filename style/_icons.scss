@@ -10,6 +10,8 @@ $avatar-sizes: (
   md: 5rem,
   lg: 7rem,
   xl: 10rem,
+  inherit: inherit,
+  initial: initial
 );
 
 @each $size, $value in $avatar-sizes {

@@ -107,6 +107,7 @@ class GridDirective(SphinxDirective):
         "padding": padding_option,
         "text-align": text_align,
         "outline": directives.flag,
+        "reverse": directives.flag,
         "class-container": directives.class_option,
         "class-row": directives.class_option,
     }
@@ -138,6 +139,7 @@ class GridDirective(SphinxDirective):
             ["sd-row"]
             + column_classes
             + self.options.get("gutter", [])
+            + (["sd-flex-row-reverse"] if "reverse" in self.options else [])
             + self.options.get("class-row", []),
         )
         self.set_source_info(row)

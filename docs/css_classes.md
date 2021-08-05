@@ -253,6 +253,8 @@ These classes center an image, set their size and add a circular crop:
 - `sd-avatar-md`
 - `sd-avatar-lg`
 - `sd-avatar-xl`
+- `sd-avatar-inherit`
+- `sd-avatar-initial`
 
 ````{grid} 1 2 3 3
 :gutter: 1
@@ -273,3 +275,13 @@ These classes center an image, set their size and add a circular crop:
 <img src="images/ebp-logo.png" class="sd-avatar-xl sd-border-1">
 ```
 ````
+
+## Load Animations
+
+Add CSS animations when loading elements using the `sd-animate-{name}` classes:
+
+- `sd-animate-slide-from-left`
+- `sd-animate-slide-from-right`
+- `sd-animate-grow100`
+- `sd-animate-grow50`
+- `sd-animate-grow50-rot20`
