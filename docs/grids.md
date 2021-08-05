@@ -2,6 +2,8 @@
 
 # Grids
 
+## Introduction
+
 Grids are based on a 12 column system, which can adapt to the size of the viewing screen.
 
 A `grid` directive can be set with the number of default columns (1 to 12);
@@ -65,6 +67,8 @@ short text content
 :::
 ::::
 
+## Placing a card in a grid
+
 The `grid-item-card` directive is a short-hand for placing a card content container inside a grid item (see [Cards](./cards.md)). Most of the `card` directive's options can be used also here:
 
 ::::{grid} 2
@@ -89,6 +93,8 @@ B
 ```
 ````
 `````
+
+## Controlling spacing between items
 
 You can set the spacing between grid items with the `gutter` option.
 Like for grid columns, you can either provide a single number or four for small, medium and large and extra-large screens.
@@ -129,6 +135,8 @@ B
 ````
 `````
 
+## Item level column width
+
 You can override the number of columns a single item takes up by using the `columns` option of the `grid-item` directive.
 Given the total columns are 12, this means 12 would indicate a single item takes up the entire grid row, or 6 half.
 Alternatively, use `auto` to automatically decide how many columns to use based on the item content.
@@ -165,6 +173,29 @@ C
 ```
 ````
 `````
+
+## Reversing the item order
+
+Use the `grid` directive's `reverse` option to reverse the order of the items.
+This can be useful if you want an item to be on the right side on large screens, but at the top on small screens.
+
+::::{grid} 1 1 2 2
+:reverse:
+
+:::{grid-item}
+```{image} ./images/ebp-logo.png
+:width: 200px
+:class: sd-m-auto
+```
+:::
+
+:::{grid-item-card}
+Some text
+:::
+
+::::
+
+## Nesting grids
 
 Grids can be nested in other grids to create complex, adaptive layouts:
 
@@ -258,6 +289,9 @@ text-align
 
 outline
 : Create a border around the grid.
+
+reverse
+: Reverse the order of the grid items.
 
 class-container
 : Additional CSS classes for the grid container element.

@@ -1,0 +1,81 @@
+@keyframes sd-slide-from-left {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes sd-slide-from-right {
+  0% {
+    transform: translateX(200%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes sd-grow100 {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sd-grow50 {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sd-grow50-rot20 {
+  0% {
+    transform: scale(0.5) rotateZ(-20deg);
+    opacity: 0.5;
+  }
+  75% {
+    transform: scale(1) rotateZ(5deg);
+    opacity: 1;
+  }
+  95% {
+    transform: scale(1) rotateZ(-1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotateZ(0);
+    opacity: 1;
+  }
+}
+
+// animation is shorthand for 'animation-' properties:
+// duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name
+
+.sd-animate-slide-from-left {
+  animation: 1s ease-out 0s 1 normal none running sd-slide-from-left;
+}
+
+.sd-animate-slide-from-right {
+  animation: 1s ease-out 0s 1 normal none running sd-slide-from-right;
+}
+
+.sd-animate-grow100 {
+  animation: 1s ease-out 0s 1 normal none running sd-grow100;
+}
+
+.sd-animate-grow50 {
+  animation: 1s ease-out 0s 1 normal none running sd-grow50;
+}
+
+.sd-animate-grow50-rot20 {
+  animation: 1s ease-out 0s 1 normal none running sd-grow50-rot20;
+}
