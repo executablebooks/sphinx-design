@@ -22,6 +22,13 @@ A sphinx extension for designing beautiful, screen-size responsive web-component
 :::
 ::::
 
+```{button-ref} get_started
+:color: primary
+:class: sd-fs-5
+
+Get Started
+```
+
 Conflict free CSS
 : All CSS classes are prefixed, to avoid conflicts with other frameworks.
 
