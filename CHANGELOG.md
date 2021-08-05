@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.0.7 - 2021-05-08
+
+✨ NEW: Add `reverse` option for `grid` directive
+
+✨ NEW: Add animations
+
 ## v0.0.6 - 2021-04-08
 
 ✨ NEW: Add `card-carousel` directive
@@ -10,7 +16,7 @@
 
 ## v0.0.4 - 2021-28-07
 
-👌 IMPROVE: Allow `auto` for grid columns.
+👌 IMPROVE: Allow `auto` for grid columns
 
 ## v0.0.3 - 2021-26-07
 
