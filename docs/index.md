@@ -1,3 +1,7 @@
+---
+sd_hide_title: true
+---
+
 # sphinx-design
 
 ::::{grid}
@@ -126,5 +130,7 @@ Change the default colors and other CSS.
 :::
 
 ::::
+
+-----------
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.

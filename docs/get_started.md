@@ -26,11 +26,22 @@ myst_enable_extensions = ["colon_fence"]
 
 ## Configuration
 
-To hide the the title header on the landing page (i.e. root document), add the following to your `conf.py`:
+To hide the the title header of a page, add the to the top of the page:
 
-```python
-sd_hide_root_title = True
+::::{tab-set}
+:::{tab-item} MyST Markdown
+```markdown
+---
+sd_hide_title: true
+---
 ```
+:::
+:::{tab-item} RestructuredText
+```rst
+:sd_hide_title:
+```
+:::
+::::
 
 ## Supported browsers
 

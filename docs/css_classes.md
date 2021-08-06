@@ -292,3 +292,5 @@ Add CSS animations when loading elements using the `sd-animate-{name}` classes:
 - `sd-animate-grow100`
 - `sd-animate-grow50`
 - `sd-animate-grow50-rot20`
+
+See [uxdesign.cc](https://uxdesign.cc/the-ultimate-guide-to-proper-use-of-animation-in-ux-10bd98614fa9) and [material.io](https://material.io/design/motion/understanding-motion.html#user-education) for good guides to animation.

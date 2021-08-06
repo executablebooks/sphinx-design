@@ -27,7 +27,6 @@ from .tabs import setup_tabs
 
 def setup_extension(app: Sphinx) -> None:
     """Set up the sphinx extension."""
-    app.add_config_value("sd_hide_root_title", False, "env")
     app.connect("builder-inited", update_css_js)
     app.connect("env-updated", update_css_links)
     # we override container html visitors, to stop the default behaviour
@@ -143,15 +142,15 @@ class AddFirstTitleCss(SphinxTransform):
     default_priority = 699  # priority main
 
     def apply(self):
-        if not self.app.config.sd_hide_root_title:
+        hide = False
+        for docinfo in self.document.traverse(nodes.docinfo):
+            for name in docinfo.traverse(nodes.field_name):
+                if name.astext() == "sd_hide_title":
+                    hide = True
+                    break
+            break
+        if not hide:
             return
-        # from sphinx 4 master_doc is deprecated for root_doc
-        try:
-            if self.env.docname != self.config.root_doc:
-                return
-        except Exception:
-            if self.env.docname != self.config.master_doc:
-                return
         for section in self.document.traverse(nodes.section):
             if isinstance(section.children[0], nodes.title):
                 if "classes" in section.children[0]:
