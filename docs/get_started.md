@@ -53,3 +53,51 @@ sd_hide_title: true
 - Explorer >= 12
 
 (Mirrors: <https://github.com/twbs/bootstrap/blob/v5.0.2/.browserslistrc>)
+
+## Migrating from sphinx-panels
+
+This package arose as an iteration on [sphinx-panels](https://github.com/executablebooks/sphinx-panels), with the intention to make it more flexible, easier to use, and minimise CSS clashes wth sphinx themes.
+
+Notable changes:
+
+### Reduce direct use of CSS classes
+
+These are replaced by the use of directive options, which are:
+
+- Easier to understand
+- Easier to validate
+- Easier to work with non-HTML outputs
+- Easier to improve/refactor
+
+### `panel` directive replaced
+
+The `panel` directive is replaced by the use of the top-level `grid` directive,
+then using `grid-item-card` directive children, rather than delimiting cards by `---`.
+
+If no card is needed, then the `grid-item` directive can be used instead
+and `card` can be also used independently of grids.
+
+### `tabbed` directive replaced
+
+The `tabbed` directive is replaced by the use of the top-level `tab-set` directive,
+then using `tab-item` directive children.
+
+The `:sync:` option allows to synchronize tab selection across sets.
+
+The `tab-set-code` directive provides a shorthand for synced code examples.
+
+### `octicon` icon role
+
+The default SVGs produced are now sized relative to the surrounding text (i.e. using `1em`).
+The syntax for specifying a custom size and adding classes is also changed.
+
+This is similar for favicon icons.
+
+### Improved CSS
+
+Updated Bootstrap CSS from v4 -> v5,
+which in particular allows top-level grid to define both column numbers and gutter sizes.
+
+All CSS classes are prefixed with `sd-` (no clash with other theme/extension CSS)
+
+All colors use CSS variables (customisable)

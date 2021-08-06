@@ -39,24 +39,17 @@ View the documentation in multiple themes:
 
 ## Comparison to sphinx-panels
 
-This package is an iteration on sphinx-panels and intends to replace it.
+This package is an iteration on [sphinx-panels](https://github.com/executablebooks/sphinx-panels) and intends to replace it.
+See [Migrating from sphinx-panels](./docs/get_started.md) for more information.
 
-- Replaces `panel` directive with top-level `grid` + children `grid-item-card`
-  - less "bespoke" syntax
-  - `grid-item` can be used when no card is needed
-  - `card` can be used independently of grids
-- tabs changed:
-  - top-level `tab-set`
-  - `tabbed` -> `tab-item`
-  - include `:sync:` option to synchronize tab selection across sets
-- Minimises direct use of CSS classes (encourage to not use them)
-  - More declarative, easy to understand options, easier to validate
-  - Easier to work with non-HTML outputs
-  - Easier to improve/refactor
-- Updated Bootstrap CSS v4 -> v5
-  - top-level grid can define both column numbers and gutter sizes
-- All CSS classes are prefixed with `sd-` (no clash with other theme/extension CSS)
-- All colors use CSS variables (customisable)
+## Development
+
+It is recommended to use [tox](https://tox.readthedocs.io/en/latest/) to run the tests and document builds.
+Run `tox -va` to see all the available tox environments.
+
+To run linting, formatting and SASS compilation, use [pre-commit](https://pre-commit.com/).
+`pre-commit run --all css` will run the SASS compiler, for which you will need [node](https://nodejs.org) and [npm](https://www.npmjs.com/) installed,
+or you can directly run `npm run css`.
 
 ## TODO
 
