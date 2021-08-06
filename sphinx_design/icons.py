@@ -56,7 +56,7 @@ def list_octicons() -> List[str]:
     return list(get_octicon_data().keys())
 
 
-HEIGHT_REGEX = re.compile(r"^(?P<value>\d+)(?P<unit>px|em|rem)$")
+HEIGHT_REGEX = re.compile(r"^(?P<value>\d+(\.\d+)?)(?P<unit>px|em|rem)$")
 
 
 def get_octicon(
@@ -79,7 +79,7 @@ def get_octicon(
         raise ValueError(
             f"Invalid height: '{height}', must be format <integer><px|em|rem>"
         )
-    height_value = int(match.group("value"))
+    height_value = round(float(match.group("value")), 3)
     height_unit = match.group("unit")
 
     original_height = 16
@@ -92,7 +92,7 @@ def get_octicon(
         elif height_value >= 1.5:
             original_height = 24
     original_width = data["heights"][str(original_height)]["width"]
-    width_value = round(original_width * height_value / original_height, 2)
+    width_value = round(original_width * height_value / original_height, 3)
     content = data["heights"][str(original_height)]["path"]
     options = {
         "version": "1.1",

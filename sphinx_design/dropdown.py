@@ -125,19 +125,6 @@ class DropdownDirective(SphinxDirective):
         return [container]
 
 
-# Note the custom octicon here has thicker dots than:
-# get_octicon("kebab-horizontal", classes=["no-title"])
-KEBAB = """\
-<svg viewBox="0 0 36 24" width="36" height="16" xmlns="http://www.w3.org/2000/svg"
-    class="octicon no-title" aria-hidden="true">
-  <g xmlns="http://www.w3.org/2000/svg" class="jp-icon3">
-    <circle cx="0" cy="12" r="6"></circle>
-    <circle cx="18" cy="12" r="6"></circle>
-    <circle cx="36" cy="12" r="6"></circle>
-  </g>
-</svg>"""
-
-
 class DropdownHtmlTransform(SphinxPostTransform):
     """Transform dropdown containers into the HTML specific AST structures::
 
@@ -165,7 +152,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=[
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon("chevron-up", height="24px")),
+                        nodes.Text(get_octicon("chevron-up", height="1.5em")),
                         format="html",
                     )
                 ],
@@ -176,7 +163,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=[
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon("chevron-down", height="24px")),
+                        nodes.Text(get_octicon("chevron-down", height="1.5em")),
                         format="html",
                     )
                 ],
@@ -196,7 +183,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 title_children = [
                     nodes.raw(
                         "...",
-                        nodes.Text(KEBAB),
+                        nodes.Text(get_octicon("kebab-horizontal", height="1.5em")),
                         format="html",
                     )
                 ]

@@ -5,20 +5,13 @@
         <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" opened="False">
             <dropdown_title classes="sd-summary-title sd-card-header">
                 <raw format="html" xml:space="preserve">
-                    <svg viewBox="0 0 36 24" width="36" height="16" xmlns="http://www.w3.org/2000/svg"
-                        class="octicon no-title" aria-hidden="true">
-                      <g xmlns="http://www.w3.org/2000/svg" class="jp-icon3">
-                        <circle cx="0" cy="12" r="6"></circle>
-                        <circle cx="18" cy="12" r="6"></circle>
-                        <circle cx="36" cy="12" r="6"></circle>
-                      </g>
-                    </svg>
+                    <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-kebab-horizontal" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M6 12a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0zm6 2a2 2 0 100-4 2 2 0 000 4z"></path></svg>
                 <container classes="sd-summary-down" design_component="dropdown-closed-marker" is_div="True">
                     <raw format="html" xml:space="preserve">
-                        <svg version="1.1" width="24.0px" height="24px" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
+                        <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
                 <container classes="sd-summary-up" design_component="dropdown-open-marker" is_div="True">
                     <raw format="html" xml:space="preserve">
-                        <svg version="1.1" width="24.0px" height="24px" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
+                        <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
             <container classes="sd-summary-content sd-card-body" design_component="dropdown-body" is_div="True">
                 <paragraph classes="sd-card-text">
                     Dropdown content
@@ -27,10 +20,10 @@
                 Dropdown title
                 <container classes="sd-summary-down" design_component="dropdown-closed-marker" is_div="True">
                     <raw format="html" xml:space="preserve">
-                        <svg version="1.1" width="24.0px" height="24px" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
+                        <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
                 <container classes="sd-summary-up" design_component="dropdown-open-marker" is_div="True">
                     <raw format="html" xml:space="preserve">
-                        <svg version="1.1" width="24.0px" height="24px" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
+                        <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
             <container classes="sd-summary-content sd-card-body" design_component="dropdown-body" is_div="True">
                 <paragraph classes="sd-card-text">
                     Dropdown content
@@ -39,10 +32,10 @@
                 Open dropdown
                 <container classes="sd-summary-down" design_component="dropdown-closed-marker" is_div="True">
                     <raw format="html" xml:space="preserve">
-                        <svg version="1.1" width="24.0px" height="24px" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
+                        <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
                 <container classes="sd-summary-up" design_component="dropdown-open-marker" is_div="True">
                     <raw format="html" xml:space="preserve">
-                        <svg version="1.1" width="24.0px" height="24px" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
+                        <svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
             <container classes="sd-summary-content sd-card-body" design_component="dropdown-body" is_div="True">
                 <paragraph classes="sd-card-text">
                     Dropdown content
