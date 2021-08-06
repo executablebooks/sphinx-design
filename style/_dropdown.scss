@@ -55,6 +55,7 @@ details.sd-dropdown {
   summary:hover .sd-summary-up svg,
   summary:hover .sd-summary-down svg {
     opacity: 1;
+    transform: scale(1.1);
   }
 
   .sd-summary-up svg,
@@ -68,7 +69,7 @@ details.sd-dropdown {
     pointer-events: none;
     position: absolute;
     right: 1em;
-    top: 0.75em;
+    top: 1em;
   }
 
   &[open] > .sd-summary-title .sd-summary-down {

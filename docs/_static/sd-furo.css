@@ -1,0 +1,12 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+        --sd-color-dark: #f8f9fa;
+        --sd-color-light: #212529;
+        --sd-color-dark-highlight: #d3d4d5;
+        --sd-color-light-highlight: #1c1f23;
+        --sd-color-dark-text: #212529;
+        --sd-color-light-text: #fff;
+        --sd-color-shadow: rgba(255, 255, 255, 0.15);
+        --sd-color-card-border: rgba(255, 255, 255, 0.125);
+    }
+}

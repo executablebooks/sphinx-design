@@ -44,6 +44,9 @@ if html_theme == "furo":
     html_theme_options = {
         "sidebar_hide_name": True,
     }
+    html_css_files = [
+        "sd-furo.css",
+    ]
 if html_theme == "sphinx_rtd_theme":
     html_theme_options = {
         "logo_only": True,
@@ -65,5 +68,3 @@ myst_substitutions = {
     "Nam sed arcu dignissim, ultrices quam sit amet, commodo ipsum. "
     "Etiam quis nunc at ligula tincidunt eleifend."
 }
-
-sd_hide_root_title = True
