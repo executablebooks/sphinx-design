@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.0.9 - 2021-06-08
+
+♻️ REFACTOR: `test_sd_hide_root_title` to `sd_hide_title` front-matter
+
+👌 IMPROVE: dropdown chevrons
+
 ## v0.0.8 - 2021-06-08
 
 ✨ NEW: Add `test_sd_hide_root_title` config option to hide the root title.
