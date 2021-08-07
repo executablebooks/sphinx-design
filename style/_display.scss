@@ -18,9 +18,16 @@
   display: grid !important;
 }
 
-.sd-d-flex {
+.sd-d-flex-row {
   display: -ms-flexbox !important;
   display: flex !important;
+  flex-direction: row !important;
+}
+
+.sd-d-flex-column {
+  display: -ms-flexbox !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .sd-d-inline-flex {
@@ -62,14 +69,41 @@
   }
 }
 
-.sd-align-items-start {
+// will align on major axis of flex
+.sd-align-major-start {
+  justify-content: flex-start !important;
+}
+
+.sd-align-major-end {
+  justify-content: flex-end !important;
+}
+
+.sd-align-major-center {
+  justify-content: center !important;
+}
+
+.sd-align-major-justify {
+  justify-content: space-between !important;
+}
+
+.sd-align-major-spaced {
+  justify-content: space-evenly !important;
+}
+
+// will align on minor axis of flex
+.sd-align-minor-start {
   align-items: flex-start !important;
 }
 
-.sd-align-items-end {
+.sd-align-minor-end {
   align-items: flex-end !important;
 }
 
-.sd-align-items-center {
+.sd-align-minor-center {
   align-items: center !important;
+}
+
+// default
+.sd-align-minor-stretch {
+  align-items: stretch !important;
 }

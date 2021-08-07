@@ -36,6 +36,7 @@ See the [Material Design](https://material.io/components/tabs) description for f
 ## Synchronised Tabs
 
 Use the `sync` option to synchronise the selected tab items across multiple tab-sets.
+Note, synchronisation requires that JavaScript is enabled.
 
 ::::{tab-set}
 
@@ -121,10 +122,14 @@ Paragraph
 ::::{tab-set}
 
 :::{tab-item} Label1
+:sync: label-1
+
 Content 1
 :::
 
 :::{tab-item} Label2
+:sync: label-2
+
 Content 2
 :::
 
@@ -134,14 +139,21 @@ Content 2
 ::::::{grid} 1 1 2 2
 
 :::::{grid-item}
+:outline:
+
+Initial paragraph
 
 ::::{tab-set}
 
 :::{tab-item} Label1
+:sync: label-1
+
 Content 1
 :::
 
 :::{tab-item} Label2
+:sync: label-2
+
 Content 2
 :::
 
@@ -150,18 +162,25 @@ Content 2
 :::::
 
 :::::{grid-item}
+:outline:
 
 ::::{tab-set}
 
 :::{tab-item} Label1
+:sync: label-1
+
 Content 1
 :::
 
 :::{tab-item} Label2
+:sync: label-2
+
 Content 2
 :::
 
 ::::
+
+Ending paragraph
 
 :::::
 

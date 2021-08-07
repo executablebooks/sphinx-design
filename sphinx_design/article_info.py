@@ -77,7 +77,7 @@ class ArticleInfoDirective(SphinxDirective):
             # TODO only in html (hide in latex)
             avatar_column = create_component(
                 "grid-item",
-                ["sd-col", "sd-col-auto", "sd-d-flex", "sd-align-items-center"],
+                ["sd-col", "sd-col-auto", "sd-d-flex-row", "sd-align-minor-center"],
             )
             self.set_source_info(avatar_column)
             avatar_classes = ["sd-avatar-sm"]
@@ -103,7 +103,7 @@ class ArticleInfoDirective(SphinxDirective):
 
         info_column = create_component(
             "grid-item",
-            ["sd-col", "sd-d-flex", "sd-align-items-center"],
+            ["sd-col", "sd-d-flex-row", "sd-align-minor-center"],
         )
         self.set_source_info(info_column)
         top_row += info_column
@@ -138,7 +138,7 @@ class ArticleInfoDirective(SphinxDirective):
         if author_text:
             author_column = create_component(
                 "grid-item",
-                ["sd-col", "sd-col-auto", "sd-d-flex", "sd-align-items-center"],
+                ["sd-col", "sd-col-auto", "sd-d-flex-row", "sd-align-minor-center"],
             )
             self.set_source_info(author_column)
             author_nodes = self._parse_text(author_text, parse=parse_fields)
@@ -149,7 +149,7 @@ class ArticleInfoDirective(SphinxDirective):
         if date_text:
             date_column = create_component(
                 "grid-item",
-                ["sd-col", "sd-col-auto", "sd-d-flex", "sd-align-items-center"],
+                ["sd-col", "sd-col-auto", "sd-d-flex-row", "sd-align-minor-center"],
             )
             self.set_source_info(date_column)
             date_icon = nodes.raw(
@@ -166,7 +166,7 @@ class ArticleInfoDirective(SphinxDirective):
         if read_time_text:
             read_time_column = create_component(
                 "grid-item",
-                ["sd-col", "sd-col-auto", "sd-d-flex", "sd-align-items-center"],
+                ["sd-col", "sd-col-auto", "sd-d-flex-row", "sd-align-minor-center"],
             )
             self.set_source_info(read_time_column)
             read_time_icon = nodes.raw(

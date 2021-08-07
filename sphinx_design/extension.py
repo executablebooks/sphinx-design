@@ -93,10 +93,13 @@ def update_css_links(app: Sphinx, env: BuildEnvironment):
 
 def visit_container(self, node: nodes.Node):
     classes = "docutils container"
+    attrs = {}
     if node.get("is_div", False):
         # we don't want the CSS for container for these nodes
         classes = "docutils"
-    self.body.append(self.starttag(node, "div", CLASS=classes))
+    if "style" in node:
+        attrs["style"] = node["style"]
+    self.body.append(self.starttag(node, "div", CLASS=classes, **attrs))
 
 
 def depart_container(self, node: nodes.Node):
@@ -114,11 +117,10 @@ class Div(SphinxDirective):
 
     optional_arguments = 1  # css classes
     final_argument_whitespace = True
-    option_spec = {"name": directives.unchanged}
+    option_spec = {"style": directives.unchanged, "name": directives.unchanged}
     has_content = True
 
     def run(self):
-        self.assert_has_content()
         try:
             if self.arguments:
                 classes = directives.class_option(self.arguments[0])
@@ -130,9 +132,12 @@ class Div(SphinxDirective):
                 % (self.name, self.arguments[0])
             )
         node = create_component("div", rawtext="\n".join(self.content), classes=classes)
+        if "style" in self.options:
+            node["style"] = self.options["style"]
         self.set_source_info(node)
         self.add_name(node)
-        self.state.nested_parse(self.content, self.content_offset, node)
+        if self.content:
+            self.state.nested_parse(self.content, self.content_offset, node)
         return [node]
 
 

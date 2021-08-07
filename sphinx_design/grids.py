@@ -105,7 +105,6 @@ class GridDirective(SphinxDirective):
         "gutter": gutter_option,
         "margin": margin_option,
         "padding": padding_option,
-        "text-align": text_align,
         "outline": directives.flag,
         "reverse": directives.flag,
         "class-container": directives.class_option,
@@ -129,7 +128,6 @@ class GridDirective(SphinxDirective):
             grid_classes
             + self.options.get("margin", ["sd-mb-4"])
             + self.options.get("padding", [])
-            + self.options.get("text-align", [])
             + (["sd-border-1"] if "outline" in self.options else [])
             + self.options.get("class-container", []),
         )
@@ -170,8 +168,9 @@ class GridItemDirective(SphinxDirective):
         "columns": item_columns_option,
         "margin": margin_option,
         "padding": padding_option,
+        "child-direction": make_choice(["column", "row"]),
+        "child-align": make_choice(["start", "end", "center", "justify", "spaced"]),
         "outline": directives.flag,
-        "text-align": text_align,
         "class": directives.class_option,
     }
 
@@ -188,12 +187,16 @@ class GridItemDirective(SphinxDirective):
             "grid-item",
             [
                 "sd-col",
-                "sd-d-flex",  # TODO is this necessary or should be configurable?
+                f"sd-d-flex-{self.options.get('child-direction', 'column')}",
             ]
             + self.options.get("columns", [])
             + self.options.get("margin", [])
             + self.options.get("padding", [])
-            + self.options.get("text-align", [])
+            + (
+                [f'sd-align-major-{self.options["child-align"]}']
+                if "child-align" in self.options
+                else []
+            )
             + (["sd-border-1"] if "outline" in self.options else [])
             + self.options.get("class", []),
         )
@@ -240,7 +243,7 @@ class GridItemCardDirective(SphinxDirective):
             "grid-item",
             [
                 "sd-col",
-                "sd-d-flex",  # TODO is this necessary or should be configurable?
+                "sd-d-flex-row",
             ]
             + self.options.get("columns", [])
             + self.options.get("margin", [])
