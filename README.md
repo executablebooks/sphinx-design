@@ -72,8 +72,6 @@ horizontal card (grid row inside card, picture on left)
 
 subtitle for card (see <https://material.io/components/cards#anatomy>)
 
-paragraph and tab-set in grid-item
-
 rtd PRs not working
 
 octicon in button text shown as raw HTML

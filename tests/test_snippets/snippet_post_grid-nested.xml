@@ -4,10 +4,10 @@
             Heading
         <container classes="sd-container-fluid sd-sphinx-override sd-mb-4" design_component="grid-container" is_div="True">
             <container classes="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-1 sd-g-xs-1 sd-g-sm-1 sd-g-md-1 sd-g-lg-1" design_component="grid-row" is_div="True">
-                <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                <container classes="sd-col sd-d-flex-column" design_component="grid-item" is_div="True">
                     <container classes="sd-container-fluid sd-sphinx-override sd-mb-4" design_component="grid-container" is_div="True">
                         <container classes="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-1 sd-row-cols-lg-1 sd-g-1 sd-g-xs-1 sd-g-sm-1 sd-g-md-1 sd-g-lg-1" design_component="grid-row" is_div="True">
-                            <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                            <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
                                 <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                                     <container classes="sd-card-body" design_component="card-body" is_div="True">
                                         <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
@@ -16,31 +16,31 @@
                                             Multi-line
                                         <paragraph classes="sd-card-text">
                                             content
-                            <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                            <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
                                 <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                                     <container classes="sd-card-body" design_component="card-body" is_div="True">
                                         <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
                                             Item 1.2
                                         <paragraph classes="sd-card-text">
                                             Content
-                <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                <container classes="sd-col sd-d-flex-column" design_component="grid-item" is_div="True">
                     <container classes="sd-container-fluid sd-sphinx-override sd-mb-4" design_component="grid-container" is_div="True">
                         <container classes="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-1 sd-row-cols-lg-1 sd-g-1 sd-g-xs-1 sd-g-sm-1 sd-g-md-1 sd-g-lg-1" design_component="grid-row" is_div="True">
-                            <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                            <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
                                 <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                                     <container classes="sd-card-body" design_component="card-body" is_div="True">
                                         <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
                                             Item 2.1
                                         <paragraph classes="sd-card-text">
                                             Content
-                            <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                            <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
                                 <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                                     <container classes="sd-card-body" design_component="card-body" is_div="True">
                                         <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
                                             Item 2.2
                                         <paragraph classes="sd-card-text">
                                             Content
-                            <container classes="sd-col sd-d-flex" design_component="grid-item" is_div="True">
+                            <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
                                 <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                                     <container classes="sd-card-body" design_component="card-body" is_div="True">
                                         <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">

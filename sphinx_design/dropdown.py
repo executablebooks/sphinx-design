@@ -172,7 +172,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
             newnode = dropdown_main(
                 opened=node["opened"],
                 classes=["sd-sphinx-override", "sd-dropdown"]
-                + (["sd-card"] if use_card else ["sd-d-flex"])
+                + (["sd-card"] if use_card else ["sd-d-flex-column"])
                 + node["container_classes"],
             )
 

@@ -7,7 +7,7 @@ sd_hide_title: true
 ::::{grid}
 :reverse:
 :gutter: 2 1 1 1
-:margin: 4 1 1 1
+:margin: 4 4 1 1
 
 :::{grid-item}
 :columns: 12 4 4 4
@@ -20,19 +20,20 @@ sd_hide_title: true
 
 :::{grid-item}
 :columns: 12 8 8 8
-:class: sd-align-items-center sd-fs-3
+:child-align: justify
+:class: sd-fs-3
 
 A sphinx extension for designing beautiful, screen-size responsive web-components.
-:::
-::::
 
 ```{button-ref} get_started
 :color: primary
-:align: center
 :class: sd-fs-5
 
 Get Started
 ```
+
+:::
+::::
 
 Conflict free CSS
 : All CSS classes are prefixed, to avoid conflicts with other frameworks.

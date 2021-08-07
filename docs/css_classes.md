@@ -25,6 +25,8 @@ Some CSS styled text
 
 If you find yourself using a class(es) often, consider opening an issue to request a new role/directive or option!
 
+The `div` directive also has the `style` option, which allows you to add inline CSS styles, although it is not recommended to use this option for most cases.
+
 ## Text
 
 Classes are available for styling and alignment:
@@ -70,16 +72,24 @@ Define the layout of an element and its children (see [`display`](https://develo
 - `sd-d-inline-block`
 - `sd-d-block`
 - `sd-d-grid`
-- `sd-d-flex`
+- `sd-d-flex-row` (align items horizontally)
+- `sd-d-flex-column` (align items vertically)
 - `sd-d-inline-flex`
 
 Variants are also available for screen-sizes (xs, sm, md, lg), e.g. `sd-d-sm-none`.
 
-Items within a flex box can also be aligned:
+Items within a flex box can also be aligned along the major axis or minor axis, dependant on the flex-direction.
+For example, using `sd-d-flex-column` and `sd-align-major-center` will center the items in the vertical direction.
 
-- `sd-align-items-start`
-- `sd-align-items-end`
-- `sd-align-items-center`
+- `sd-align-major-start`
+- `sd-align-major-end`
+- `sd-align-major-center`
+- `sd-align-major-spaced` (spaced to fill the full axis)
+- `sd-align-major-justify` (spaced to fill the full axis, with the first/last item on the edges of the axis)
+
+- `sd-align-minor-start`
+- `sd-align-minor-end`
+- `sd-align-minor-center`
 
 ## Sizing
 

@@ -284,9 +284,6 @@ padding
 : Inner padding of grid.
   One (all) or four (top bottom left right) values from: 0, 1, 2, 3, 4, 5.
 
-text-align
-: Default horizontal text alignment: left, right, center or justify
-
 outline
 : Create a border around the grid.
 
@@ -313,11 +310,14 @@ padding
 : Inner padding of grid item.
   One (all) or four (top bottom left right) values from: 0, 1, 2, 3, 4, 5.
 
+child-direction
+: Direction of children in the grid item: `column` (default) or `row`.
+
+child-align
+: Alignment of children, along the `child-direction`: `start` (default), `end`, `center`, `justify` or `spaced`.
+
 outline
 : Create a border around the grid item.
-
-text-align
-: Default horizontal text alignment: left, right, center or justify
 
 class
 : Additional CSS classes for the grid item element.
