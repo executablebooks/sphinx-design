@@ -6,7 +6,7 @@
             <container classes="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1" design_component="grid-row" is_div="True">
                 <container classes="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center" design_component="grid-item" is_div="True">
                     <reference refuri="https://executablebooks.org/">
-                        <image alt="" candidates="{'*': 'ebp-logo.png'}" classes="sd-avatar-sm sd-outline-muted" uri="ebp-logo.png">
+                        <image alt="" candidates="{'*': 'images/ebp-logo.png'}" classes="sd-avatar-sm sd-outline-muted" uri="images/ebp-logo.png">
                 <container classes="sd-col sd-d-flex-row sd-align-minor-center" design_component="grid-item" is_div="True">
                     <container classes="sd-container-fluid sd-sphinx-override" design_component="grid-container" is_div="True">
                         <container classes="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1" design_component="grid-row" is_div="True">

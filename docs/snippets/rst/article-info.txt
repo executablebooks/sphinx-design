@@ -1,5 +1,5 @@
 .. article-info::
-    :avatar: ebp-logo.png
+    :avatar: images/ebp-logo.png
     :avatar-link: https://executablebooks.org/
     :avatar-outline: muted
     :author: Executable Books

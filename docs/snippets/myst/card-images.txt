@@ -1,0 +1,34 @@
+:::::{grid} 2 3 3 4
+
+::::{grid-item}
+
+:::{card} Title
+:img-background: images/particle_background.jpg
+:class-card: sd-text-black
+
+Text
+:::
+
+::::
+
+::::{grid-item-card} Title
+:img-top: images/particle_background.jpg
+
+Header
+^^^
+Content
++++
+Footer
+::::
+
+::::{grid-item-card} Title
+:img-bottom: images/particle_background.jpg
+
+Header
+^^^
+Content
++++
+Footer
+::::
+
+:::::

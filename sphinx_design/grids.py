@@ -217,6 +217,7 @@ class GridItemCardDirective(SphinxDirective):
         "margin": margin_option,
         "padding": padding_option,
         "text-align": text_align,
+        "img-background": directives.uri,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "link": directives.uri,
@@ -256,6 +257,7 @@ class GridItemCardDirective(SphinxDirective):
             if key
             in [
                 "text-align",
+                "img-background",
                 "img-top",
                 "img-bottom",
                 "link",

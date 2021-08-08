@@ -73,20 +73,58 @@ Footer
 :::
 ::::
 
-You can also add images to the top and bottom of the card, with the `img-top` and `img-bottom` options:
+## Card images
 
-::::{grid} 1 2 2 2
-:::{grid-item-card} Card Title
-:img-top: images/banner.png
-:img-bottom: images/banner.png
+You can also add an image as the background of a card or at the top/bottom of the card, with the `img-background`, `img-top`, `img-bottom` options:
+
+:::::{grid} 2 3 3 4
+
+::::{grid-item}
+
+:::{card} Title
+:img-background: images/particle_background.jpg
+:class-card: sd-text-black
+
+Text
+:::
+
+::::
+
+::::{grid-item-card} Title
+:img-top: images/particle_background.jpg
 
 Header
 ^^^
-Card content
+Content
 +++
 Footer
-:::
 ::::
+
+::::{grid-item-card} Title
+:img-bottom: images/particle_background.jpg
+
+Header
+^^^
+Content
++++
+Footer
+::::
+
+:::::
+
+`````{dropdown} Syntax
+:icon: code
+:color: light
+
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/card-images.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/card-images.txt
+:language: rst
+```
+````
+`````
 
 (cards-clickable)=
 
@@ -207,6 +245,9 @@ margin
 
 text-align
 : Default horizontal text alignment: left, right, center or justify
+
+img-background
+: A URI (relative file path or URL) to an image to be placed below the content.
 
 img-top
 : A URI (relative file path or URL) to an image to be placed above the content.

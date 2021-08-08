@@ -111,7 +111,7 @@ Note, for grids the special gutter classes `sd-g-{screen-size}-{spacing}` are us
 
 ## Colors
 
-Colors can be set using [CSS variable](./css_variables.md), they are defined for the semantic color names: primary, secondary, success, warning, danger, info, light, dark, and muted.
+Colors can be set using [CSS variable](./css_variables.md), they are defined for the semantic color names: `primary`, `secondary`, `success`, `warning`, `danger`, `info`, `light`, `dark`, and `muted`, and specific colors `black` and `white`.
 
 - `sd-bg-{name}`
 - `sd-bg-text-{name}`
