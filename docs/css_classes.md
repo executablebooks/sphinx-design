@@ -91,6 +91,8 @@ For example, using `sd-d-flex-column` and `sd-align-major-center` will center th
 - `sd-align-minor-end`
 - `sd-align-minor-center`
 
+For more information, see [this guide to flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/).
+
 ## Sizing
 
 Size objects width/height by percentage:

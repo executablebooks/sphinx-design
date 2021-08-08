@@ -68,7 +68,7 @@ $semantic-colors: (
 }
 
 @each $color, $value in $semantic-colors {
-  .sd-text-#{$color} {
+  .sd-text-#{$color}, .sd-text-#{$color} > p {
     color: var(--sd-color-#{$color}) !important;
   }
   a {
