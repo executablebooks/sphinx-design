@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.0.10 - 2021-08-08
+
+✨ NEW: Add `grid-item` directive `child-direction` and `child-align` options
+
+✨ NEW: Add `card` directive `img-background` option
+
 ## v0.0.9 - 2021-06-08
 
 ♻️ REFACTOR: `test_sd_hide_root_title` to `sd_hide_title` front-matter
