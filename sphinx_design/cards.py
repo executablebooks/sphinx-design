@@ -57,6 +57,7 @@ class CardDirective(SphinxDirective):
         "text-align": text_align,
         "img-top": directives.uri,
         "img-bottom": directives.uri,
+        "img-background": directives.uri,
         "link": directives.uri,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "shadow": make_choice(["none", "sm", "md", "lg"]),
@@ -91,6 +92,20 @@ class CardDirective(SphinxDirective):
         )
         inst.set_source_info(card)
 
+        container = card
+        if "img-background" in options:
+            card.append(
+                nodes.image(
+                    uri=options["img-background"],
+                    classes=["sd-card-img"],
+                    alt="background image",
+                )
+            )
+            overlay = create_component("card-overlay", ["sd-card-img-overlay"])
+            inst.set_source_info(overlay)
+            card += overlay
+            container = overlay
+
         if "img-top" in options:
             image_top = nodes.image(
                 "",
@@ -98,12 +113,12 @@ class CardDirective(SphinxDirective):
                 alt="card-img-top",
                 classes=["sd-card-img-top"],
             )
-            card.append(image_top)
+            container.append(image_top)
 
         components = cls.split_content(inst.content, inst.content_offset)
 
         if components.header:
-            card.append(
+            container.append(
                 cls._create_component(
                     inst, "header", options, components.header[0], components.header[1]
                 )
@@ -121,10 +136,10 @@ class CardDirective(SphinxDirective):
             textnodes, _ = inst.state.inline_text(arguments[0], inst.lineno)
             title.extend(textnodes)
             body.insert(0, title)
-        card.append(body)
+        container.append(body)
 
         if components.footer:
-            card.append(
+            container.append(
                 cls._create_component(
                     inst, "footer", options, components.footer[0], components.footer[1]
                 )
@@ -137,7 +152,7 @@ class CardDirective(SphinxDirective):
                 alt="card-img-bottom",
                 classes=["sd-card-img-bottom"],
             )
-            card.append(image_bottom)
+            container.append(image_bottom)
 
         if "link" in options:
             link_container = PassthroughTextElement()
@@ -162,7 +177,7 @@ class CardDirective(SphinxDirective):
                 link = addnodes.pending_xref("", nodes.Text(""), **options)
             inst.set_source_info(link)
             link_container += link
-            card.append(link_container)
+            container.append(link_container)
 
         return card
 

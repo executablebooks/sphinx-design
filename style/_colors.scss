@@ -38,6 +38,8 @@ $semantic-colors: (
   "light": $gray-100,
   "muted": $gray-600,
   "dark": $gray-900,
+  "black": black,
+  "white": white,
 ) !default;
 
 @function text-color($value) {
