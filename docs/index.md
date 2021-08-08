@@ -4,10 +4,13 @@ sd_hide_title: true
 
 # sphinx-design
 
+::::::{div} landing-title
+:style: "padding: 0.1rem 0.5rem 0.6rem 0; background-image: linear-gradient(315deg, #438ff9 0%, #1572f4 74%); clip-path: polygon(0px 0px, 100% 0%, 100% 100%, 0% 91%);"
+
 ::::{grid}
 :reverse:
-:gutter: 2 1 1 1
-:margin: 4 4 1 1
+:gutter: 2 3 3 3
+:margin: 4 4 1 2
 
 :::{grid-item}
 :columns: 12 4 4 4
@@ -21,12 +24,13 @@ sd_hide_title: true
 :::{grid-item}
 :columns: 12 8 8 8
 :child-align: justify
-:class: sd-fs-3
+:class: sd-text-white sd-fs-3
 
 A sphinx extension for designing beautiful, screen-size responsive web-components.
 
 ```{button-ref} get_started
-:color: primary
+:outline:
+:color: white
 :class: sd-fs-5
 
 Get Started
@@ -34,6 +38,8 @@ Get Started
 
 :::
 ::::
+
+::::::
 
 Conflict free CSS
 : All CSS classes are prefixed, to avoid conflicts with other frameworks.

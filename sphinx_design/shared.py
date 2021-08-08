@@ -17,6 +17,8 @@ SEMANTIC_COLORS = (
     "light",
     "muted",
     "dark",
+    "white",
+    "black",
 )
 
 
