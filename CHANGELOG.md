@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.0.11 - 2021-09-08
+
+✨ NEW: Add `ref-type` option to `button-ref` directive
+
 ## v0.0.10 - 2021-08-08
 
 ✨ NEW: Add `grid-item` directive `child-direction` and `child-align` options
