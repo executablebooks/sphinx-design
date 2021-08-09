@@ -29,9 +29,10 @@ sd_hide_title: true
 A sphinx extension for designing beautiful, screen-size responsive web-components.
 
 ```{button-ref} get_started
+:ref-type: doc
 :outline:
 :color: white
-:class: sd-fs-5
+:class: sd-px-4 sd-fs-5
 
 Get Started
 ```

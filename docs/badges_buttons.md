@@ -108,6 +108,25 @@ Reference Button text
 ````
 `````
 
+Note that by default sphinx converts the content of references to raw text.
+For example `**Bold text**` with `ref-type` set to `ref` will be rendered without bold:
+
+```{button-ref} buttons
+:ref-type: ref
+:color: primary
+
+**Bold text**
+```
+
+However, if using [myst-parser](https://myst-parser.readthedocs.io/), you can set the `ref-type` to `myst`, and the content will be properly rendered:
+
+```{button-ref} buttons
+:ref-type: myst
+:color: primary
+
+**Bold text**
+```
+
 Use the `click-parent` option to make the button's parent container also clickable.
 
 :::{card} Card with an expanded button
@@ -124,6 +143,9 @@ See the [Material Design](https://material.io/components/buttons) and [Bootstrap
 
 ### `button-link` and `button-ref` options
 
+ref-type (`button-ref` only)
+: Type of reference to use; `any` (default), `ref`, `doc`, or `myst`
+
 color
 : Set the color of the button (background and font).
   One of the semantic color names: `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`, `muted`.
@@ -132,7 +154,7 @@ outline
 : Outline color variant
 
 align
-: Align the button on the page; left, right, center or justify
+: Align the button on the page; `left`, `right`, `center` or `justify`
 
 expand
 : Expand to fit parent width
