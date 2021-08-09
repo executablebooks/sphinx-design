@@ -144,6 +144,8 @@ class _ButtonDirective(SphinxDirective):
         "click-parent": directives.flag,
         "tooltip": directives.unchanged_required,
         "shadow": directives.flag,
+        # ref button only
+        "ref-type": make_choice(["any", "ref", "doc", "myst"]),
         "class": directives.class_option,
     }
 
@@ -174,13 +176,16 @@ class _ButtonDirective(SphinxDirective):
         self.set_source_info(node)
         if "tooltip" in self.options:
             node["reftitle"] = self.options["tooltip"]  # TODO escape HTML
+
         if self.content:
             textnodes, _ = self.state.inline_text(
                 "\n".join(self.content), self.lineno + self.content_offset
             )
-            node.extend(textnodes)
+            content = nodes.inline("", "")
+            content.extend(textnodes)
         else:
-            node += nodes.inline(target, target)
+            content = nodes.inline(target, target)
+        node.append(content)
 
         if "expand" in self.options:
             grid_container = nodes.inline(classes=["sd-d-grid"])
@@ -217,13 +222,14 @@ class ButtonRefDirective(_ButtonDirective):
         self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
     ) -> nodes.Node:
         """Create the reference node."""
+        ref_type = self.options.get("ref-type", "any")
         options = {
             # TODO the presence of classes raises an error if the link cannot be found
             "classes": classes,
             "reftarget": target,
             "refdoc": self.env.docname,
-            "refdomain": "",
-            "reftype": "any",  # TODO allow for variable ref type
+            "refdomain": "std" if ref_type in {"ref", "doc"} else "",
+            "reftype": ref_type,
             "refexplicit": explicit_title,
             "refwarn": True,
         }

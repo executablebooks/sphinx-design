@@ -74,8 +74,6 @@ subtitle for card (see <https://material.io/components/cards#anatomy>)
 
 rtd PRs not working
 
-octicon in button text shown as raw HTML
-
 
 [github-ci]: https://github.com/executablebooks/sphinx-design/workflows/continuous-integration/badge.svg?branch=main
 [github-link]: https://github.com/executablebooks/sphinx-design
