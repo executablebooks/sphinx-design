@@ -136,7 +136,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
 
     """
 
-    default_priority = 200
+    default_priority = 199
     formats = ("html",)
 
     def run(self):
