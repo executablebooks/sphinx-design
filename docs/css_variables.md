@@ -57,6 +57,8 @@ The defaults are:
     --sd-color-card-footer: transparent;
     --sd-color-tabs-label-active: hsla(231, 99%, 66%, 1);
     --sd-color-tabs-label-inactive: rgba(178, 206, 245, 0.62);
+    --sd-color-tabs-underline-active: hsla(231, 99%, 66%, 1);
+    --sd-color-tabs-underline-inactive: rgba(178, 206, 245, 0.62);
     --sd-color-tabs-overline: rgb(207, 236, 238);
     --sd-color-tabs-underline: rgb(207, 236, 238);
     --sd-fontsize-tabs-label: 1rem
