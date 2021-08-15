@@ -82,7 +82,7 @@ details.sd-dropdown {
 
   // Hide the card body border when not open
   &:not([open]).sd-card {
-    border-color: transparent;
+    border: none;
   }
   &:not([open]) > .sd-card-header {
     border: 1px solid var(--sd-color-card-border);
