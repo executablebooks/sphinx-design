@@ -82,7 +82,8 @@ $semantic-colors: (
 @each $color, $value in $semantic-colors {
   .sd-outline-#{$color} {
     border-color: var(--sd-color-#{$color}) !important;
-    border: 1px solid !important;
+    border-style: solid !important;
+    border-width: 1px !important;
   }
   a {
     &.sd-outline-#{$color}:focus,
