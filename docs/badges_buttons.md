@@ -208,7 +208,8 @@ If the theme you are using does not already include the FontAwesome CSS, it shou
 html_css_files = ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css"]
 ```
 
-Use either `fa` (deprecated in font-awesome v5), `fas` or `fab` for the role name.
+Use either `fa` (deprecated in font-awesome v5), `fas`, `fab` or `far` for the role name.
+Note that not all regular style icons are free, `far` role only works with free ones.
 
 ````{tab-set-code}
 ```markdown
