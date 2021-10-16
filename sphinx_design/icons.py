@@ -29,7 +29,7 @@ OCTICON_CSS = """\
 def setup_icons(app: Sphinx) -> None:
     app.add_role("octicon", OcticonRole())
     app.add_directive("_all-octicon", AllOcticons)
-    for style in ["fa", "fas", "fab"]:
+    for style in ["fa", "fas", "fab", "far"]:
         # note: fa is deprecated in v5, fas is the default and fab is the other free option
         app.add_role(style, FontawesomeRole(style))
     app.add_config_value("sd_fontawesome_latex", False, "env")
