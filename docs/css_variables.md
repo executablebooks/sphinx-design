@@ -56,7 +56,7 @@ The defaults are:
     --sd-color-card-header: transparent;
     --sd-color-card-footer: transparent;
     --sd-color-tabs-label-active: hsla(231, 99%, 66%, 1);
-    --sd-color-tabs-label-hover: hsl(0, 0%, 66%);
+    --sd-color-tabs-label-hover: hsla(231, 99%, 66%, 1);
     --sd-color-tabs-label-inactive: hsl(0, 0%, 66%);
     --sd-color-tabs-underline-active: hsla(231, 99%, 66%, 1);
     --sd-color-tabs-underline-hover: rgba(178, 206, 245, 0.62);
