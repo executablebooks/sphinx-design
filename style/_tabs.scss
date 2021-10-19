@@ -13,7 +13,7 @@
 
     // Active tab label
     &:checked + label {
-      border-color: var(--sd-color-tabs-label-active);
+      border-color: var(--sd-color-tabs-underline-active);
       color: var(--sd-color-tabs-label-active);
 
       // Show tabbed block content
@@ -23,7 +23,8 @@
     }
 
     &:not(:checked) + label:hover {
-        border-color: var(--sd-color-tabs-label-inactive);
+      color: var(--sd-color-tabs-label-hover);
+      border-color: var(--sd-color-tabs-underline-hover);
     }
 
     // Focused tab label
@@ -43,6 +44,7 @@
     border-bottom: 0.125rem solid transparent;
     margin-bottom: 0;
     color: var(--sd-color-tabs-label-inactive);
+    border-color: var(--sd-color-tabs-underline-inactive);
     cursor: pointer;
     font-size: var(--sd-fontsize-tabs-label);
     font-weight: 700;
