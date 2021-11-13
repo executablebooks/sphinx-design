@@ -213,7 +213,7 @@ Material Design icons come as several flavors. Each flavor represents a differen
 - `material-sharp`
 - `material-twotone`
 
-Not all icons are available for each flavor, but most are. Instead of displaying the 10660+ icons here, you are encouraged to browse the available icons from the [Materia Design Icons' showcase](https://fonts.google.com/icons) hosted by Google.
+Not all icons are available for each flavor, but most are. Instead of displaying the 10660+ icons here, you are encouraged to browse the available icons from the [Material Design Icons' showcase](https://fonts.google.com/icons) hosted by Google.
 
 - A coloured icon: {material-regular}`settings;3em;sd-text-success`, some more text.
 - A coloured icon: {material-outlined}`settings;3em;sd-text-success`, some more text.
