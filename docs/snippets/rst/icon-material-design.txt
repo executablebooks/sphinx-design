@@ -1,0 +1,5 @@
+- A coloured icon: :material-regular:`settings;3em;sd-text-success`, some more text.
+- A coloured icon: :material-outlined:`settings;3em;sd-text-success`, some more text.
+- A coloured icon: :material-sharp:`settings;3em;sd-text-success`, some more text.
+- A coloured icon: :material-round:`settings;3em;sd-text-success`, some more text.
+- A coloured icon: :material-twotone:`settings;3em;sd-text-success`, some more text.
