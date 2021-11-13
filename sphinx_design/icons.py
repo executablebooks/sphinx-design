@@ -217,7 +217,6 @@ def visit_fontawesome_latex(self, node):
     raise nodes.SkipNode
 
 
-
 @lru_cache(1)
 def get_material_icon_data(style: str) -> Dict[str, Any]:
     """Load all octicon data."""
@@ -298,7 +297,9 @@ class MaterialRole(SphinxRole):
         classes = "" if len(values) < 3 else values[2]
         icon = icon.strip()
         try:
-            svg = get_material_icon(self.style, icon, height=height, classes=classes.split())
+            svg = get_material_icon(
+                self.style, icon, height=height, classes=classes.split()
+            )
         except Exception as exc:
             msg = self.inliner.reporter.error(
                 f"Invalid material-{self.style} icon content: {type(exc)} {exc}",
