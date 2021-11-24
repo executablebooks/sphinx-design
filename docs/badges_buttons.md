@@ -175,7 +175,7 @@ class
 
 ## Inline Icons
 
-Inline icon roles are available for both the [GitHub octicon](https://octicons-git-v2.primer.now.sh/octicons/) or [FontAwesome](https://fontawesome.com/icons?d=gallery&m=free) libraries.
+Inline icon roles are available for both the [GitHub octicon](https://primer.style/octicons/) or [FontAwesome](https://fontawesome.com/icons?d=gallery&m=free) libraries.
 
 Octicon icons are added as SVG's directly into the page with the `octicon` role.
 
