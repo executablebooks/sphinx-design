@@ -32,6 +32,8 @@ def setup_icons(app: Sphinx) -> None:
     for style in ["fa", "fas", "fab", "far"]:
         # note: fa is deprecated in v5, fas is the default and fab is the other free option
         app.add_role(style, FontawesomeRole(style))
+    for style in ["regular", "outlined", "round", "sharp", "twotone"]:
+        app.add_role("material-" + style, MaterialRole(style))
     app.add_config_value("sd_fontawesome_latex", False, "env")
     app.connect("config-inited", add_fontawesome_pkg)
     app.add_node(
@@ -213,3 +215,98 @@ def visit_fontawesome_latex(self, node):
     if self.config.sd_fontawesome_latex:
         self.body.append(f"\\faicon{{{node['icon_name']}}}")
     raise nodes.SkipNode
+
+
+@lru_cache(1)
+def get_material_icon_data(style: str) -> Dict[str, Any]:
+    """Load all octicon data."""
+    content = resources.read_text(compiled, f"material_{style}.json")
+    return json.loads(content)
+
+
+def get_material_icon(
+    style: str,
+    name: str,
+    height: str = "1em",
+    classes: Sequence[str] = (),
+    aria_label: Optional[str] = None,
+) -> str:
+    """Return the HTML for an Google material icon SVG icon.
+
+    :height: the height of the material icon, with suffix unit 'px', 'em' or 'rem'.
+    """
+    try:
+        data = get_material_icon_data(style)[name]
+    except KeyError:
+        raise KeyError(f"Unrecognised material-{style} icon: {name}")
+
+    match = HEIGHT_REGEX.match(height)
+    if not match:
+        raise ValueError(
+            f"Invalid height: '{height}', must be format <integer><px|em|rem>"
+        )
+    height_value = round(float(match.group("value")), 3)
+    height_unit = match.group("unit")
+
+    original_height = 20
+    if "20" not in data["heights"]:
+        original_height = int(list(data["heights"].keys())[0])
+    elif "24" in data["heights"]:
+        if height_unit == "px":
+            if height_value >= 24:
+                original_height = 24
+        elif height_value >= 1.5:
+            original_height = 24
+    original_width = data["heights"][str(original_height)]["width"]
+    width_value = round(original_width * height_value / original_height, 3)
+    content = data["heights"][str(original_height)]["path"]
+    options = {
+        "version": "4.0.0.63c5cb3",
+        "width": f"{width_value}{height_unit}",
+        "height": f"{height_value}{height_unit}",
+        "class": " ".join(("sd-material-icon", f"sd-material-icon-{name}", *classes)),
+    }
+
+    options["viewBox"] = f"0 0 {original_width} {original_height}"
+
+    if aria_label is not None:
+        options["aria-label"] = aria_label
+        options["role"] = "img"
+    else:
+        options["aria-hidden"] = "true"
+
+    opt_string = " ".join(f'{k}="{v}"' for k, v in options.items())
+    return f"<svg {opt_string}>{content}</svg>"
+
+
+class MaterialRole(SphinxRole):
+    """Role to display a Material-* icon.
+
+    Additional classes can be added to the element after a semicolon.
+    """
+
+    def __init__(self, style: str) -> None:
+        super().__init__()
+        self.style = style
+
+    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+        """Run the role."""
+        values = self.text.split(";") if ";" in self.text else [self.text]
+        icon = values[0]
+        height = "1em" if len(values) < 2 else values[1]
+        classes = "" if len(values) < 3 else values[2]
+        icon = icon.strip()
+        try:
+            svg = get_material_icon(
+                self.style, icon, height=height, classes=classes.split()
+            )
+        except Exception as exc:
+            msg = self.inliner.reporter.error(
+                f"Invalid material-{self.style} icon content: {type(exc)} {exc}",
+                line=self.lineno,
+            )
+            prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
+            return [prb], [msg]
+        node = nodes.raw("", nodes.Text(svg), format="html")
+        self.set_source_info(node)
+        return [node], []
