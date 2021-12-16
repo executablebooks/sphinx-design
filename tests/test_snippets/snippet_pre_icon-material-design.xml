@@ -2,7 +2,7 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <bullet_list bullet="-">
+        <bullet_list>
             <list_item>
                 <paragraph>
                     A coloured icon: 
