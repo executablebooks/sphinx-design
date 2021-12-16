@@ -215,11 +215,12 @@ Material Design icons come as several flavors. Each flavor represents a differen
 
 Not all icons are available for each flavor, but most are. Instead of displaying the 10660+ icons here, you are encouraged to browse the available icons from the [Material Design Icons' showcase](https://fonts.google.com/icons) hosted by Google.
 
-- A coloured icon: {material-regular}`settings;3em;sd-text-success`, some more text.
-- A coloured icon: {material-outlined}`settings;3em;sd-text-success`, some more text.
-- A coloured icon: {material-sharp}`settings;3em;sd-text-success`, some more text.
-- A coloured icon: {material-round}`settings;3em;sd-text-success`, some more text.
-- A coloured icon: {material-twotone}`settings;3em;sd-text-success`, some more text.
+- A regular icon: {material-regular}`thumbs_up_down`, some more text
+- A coloured regular icon: {material-regular}`settings;3em;sd-text-success`, some more text.
+- A coloured outline icon: {material-outlined}`settings;3em;sd-text-success`, some more text.
+- A coloured sharp icon: {material-sharp}`settings;3em;sd-text-success`, some more text.
+- A coloured round icon: {material-round}`settings;3em;sd-text-success`, some more text.
+- A coloured two-tone icon: {material-twotone}`settings;3em;sd-text-success`, some more text.
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/icon-material-design.txt
