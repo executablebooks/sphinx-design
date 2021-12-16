@@ -1,4 +1,4 @@
-- A regular icon: :material-regular:`data_exploration`, some more text
+- A regular icon: :material-regular:`data_exploration;2em`, some more text
 - A coloured regular icon: :material-regular:`settings;3em;sd-text-success`, some more text.
 - A coloured outline icon: :material-outlined:`settings;3em;sd-text-success`, some more text.
 - A coloured sharp icon: :material-sharp:`settings;3em;sd-text-success`, some more text.
