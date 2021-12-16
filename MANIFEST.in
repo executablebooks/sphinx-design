@@ -22,3 +22,9 @@ include sphinx_design/compiled/style.min.css
 include sphinx_design/compiled/sd_tabs.js
 include sphinx_design/compiled/octicon_LICENSE
 include sphinx_design/compiled/octicons.json
+include sphinx_design/compiled/material_outlined.json
+include sphinx_design/compiled/material_regular.json
+include sphinx_design/compiled/material_round.json
+include sphinx_design/compiled/material_sharp.json
+include sphinx_design/compiled/material_twotone.json
+include sphinx_design/compiled/material-icons_LICENSE
