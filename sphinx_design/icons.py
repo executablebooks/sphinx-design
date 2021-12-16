@@ -16,7 +16,7 @@ from sphinx.util.docutils import SphinxDirective, SphinxRole
 
 from . import compiled
 
-OCTICON_VERSION = "0.0.0-dd899ea"
+OCTICON_VERSION = "v16.1.1"
 
 OCTICON_CSS = """\
 .octicon {
