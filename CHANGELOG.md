@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.0.13
+
+✨ NEW: add icon `far` role (#35), thanks to @OriolAbril
+
+👌 IMPROVE: Styling for tabs (#21), thanks to @pradyunsg
+
+👌 IMPROVE: Properly remove the border on dropdown card body (#23), thanks to @pradyunsg
+
+🐛 FIX: `sd-outline-*` classes color (#25)
+
 ## v0.0.11 - 2021-09-08
 
 ✨ NEW: Add `ref-type` option to `button-ref` directive

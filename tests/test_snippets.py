@@ -33,8 +33,11 @@ def test_snippets_rst(
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
+    pformat = builder.get_doctree("index").pformat()
+    # fixed in https://github.com/executablebooks/MyST-Parser/pull/465
+    pformat = pformat.replace('<bullet_list bullet="-">', "<bullet_list>")
     file_regression.check(
-        builder.get_doctree("index").pformat(),
+        pformat,
         basename=f"snippet_pre_{path.name[:-len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -77,8 +80,11 @@ def test_snippets_rst_post(
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
+    pformat = builder.get_doctree("index", post_transforms=True).pformat()
+    # fixed in https://github.com/executablebooks/MyST-Parser/pull/465
+    pformat = pformat.replace('<bullet_list bullet="-">', "<bullet_list>")
     file_regression.check(
-        builder.get_doctree("index", post_transforms=True).pformat(),
+        pformat,
         basename=f"snippet_post_{path.name[:-len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
