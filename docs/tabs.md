@@ -1,4 +1,4 @@
-(tabs)=
+(sd-tabs)=
 
 # Tabs
 
