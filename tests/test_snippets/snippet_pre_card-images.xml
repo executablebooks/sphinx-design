@@ -10,7 +10,8 @@
                         <container classes="sd-card-img-overlay" design_component="card-overlay" is_div="True">
                             <container classes="sd-card-body" design_component="card-body" is_div="True">
                                 <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                                    Title
+                                    <PassthroughTextElement>
+                                        Title
                                 <paragraph classes="sd-card-text">
                                     Text
                 <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
@@ -21,7 +22,8 @@
                                 Header
                         <container classes="sd-card-body" design_component="card-body" is_div="True">
                             <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                                Title
+                                <PassthroughTextElement>
+                                    Title
                             <paragraph classes="sd-card-text">
                                 Content
                         <container classes="sd-card-footer" design_component="card-footer" is_div="True">
@@ -34,7 +36,8 @@
                                 Header
                         <container classes="sd-card-body" design_component="card-body" is_div="True">
                             <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                                Title
+                                <PassthroughTextElement>
+                                    Title
                             <paragraph classes="sd-card-text">
                                 Content
                         <container classes="sd-card-footer" design_component="card-footer" is_div="True">

@@ -6,13 +6,15 @@
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                        card 1
+                        <PassthroughTextElement>
+                            card 1
                     <paragraph classes="sd-card-text">
                         content
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                        card 2
+                        <PassthroughTextElement>
+                            card 2
                     <paragraph classes="sd-card-text">
                         Longer
                     <paragraph classes="sd-card-text">
@@ -20,16 +22,20 @@
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                        card 3
+                        <PassthroughTextElement>
+                            card 3
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                        card 4
+                        <PassthroughTextElement>
+                            card 4
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                        card 5
+                        <PassthroughTextElement>
+                            card 5
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                        card 6
+                        <PassthroughTextElement>
+                            card 6
