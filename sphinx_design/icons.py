@@ -1,13 +1,8 @@
+from functools import lru_cache
+import importlib.resources as resources
 import json
 import re
-from functools import lru_cache
 from typing import Any, Dict, List, Optional, Sequence, Tuple
-
-try:
-    import importlib.resources as resources
-except ImportError:
-    # python < 3.7
-    import importlib_resources as resources  # type: ignore[no-redef]
 
 from docutils import nodes
 from docutils.parsers.rst import directives
