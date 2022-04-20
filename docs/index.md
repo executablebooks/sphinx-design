@@ -57,6 +57,7 @@ Supports non-HTML output formats
 ```{toctree}
 :hidden:
 
+other
 get_started
 ```
 
