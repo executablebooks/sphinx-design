@@ -8,7 +8,8 @@
                     Header
             <container classes="sd-card-body" design_component="card-body" is_div="True">
                 <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                    Card Title
+                    <PassthroughTextElement>
+                        Card Title
                 <paragraph classes="sd-card-text">
                     Card content
             <container classes="sd-card-footer" design_component="card-footer" is_div="True">

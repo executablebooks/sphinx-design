@@ -1,0 +1,5 @@
+(target)=
+:::{card} Card Title <https://example.com> {ref}`link <target>`
+
+Card content
+:::

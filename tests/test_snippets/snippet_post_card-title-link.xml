@@ -1,0 +1,18 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <target refid="target">
+        <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm" design_component="card" ids="target" is_div="True" names="target">
+            <container classes="sd-card-body" design_component="card-body" is_div="True">
+                <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
+                    <PassthroughTextElement>
+                        Card Title 
+                        <reference refuri="https://example.com">
+                            https://example.com
+                         
+                        <reference internal="True" refid="target">
+                            <inline classes="std std-ref">
+                                link
+                <paragraph classes="sd-card-text">
+                    Card content

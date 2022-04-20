@@ -103,4 +103,6 @@ class PassthroughTextElement(nodes.TextElement):
     """A text element which will not render anything.
 
     This is required for reference node to render correctly outside of paragraphs.
+    Since sphinx expects them to be within a ``TextElement``:
+    https://github.com/sphinx-doc/sphinx/blob/068f802df90ea790f89319094e407c4d5f6c26ff/sphinx/writers/html5.py#L224
     """

@@ -8,13 +8,15 @@
                     <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                         <container classes="sd-card-body" design_component="card-body" is_div="True">
                             <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                                Title 1
+                                <PassthroughTextElement>
+                                    Title 1
                             <paragraph classes="sd-card-text">
                                 A
                 <container classes="sd-col sd-d-flex-row" design_component="grid-item" is_div="True">
                     <container classes="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm" design_component="card" is_div="True">
                         <container classes="sd-card-body" design_component="card-body" is_div="True">
                             <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
-                                Title 2
+                                <PassthroughTextElement>
+                                    Title 2
                             <paragraph classes="sd-card-text">
                                 B
