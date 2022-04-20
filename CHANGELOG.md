@@ -1,6 +1,17 @@
 # Change Log
 
-## v0.0.13
+## v0.1.0 - 2022-04-21
+
+- ✨ NEW: Add material design icons roles, thanks to @2bndy5 in [#41](https://github.com/executablebooks/sphinx-design/pull/41)
+- ⬆️ UPGRADE: octicons to v16.1.1, thanks to @pocek in [#43](https://github.com/executablebooks/sphinx-design/pull/43)
+- 🐛 FIX: Links in card titles by @chrisjsewell in [#59](https://github.com/executablebooks/sphinx-design/pull/59)
+- 🐛 FIX: Exception on missing card link by @chrisjsewell in [#60](https://github.com/executablebooks/sphinx-design/pull/60)
+- 🔧 MAINTAIN: Move from setuptools to flit for package build by @chrisjsewell in [#58](https://github.com/executablebooks/sphinx-design/pull/58)
+- 🔧 MAINTAIN: Drop furo-specific stylesheet, thanks to @pradyunsg in [#22](https://github.com/executablebooks/sphinx-design/pull/22)
+
+**Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.0.13...v0.1.0>
+
+## v0.0.13 - 2021-10-27
 
 ✨ NEW: add icon `far` role (#35), thanks to @OriolAbril
 
