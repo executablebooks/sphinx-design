@@ -176,7 +176,7 @@ class CardDirective(SphinxDirective):
                     "refexplicit": True,
                     "refwarn": True,
                 }
-                link = addnodes.pending_xref("", nodes.Text(""), **options)
+                link = addnodes.pending_xref("", nodes.inline(), **options)
             inst.set_source_info(link)
             link_container += link
             container.append(link_container)
