@@ -1,11 +1,6 @@
 import hashlib
+import importlib.resources as resources
 from pathlib import Path
-
-try:
-    import importlib.resources as resources
-except ImportError:
-    # python < 3.7
-    import importlib_resources as resources  # type: ignore[no-redef]
 
 from docutils import nodes
 from docutils.parsers.rst import directives

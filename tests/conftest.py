@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import pytest
 from docutils import nodes
+import pytest
 from sphinx.testing.path import path as sphinx_path
 from sphinx.testing.util import SphinxTestApp
 

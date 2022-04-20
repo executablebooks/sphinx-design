@@ -34,8 +34,6 @@ def test_snippets_rst(
     write_assets(builder.src_path)
     builder.build()
     pformat = builder.get_doctree("index").pformat()
-    # fixed in https://github.com/executablebooks/MyST-Parser/pull/465
-    pformat = pformat.replace('<bullet_list bullet="-">', "<bullet_list>")
     file_regression.check(
         pformat,
         basename=f"snippet_pre_{path.name[:-len(path.suffix)]}",
@@ -81,8 +79,6 @@ def test_snippets_rst_post(
     write_assets(builder.src_path)
     builder.build()
     pformat = builder.get_doctree("index", post_transforms=True).pformat()
-    # fixed in https://github.com/executablebooks/MyST-Parser/pull/465
-    pformat = pformat.replace('<bullet_list bullet="-">', "<bullet_list>")
     file_regression.check(
         pformat,
         basename=f"snippet_post_{path.name[:-len(path.suffix)]}",
