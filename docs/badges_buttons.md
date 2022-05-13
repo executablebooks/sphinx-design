@@ -246,8 +246,8 @@ Use either `fa` (deprecated in font-awesome v5), `fas`, `fab` or `far` for the r
 Note that not all regular style icons are free, `far` role only works with free ones.
 
 ````{warning}
-Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a
-height/size to the `fa*` roles is not supported. However, you can always add your custom CSS class that controls the `font-size` property.
+Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a height/size to the `fa*` roles is not supported.
+However, you can always add your custom CSS class that controls the `font-size` property.
 
 If a height/size is supplied to a `fa*` role, then it will be interpreted as a CSS class.
 There can only be a maximum of 1 `;` in the `fa*` roles' arguments
