@@ -13,10 +13,11 @@ html_title = f"Sphinx Design ({html_theme.replace('_', '-')})"
 html_static_path = ["_static"]
 html_logo = "_static/logo_wide.svg"
 html_favicon = "_static/logo_square.svg"
-html_css_files = [
-    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-]
 
+if html_theme not in ("sphinx_book_theme", "pydata_sphinx_theme"):
+    html_css_files = [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    ]
 if html_theme == "alabaster":
     html_logo = ""
     html_theme_options = {
