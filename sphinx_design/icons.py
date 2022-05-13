@@ -187,7 +187,7 @@ class FontawesomeRole(SphinxRole):
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
         node = fontawesome(
-            icon=icon, classes=[self.style, f"fa-{icon}", "fa"] + classes.split()
+            icon=icon, classes=[self.style, f"fa-{icon}"] + classes.split()
         )
         self.set_source_info(node)
         return [node], []
