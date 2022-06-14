@@ -74,8 +74,9 @@ These are replaced by the use of directive options, which are:
 The `panel` directive is replaced by the use of the top-level `grid` directive,
 then using `grid-item-card` directive children, rather than delimiting cards by `---`.
 
-If no card is needed, then the `grid-item` directive can be used instead
-and `card` can be also used independently of grids.
+If no card is needed, then the `grid-item` directive can be used instead and `card` can be also used independently of grids.
+
+Approximately, `.. panels::` is equivalent to `.. grid:: 1 2 2 2` with option `:gutter: 2`.
 
 ### `tabbed` directive replaced
 
@@ -86,12 +87,21 @@ The `:sync:` option allows to synchronize tab selection across sets.
 
 The `tab-set-code` directive provides a shorthand for synced code examples.
 
+### `link-button` directive replaced
+
+The `link-button` directive is replaced by the use of `button-ref`/`button-link`.
+
+Directive options have also been added to replace the use of classes:
+
+- `stretched-link` -> `:click-parent:`
+- `btn-block` -> `:expand:`
+
 ### `octicon` icon role
 
 The default SVGs produced are now sized relative to the surrounding text (i.e. using `1em`).
 The syntax for specifying a custom size and adding classes is also changed.
 
-This is similar for favicon icons.
+This is similar for favicon icons, where the `,` delimiter is also replaced by `;`, e.g. ``:fa:`name,class` `` -> ``:fa:`name;class` ``.
 
 ### Improved CSS
 
