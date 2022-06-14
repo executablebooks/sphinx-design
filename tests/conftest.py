@@ -7,6 +7,7 @@ import pytest
 from sphinx.testing.path import path as sphinx_path
 from sphinx.testing.util import SphinxTestApp
 
+from sphinx_design._compat import findall
 from sphinx_design.tabs import TabSetHtmlTransform
 
 pytest_plugins = "sphinx.testing.fixtures"
@@ -46,7 +47,7 @@ class SphinxBuilder:
         if post_transforms:
             self.app.env.apply_post_transforms(doctree, docname)
         # make source path consistent for test comparisons
-        for node in doctree.traverse(include_self=True):
+        for node in findall(doctree)(include_self=True):
             if not ("source" in node and node["source"]):
                 continue
             node["source"] = Path(node["source"]).relative_to(self.src_path).as_posix()
