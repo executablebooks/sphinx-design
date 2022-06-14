@@ -41,6 +41,9 @@ if html_theme == "sphinx_book_theme":
         "logo_only": True,
     }
 if html_theme == "furo":
+    html_css_files = [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css"
+    ]
     html_theme_options = {
         "sidebar_hide_name": True,
     }
