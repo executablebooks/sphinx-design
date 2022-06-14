@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.2.0 - 2022-06-14
+
+- ⬆️ Support Sphinx v5, drop v3
+- ⬆️ Add Python 3.10 support
+
+**Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.1.0...v0.2.0>
+
 ## v0.1.0 - 2022-04-21
 
 - ✨ NEW: Add material design icons roles, thanks to @2bndy5 in [#41](https://github.com/executablebooks/sphinx-design/pull/41)
