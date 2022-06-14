@@ -10,6 +10,7 @@ from sphinx.transforms import SphinxTransform
 from sphinx.util.docutils import SphinxDirective
 
 from . import compiled as static_module
+from ._compat import findall
 from .article_info import setup_article_info
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
@@ -143,15 +144,15 @@ class AddFirstTitleCss(SphinxTransform):
 
     def apply(self):
         hide = False
-        for docinfo in self.document.traverse(nodes.docinfo):
-            for name in docinfo.traverse(nodes.field_name):
+        for docinfo in findall(self.document)(nodes.docinfo):
+            for name in findall(docinfo)(nodes.field_name):
                 if name.astext() == "sd_hide_title":
                     hide = True
                     break
             break
         if not hide:
             return
-        for section in self.document.traverse(nodes.section):
+        for section in findall(self.document)(nodes.section):
             if isinstance(section.children[0], nodes.title):
                 if "classes" in section.children[0]:
                     section.children[0]["classes"].append("sd-d-none")
