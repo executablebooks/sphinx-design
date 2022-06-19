@@ -14,6 +14,7 @@ from sphinx_design.shared import (
     margin_option,
 )
 
+from ._compat import findall
 from .icons import get_octicon, list_octicons
 
 
@@ -217,7 +218,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=body_children,
             )
             if use_card:
-                for para in body_node.traverse(nodes.paragraph):
+                for para in findall(body_node)(nodes.paragraph):
                     para["classes"] = ([] if "classes" in para else para["classes"]) + [
                         "sd-card-text"
                     ]
