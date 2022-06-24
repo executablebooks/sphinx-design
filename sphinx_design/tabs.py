@@ -213,7 +213,9 @@ class TabSetHtmlTransform(SphinxPostTransform):
 
     def run(self) -> None:
         """Run the transform."""
-        for tab_set in self.document.traverse(
+        # Can just use "findall" once docutils 0.18+ is required
+        meth = 'findall' if hasattr(self.document, 'findall') else 'traverse'
+        for tab_set in getattr(self.document, meth)(
             lambda node: is_component(node, "tab-set")
         ):
             tab_set_identity = self.get_unique_key()
