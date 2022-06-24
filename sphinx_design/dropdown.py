@@ -143,9 +143,10 @@ class DropdownHtmlTransform(SphinxPostTransform):
     def run(self):
         """Run the transform"""
         # Can just use "findall" once docutils 0.18+ is required
-        meth = 'findall' if hasattr(self.document, 'findall') else 'traverse'
+        meth = "findall" if hasattr(self.document, "findall") else "traverse"
         for node in getattr(self.document, meth)(
-                lambda node: is_component(node, "dropdown")):
+            lambda node: is_component(node, "dropdown")
+        ):
 
             # TODO option to not have card css (but requires more formatting)
             use_card = True
