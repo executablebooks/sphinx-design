@@ -237,24 +237,43 @@ FontAwesome icons are added via the Fontawesome CSS classes.
 If the theme you are using does not already include the FontAwesome CSS, it should be loaded in your configuration from a [font-awesome CDN](https://cdnjs.com/libraries/font-awesome), with the [html_css_files](https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_css_files) option, e.g.:
 
 ```python
-html_css_files = ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css"]
+html_css_files = [
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+]
 ```
 
 Use either `fa` (deprecated in font-awesome v5), `fas`, `fab` or `far` for the role name.
 Note that not all regular style icons are free, `far` role only works with free ones.
 
+````{warning}
+Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a height/size to the `fa*` roles is not supported.
+However, you can always add your custom CSS class that controls the `font-size` property.
+
+If a height/size is supplied to a `fa*` role, then it will be interpreted as a CSS class.
+There can only be a maximum of 1 `;` in the `fa*` roles' arguments
+````
+
 ````{tab-set-code}
 ```markdown
-An icon {fas}`spinner;sd-bg-primary sd-bg-text-primary`, some more text.
+- An icon {fas}`spinner;sd-text-primary`, some more text.
+- An icon {fab}`github`, some more text.
+- An icon {fab}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fas}`skull;sd-text-danger`, some more text.
 ```
 ```rst
-An icon :fas:`spinner;sd-bg-primary sd-bg-text-primary`, some more text.
+- An icon :fas:`spinner;sd-text-primary`, some more text.
+- An icon :fab:`github`, some more text.
+- An icon :fab:`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon :fas:`skull;sd-text-danger`, some more text.
 ```
 ````
 
-An icon {fas}`spinner;sd-bg-primary sd-bg-text-primary`, some more text.
+- An icon {fas}`spinner;sd-text-primary`, some more text.
+- An icon {fab}`github`, some more text.
+- An icon {fab}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fas}`skull;sd-text-danger`, some more text.
 
-By default, icons will only be output in HTML formats. But if you want fontawesome icons to be output on LaTeX, using the [fontawesome package](https://ctan.org/pkg/fontawesome), you can add to your configuration:
+By default, icons will only be output in HTML formats. But if you want FontAwesome icons to be output on LaTeX, using the [fontawesome package](https://ctan.org/pkg/fontawesome), you can add to your configuration:
 
 ```python
 sd_fontawesome_latex = True
