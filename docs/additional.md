@@ -38,7 +38,7 @@ so you can use substitutions like:
 
 - `date`
   - MyST: `` :date: "{sub-ref}`today`" ``
-  - RST: `:data: |today|`
+  - RST: `:date: |today|`
 - `read-time`
   - MyST: `` :read-time: "{sub-ref}`wordcount-minutes` min read" ``
 
