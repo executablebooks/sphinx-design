@@ -64,6 +64,7 @@ get_started
 :caption: Components
 :hidden:
 
+test
 grids
 cards
 dropdowns
@@ -71,6 +72,8 @@ tabs
 badges_buttons
 additional
 ```
+
+(mini_visium)=
 
 ```{toctree}
 :caption: Styling
