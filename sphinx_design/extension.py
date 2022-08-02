@@ -107,7 +107,8 @@ def visit_depart_null(self, node: nodes.Element) -> None:
 
 
 class Div(SphinxDirective):
-    """Same as the ``container`` directive, but does not add the ``container`` class in HTML outputs,
+    """Same as the ``container`` directive,
+    but does not add the ``container`` class in HTML outputs,
     which can interfere with Bootstrap CSS.
     """
 
