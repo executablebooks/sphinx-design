@@ -7,6 +7,9 @@ author = "Executable Book Project"
 
 extensions = ["myst_parser", "sphinx_design"]
 
+suppress_warnings = ["design.fa-build"]
+sd_fontawesome_latex = True
+
 html_theme = os.environ.get("SPHINX_THEME", "alabaster")
 html_title = f"Sphinx Design ({html_theme.replace('_', '-')})"
 
