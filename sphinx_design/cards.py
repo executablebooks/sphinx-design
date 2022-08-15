@@ -61,6 +61,7 @@ class CardDirective(SphinxDirective):
         "img-background": directives.uri,
         "link": directives.uri,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
+        "link-alt": directives.unchanged,
         "shadow": make_choice(["none", "sm", "md", "lg"]),
         "class-card": directives.class_option,
         "class-header": directives.class_option,
@@ -159,17 +160,23 @@ class CardDirective(SphinxDirective):
 
         if "link" in options:
             link_container = PassthroughTextElement()
+            _classes = ["sd-stretched-link"]
+            _rawtext = options.get("link-alt") or ""
+            if options.get("link-alt"):
+                _classes.append("sd-hide-link-text")
             if options.get("link-type", "url") == "url":
                 link = nodes.reference(
-                    "",
+                    _rawtext,
                     "",
                     refuri=options["link"],
-                    classes=["sd-stretched-link"],
+                    classes=_classes,
                 )
+                if options.get("link-alt"):
+                    link.append(nodes.inline(_rawtext, _rawtext))
             else:
                 options = {
                     # TODO the presence of classes raises an error if the link cannot be found
-                    "classes": ["sd-stretched-link"],
+                    "classes": _classes,
                     "reftarget": options["link"],
                     "refdoc": inst.env.docname,
                     "refdomain": "" if options["link-type"] == "any" else "std",
@@ -177,7 +184,9 @@ class CardDirective(SphinxDirective):
                     "refexplicit": True,
                     "refwarn": True,
                 }
-                link = addnodes.pending_xref("", nodes.inline(), **options)
+                link = addnodes.pending_xref(
+                    _rawtext, nodes.inline(_rawtext, _rawtext), **options
+                )
             inst.set_source_info(link)
             link_container += link
             container.append(link_container)
