@@ -7,9 +7,13 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
+from sphinx.util import logging
 from sphinx.util.docutils import SphinxDirective, SphinxRole
 
 from . import compiled
+from .shared import WARNING_TYPE
+
+logger = logging.getLogger(__name__)
 
 OCTICON_VERSION = "v16.1.1"
 
@@ -35,9 +39,9 @@ def setup_icons(app: Sphinx) -> None:
         fontawesome,
         html=(visit_fontawesome_html, depart_fontawesome_html),
         latex=(visit_fontawesome_latex, None),
-        text=(None, None),
-        man=(None, None),
-        texinfo=(None, None),
+        man=(visit_fontawesome_warning, None),
+        text=(visit_fontawesome_warning, None),
+        texinfo=(visit_fontawesome_warning, None),
     )
 
 
@@ -207,8 +211,29 @@ def add_fontawesome_pkg(app, config):
 
 
 def visit_fontawesome_latex(self, node):
+    """Add latex fonteawesome icon, if configured, else warn."""
     if self.config.sd_fontawesome_latex:
         self.body.append(f"\\faicon{{{node['icon']}}}")
+    else:
+        logger.warning(
+            "Fontawesome icons not included in LaTeX output, "
+            f"consider 'sd_fontawesome_latex=True' [{WARNING_TYPE}.fa-build]",
+            location=node,
+            type=WARNING_TYPE,
+            subtype="fa-build",
+        )
+    raise nodes.SkipNode
+
+
+def visit_fontawesome_warning(self, node: nodes.Element) -> None:
+    """Warn that fontawesome is not supported for this builder."""
+    logger.warning(
+        "Fontawesome icons not supported for builder: "
+        f"{self.builder.name} [{WARNING_TYPE}.fa-build]",
+        location=node,
+        type=WARNING_TYPE,
+        subtype="fa-build",
+    )
     raise nodes.SkipNode
 
 
