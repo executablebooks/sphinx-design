@@ -208,7 +208,7 @@ def add_fontawesome_pkg(app, config):
 
 def visit_fontawesome_latex(self, node):
     if self.config.sd_fontawesome_latex:
-        self.body.append(f"\\faicon{{{node['icon_name']}}}")
+        self.body.append(f"\\faicon{{{node['icon']}}}")
     raise nodes.SkipNode
 
 
