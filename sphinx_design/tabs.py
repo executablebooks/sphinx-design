@@ -1,5 +1,9 @@
+import os
+import random
+import time
+import uuid
+
 from typing import List
-from uuid import uuid4
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -11,6 +15,9 @@ from sphinx.util.logging import getLogger
 from .shared import WARNING_TYPE, create_component, is_component
 
 LOGGER = getLogger(__name__)
+
+rnd = random.Random()
+rnd.seed(os.environ.get("SOURCE_DATE_EPOCH", time.time()))
 
 
 def setup_tabs(app: Sphinx) -> None:
@@ -209,7 +216,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
     formats = ("html",)
 
     def get_unique_key(self):
-        return str(uuid4())
+        return uuid.UUID(int=rnd.getrandbits(128), version=4).hex
 
     def run(self) -> None:
         """Run the transform."""
