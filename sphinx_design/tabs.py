@@ -1,9 +1,8 @@
 import os
 import random
 import time
-import uuid
-
 from typing import List
+import uuid
 
 from docutils import nodes
 from docutils.parsers.rst import directives
