@@ -135,6 +135,7 @@ Try hovering over then clicking on the cards below:
 
 :::{card} Clickable Card (external)
 :link: https://example.com
+:link-alt: example
 
 The entire card can be clicked to navigate to <https://example.com>.
 :::
@@ -142,6 +143,7 @@ The entire card can be clicked to navigate to <https://example.com>.
 :::{card} Clickable Card (internal)
 :link: cards-clickable
 :link-type: ref
+:link-alt: cards-clickable
 
 The entire card can be clicked to navigate to the `cards-clickable` reference target.
 :::
@@ -260,6 +262,9 @@ link
 
 link-type
 : Type of link: `url` (default), `ref`, `doc`, `any`.
+
+link-alt
+: Alternative text for the link (that will be used by screen-readers).
 
 shadow
 : The size of the shadow below the card: `none`, `sm` (default), `md`, `lg`.
