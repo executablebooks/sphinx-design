@@ -148,7 +148,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
     def run(self):
         """Run the transform"""
         document: nodes.document = self.document
-        for node in document.traverse(lambda node: is_component(node, "dropdown")):
+        for node in findall(document)(lambda node: is_component(node, "dropdown")):
 
             # TODO option to not have card css (but requires more formatting)
             use_card = True

@@ -186,6 +186,24 @@ Ending paragraph
 
 ::::::
 
+Tab set, within tab set:
+
+::::::{tab-set}
+:::::{tab-item} Label 1
+::::{tab-set}
+:::{tab-item} Label 1a
+Content 1a
+:::
+:::{tab-item} Label 1b
+Content 1b
+:::
+::::
+:::::
+:::::{tab-item} Label 2
+Content 2
+:::::
+::::::
+
 ## `tab-set` options
 
 class
