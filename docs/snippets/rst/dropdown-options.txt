@@ -1,0 +1,12 @@
+.. dropdown:: Title
+    :name: target
+    :color: info
+    :icon: alert
+    :margin: 1
+    :class-container: class-container
+    :class-title: class-title
+    :class-body: class-body
+
+    Dropdown content
+
+:ref:`target`, :ref:`text <target>`

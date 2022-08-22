@@ -1,0 +1,17 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container body_classes="class-body" container_classes="sd-m-1 class-container" design_component="dropdown" has_title="True" icon="alert" is_div="True" opened="False" title_classes="class-title sd-bg-info sd-bg-text-info" type="dropdown">
+            <rubric ids="target" names="target">
+                Title
+            <paragraph>
+                Dropdown content
+        <paragraph>
+            <pending_xref refdoc="index" refdomain="std" refexplicit="False" reftarget="target" reftype="ref" refwarn="True">
+                <inline classes="xref std std-ref">
+                    target
+            , 
+            <pending_xref refdoc="index" refdomain="std" refexplicit="True" reftarget="target" reftype="ref" refwarn="True">
+                <inline classes="xref std std-ref">
+                    text

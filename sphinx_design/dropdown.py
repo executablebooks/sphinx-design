@@ -119,10 +119,15 @@ class DropdownDirective(SphinxDirective):
         self.set_source_info(container)
         if self.arguments:
             textnodes, messages = self.state.inline_text(self.arguments[0], self.lineno)
-            container += nodes.rubric(self.arguments[0], "", *textnodes)
+            title_node = nodes.rubric(self.arguments[0], "", *textnodes)
+            container += title_node
             container += messages
+            # where possible we add the target to the title node,
+            # so that it can be used as the reference text
+            self.add_name(title_node)
+        else:
+            self.add_name(container)
         self.state.nested_parse(self.content, self.content_offset, container)
-        self.add_name(container)
         return [container]
 
 
@@ -142,7 +147,8 @@ class DropdownHtmlTransform(SphinxPostTransform):
 
     def run(self):
         """Run the transform"""
-        for node in self.document.traverse(lambda node: is_component(node, "dropdown")):
+        document: nodes.document = self.document
+        for node in document.traverse(lambda node: is_component(node, "dropdown")):
 
             # TODO option to not have card css (but requires more formatting)
             use_card = True
@@ -179,6 +185,8 @@ class DropdownHtmlTransform(SphinxPostTransform):
 
             if node["has_title"]:
                 title_children = node[0].children
+                if node[0].get("ids"):
+                    newnode["ids"] += node[0]["ids"]
                 body_children = node[1:]
             else:
                 title_children = [

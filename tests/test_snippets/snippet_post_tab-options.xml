@@ -1,0 +1,19 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container classes="sd-tab-set class-set" design_component="tab-set" is_div="True">
+            <sd_tab_input checked="True" id="mock-uuid" set_id="mock-uuid" type="radio">
+            <sd_tab_label classes="sd-tab-label class-label" ids="target" input_id="mock-uuid">
+                Label
+            <container classes="sd-tab-content class-content" design_component="tab-content" is_div="True">
+                <paragraph>
+                    Content
+        <paragraph>
+            <reference internal="True" refid="target">
+                <inline classes="std std-ref">
+                    Label
+            , 
+            <reference internal="True" refid="target">
+                <inline classes="std std-ref">
+                    text
