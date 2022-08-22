@@ -7,6 +7,7 @@ from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
+from ._compat import findall
 from .shared import WARNING_TYPE, create_component, is_component
 
 LOGGER = getLogger(__name__)
@@ -216,7 +217,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
         tab_item_id_base = "sd-tab-item-"
         tab_item_id_num = 0
 
-        for tab_set in self.document.traverse(
+        for tab_set in findall(self.document)(
             lambda node: is_component(node, "tab-set")
         ):
             tab_set_identity = tab_set_id_base + str(tab_set_id_num)
