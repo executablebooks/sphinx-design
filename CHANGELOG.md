@@ -1,5 +1,20 @@
 # Change Log
 
+## v0.3.0 - 2022-08-22
+
+- ⬆️ Update Materials Design Icons to v4.0.0-46-gc9e5528, thanks to @2bndy5 (#69)
+- 🐛 FIX: dropdown/tab-item `:name:` options (#91)
+- 🐛 FIX: Docs build against non-html formats (#88)
+- 👌 IMPROVE: Add card options `class-img-top`/`class-img-bottom` (#92)
+- 👌 IMPROVE: Add `link-alt` to fix card link accessibility (#89)
+  - adds the `link-alt` option to `card` (and `grid-item-card`) directives, in order to assign a discernable name to the link (for screen readers).
+- 👌 IMPROVE: Make tab ids deterministic (#93)
+  - Use increasing indices, rather than UUIDs
+- 🔧 MAINTAIN: Fix docutils `PendingDeprecationWarning` (#94)
+- 📚 DOCS: Update font awesome icons (#64)
+
+**Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.2.0...v0.3.0>
+
 ## v0.2.0 - 2022-06-14
 
 - ⬆️ Support Sphinx v5, drop v3
