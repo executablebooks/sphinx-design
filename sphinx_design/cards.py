@@ -68,6 +68,8 @@ class CardDirective(SphinxDirective):
         "class-body": directives.class_option,
         "class-title": directives.class_option,
         "class-footer": directives.class_option,
+        "class-img-top": directives.class_option,
+        "class-img-bottom": directives.class_option,
     }
 
     def run(self) -> List[nodes.Node]:
@@ -113,7 +115,7 @@ class CardDirective(SphinxDirective):
                 "",
                 uri=options["img-top"],
                 alt="card-img-top",
-                classes=["sd-card-img-top"],
+                classes=["sd-card-img-top"] + options.get("class-img-top", []),
             )
             container.append(image_top)
 
@@ -154,7 +156,7 @@ class CardDirective(SphinxDirective):
                 "",
                 uri=options["img-bottom"],
                 alt="card-img-bottom",
-                classes=["sd-card-img-bottom"],
+                classes=["sd-card-img-bottom"] + options.get("class-img-bottom", []),
             )
             container.append(image_bottom)
 

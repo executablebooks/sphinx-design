@@ -283,3 +283,9 @@ class-title
 
 class-footer
 : Additional CSS classes for the footer element.
+
+class-img-top
+: Additional CSS classes for the top image (if present).
+
+class-img-bottom
+: Additional CSS classes for the bottom image (if present).
