@@ -3,14 +3,14 @@
         <title>
             Heading
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
-            <sd_tab_input checked="True" id="mock-uuid" set_id="mock-uuid" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="mock-uuid" sync_id="tabcode-python">
+            <sd_tab_input checked="True" id="sd-tab-item-0" set_id="sd-tab-set-0" type="radio">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-0" sync_id="tabcode-python">
                 PYTHON
             <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                 <literal_block force="False" highlight_args="{'linenostart': 1}" language="python" linenos="False" source="snippet.py" xml:space="preserve">
                     a = 1
-            <sd_tab_input checked="False" id="mock-uuid" set_id="mock-uuid" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="mock-uuid" sync_id="tabcode-javascript">
+            <sd_tab_input checked="False" id="sd-tab-item-1" set_id="sd-tab-set-0" type="radio">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-1" sync_id="tabcode-javascript">
                 JAVASCRIPT
             <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                 <literal_block force="False" highlight_args="{}" language="javascript" linenos="False" xml:space="preserve">

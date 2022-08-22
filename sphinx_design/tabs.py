@@ -1,5 +1,4 @@
 from typing import List
-from uuid import uuid4
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -208,15 +207,20 @@ class TabSetHtmlTransform(SphinxPostTransform):
     default_priority = 200
     formats = ("html",)
 
-    def get_unique_key(self):
-        return str(uuid4())
-
     def run(self) -> None:
         """Run the transform."""
+
+        # setup id generators
+        tab_set_id_base = "sd-tab-set-"
+        tab_set_id_num = 0
+        tab_item_id_base = "sd-tab-item-"
+        tab_item_id_num = 0
+
         for tab_set in self.document.traverse(
             lambda node: is_component(node, "tab-set")
         ):
-            tab_set_identity = self.get_unique_key()
+            tab_set_identity = tab_set_id_base + str(tab_set_id_num)
+            tab_set_id_num += 1
             children = []
             # get the first selected node
             selected_idx = None
@@ -239,7 +243,8 @@ class TabSetHtmlTransform(SphinxPostTransform):
                 except ValueError:
                     print(tab_item)
                     raise
-                tab_item_identity = self.get_unique_key()
+                tab_item_identity = tab_item_id_base + str(tab_item_id_num)
+                tab_item_id_num += 1
 
                 # create: <input checked="checked" id="id" type="radio">
                 input_node = sd_tab_input(

@@ -8,7 +8,6 @@ from sphinx.testing.path import path as sphinx_path
 from sphinx.testing.util import SphinxTestApp
 
 from sphinx_design._compat import findall
-from sphinx_design.tabs import TabSetHtmlTransform
 
 pytest_plugins = "sphinx.testing.fixtures"
 
@@ -63,10 +62,6 @@ class SphinxBuilder:
 
 @pytest.fixture()
 def sphinx_builder(tmp_path: Path, make_app, monkeypatch):
-
-    # make sure tabbed id keys are reproducible across test runs
-    monkeypatch.setattr(TabSetHtmlTransform, "get_unique_key", lambda self: "mock-uuid")
-
     def _create_project(
         buildername: str = "html", conf_kwargs: Optional[Dict[str, Any]] = None
     ):
