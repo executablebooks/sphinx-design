@@ -259,6 +259,8 @@ class TabSetHtmlTransform(SphinxPostTransform):
                     input_id=tab_item_identity,
                     classes=tab_label["classes"],
                 )
+                if tab_label.get("ids"):
+                    label_node["ids"] += tab_label["ids"]
                 if "sync_id" in tab_label:
                     label_node["sync_id"] = tab_label["sync_id"]
                 label_node.source, label_node.line = tab_item.source, tab_item.line

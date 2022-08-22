@@ -1,0 +1,13 @@
+.. tab-set::
+    :class: class-set
+
+    .. tab-item:: Label
+        :name: target
+        :selected:
+        :class-container: class-container
+        :class-label: class-label
+        :class-content: class-content
+
+        Content
+
+:ref:`target`, :ref:`text <target>`
