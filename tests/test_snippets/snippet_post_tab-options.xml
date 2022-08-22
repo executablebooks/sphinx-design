@@ -3,8 +3,8 @@
         <title>
             Heading
         <container classes="sd-tab-set class-set" design_component="tab-set" is_div="True">
-            <sd_tab_input checked="True" id="mock-uuid" set_id="mock-uuid" type="radio">
-            <sd_tab_label classes="sd-tab-label class-label" ids="target" input_id="mock-uuid">
+            <sd_tab_input checked="True" id="sd-tab-item-0" set_id="sd-tab-set-0" type="radio">
+            <sd_tab_label classes="sd-tab-label class-label" ids="target" input_id="sd-tab-item-0">
                 Label
             <container classes="sd-tab-content class-content" design_component="tab-content" is_div="True">
                 <paragraph>
