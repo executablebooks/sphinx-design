@@ -228,3 +228,30 @@ class-label
 
 class-content
 : Additional CSS classes for the content element.
+
+## Synchronised tab options
+
+### URL parameter
+
+By default, the URL does not indicate the tab that you selected.
+To include the tab as a URL parameter, add a setting like the following example in your `conf.py` file:
+
+```python
+sphinx_design_sync_tabs_url_param = "tab"
+```
+
+With a setting like the preceding example, after you browse to a URL like `https://www.example.com/project-A/index.html` and select a tab that you configured with the `sync` option of `python`, the URL changes to `https://www.example.com/project-A/index.html?tab=python`.
+
+### Local storage key
+
+Synchronised tabs and tabbed code examples store the value of the `sync` option in browser local storage so that a return visit to a page opens the most-recently viewed tab.
+The storage applies to a single domain, such as `https://www.example.com`.
+As a result, two projects on the same domain can interfere with each other.
+
+To use project-specific storage, add a setting like the following example in your `conf.py` file:
+
+```python
+sphinx_design_sync_tabs_storage_key = "proj-a"
+```
+
+The default value for the storage key is `sphinx-design-last-tab`.

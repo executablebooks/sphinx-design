@@ -1,6 +1,7 @@
 import hashlib
 import importlib.resources as resources
 from pathlib import Path
+from string import Template
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -19,6 +20,15 @@ from .grids import setup_grids
 from .icons import setup_icons
 from .shared import PassthroughTextElement, create_component
 from .tabs import setup_tabs
+
+
+class AmpersandTemplate(Template):
+    """We need a Template with a delimiter other than dollar sign
+    to template the JavaScript file. This is shamelessly stolen from
+    test_string.py in the Python repository.
+    """
+
+    delimiter = "&"
 
 
 def setup_extension(app: Sphinx) -> None:
@@ -42,6 +52,10 @@ def setup_extension(app: Sphinx) -> None:
         "div", Div, override=True
     )  # override sphinx-panels implementation
     app.add_transform(AddFirstTitleCss)
+    app.add_config_value(
+        "sphinx_design_sync_tabs_storage_key", "sphinx-design-last-tab", rebuild=True
+    )
+    app.add_config_value("sphinx_design_sync_tabs_url_param", None, rebuild=True)
     setup_badges_and_buttons(app)
     setup_cards(app)
     setup_grids(app)
@@ -64,7 +78,11 @@ def update_css_js(app: Sphinx):
     js_path = static_path / "design-tabs.js"
     app.add_js_file(js_path.name)
     if not js_path.exists():
-        content = resources.read_text(static_module, "sd_tabs.js")
+        stor_key = app.env.config.sphinx_design_sync_tabs_storage_key
+        url_key = app.env.config.sphinx_design_sync_tabs_url_param
+        content = AmpersandTemplate(
+            resources.read_text(static_module, "sd_tabs.js")
+        ).substitute(storage_key=stor_key, param_key=url_key)
         js_path.write_text(content)
     # Read the css content and hash it
     content = resources.read_text(static_module, "style.min.css")
