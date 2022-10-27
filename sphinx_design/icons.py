@@ -48,7 +48,9 @@ def setup_icons(app: Sphinx) -> None:
 @lru_cache(1)
 def get_octicon_data() -> Dict[str, Any]:
     """Load all octicon data."""
-    content = resources.read_text(compiled, "octicons.json")
+    content = resources.files(compiled).joinpath("octicons.json").read_text(
+        encoding="utf8"
+    )
     return json.loads(content)
 
 
@@ -240,7 +242,9 @@ def visit_fontawesome_warning(self, node: nodes.Element) -> None:
 @lru_cache(1)
 def get_material_icon_data(style: str) -> Dict[str, Any]:
     """Load all octicon data."""
-    content = resources.read_text(compiled, f"material_{style}.json")
+    content = resources.files(compiled).joinpath(f"material_{style}.json").read_text(
+        encoding="utf8"
+    )
     return json.loads(content)
 
 
