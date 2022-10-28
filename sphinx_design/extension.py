@@ -65,14 +65,10 @@ def update_css_js(app: Sphinx):
     static_module_path = resources.files(static_module)
     app.add_js_file(js_path.name)
     if not js_path.exists():
-        content = static_module_path.joinpath("sd_tabs.js").read_text(
-            encoding="utf8"
-        )
+        content = static_module_path.joinpath("sd_tabs.js").read_text(encoding="utf8")
         js_path.write_text(content)
     # Read the css content and hash it
-    content = static_module_path.joinpath("style.min.css").read_text(
-        encoding="utf8"
-    )
+    content = static_module_path.joinpath("style.min.css").read_text(encoding="utf8")
     hash = hashlib.md5(content.encode("utf8")).hexdigest()
     # Write the css file
     css_path = static_path / f"design-style.{hash}.min.css"
