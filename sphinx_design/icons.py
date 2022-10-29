@@ -10,8 +10,8 @@ from sphinx.util import logging
 from sphinx.util.docutils import SphinxDirective, SphinxRole
 
 from . import compiled
-from .shared import WARNING_TYPE
 from ._compat import read_text
+from .shared import WARNING_TYPE
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,8 @@
 """Helpers for cross compatibility across dependency versions."""
+from importlib import resources
 from typing import Callable, Iterable
 
 from docutils.nodes import Element
-from importlib import resources
 
 
 def findall(node: Element) -> Callable[..., Iterable[Element]]:
