@@ -1,5 +1,4 @@
 import hashlib
-import importlib.resources as resources
 from pathlib import Path
 
 from docutils import nodes
@@ -10,7 +9,7 @@ from sphinx.transforms import SphinxTransform
 from sphinx.util.docutils import SphinxDirective
 
 from . import compiled as static_module
-from ._compat import findall
+from ._compat import findall, read_text
 from .article_info import setup_article_info
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
@@ -62,13 +61,12 @@ def update_css_js(app: Sphinx):
     app.config.html_static_path.append(str(static_path))
     # Copy JS to the build directory.
     js_path = static_path / "design-tabs.js"
-    static_module_path = resources.files(static_module)
     app.add_js_file(js_path.name)
     if not js_path.exists():
-        content = static_module_path.joinpath("sd_tabs.js").read_text(encoding="utf8")
+        content = read_text(static_module, "sd_tabs.js")
         js_path.write_text(content)
     # Read the css content and hash it
-    content = static_module_path.joinpath("style.min.css").read_text(encoding="utf8")
+    content = read_text(static_module, "style.min.css")
     hash = hashlib.md5(content.encode("utf8")).hexdigest()
     # Write the css file
     css_path = static_path / f"design-style.{hash}.min.css"
