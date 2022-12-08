@@ -140,6 +140,7 @@ class CardDirective(SphinxDirective):
             textnodes, _ = inst.state.inline_text(arguments[0], inst.lineno)
             title_container = PassthroughTextElement()
             title_container.extend(textnodes)
+            inst.set_source_info(title_container)
             title.append(title_container)
             body.insert(0, title)
         container.append(body)
