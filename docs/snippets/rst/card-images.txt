@@ -5,11 +5,13 @@
         .. card:: Title
             :img-background: images/particle_background.jpg
             :class-card: sd-text-black
+            :img-alt: my text
 
             Text
 
     .. grid-item-card:: Title
         :img-top: images/particle_background.jpg
+        :img-alt:
 
         Header
         ^^^
