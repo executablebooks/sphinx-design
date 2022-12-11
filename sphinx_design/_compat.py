@@ -13,7 +13,6 @@ def findall(node: Element) -> Callable[..., Iterable[Element]]:
 
 
 def read_text(module: resources.Package, filename: str) -> str:
-    has_files = hasattr(resources, "files")
-    if has_files:
+    if hasattr(resources, "files"):
         return resources.files(module).joinpath(filename).read_text()
     return resources.read_text(module, filename)
