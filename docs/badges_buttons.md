@@ -242,7 +242,7 @@ html_css_files = [
 ]
 ```
 
-Use either `fa-solid`, `fa-brand` or `fa-regular` for the role name.
+Use either `fa-solid`, `fa-brands` or `fa-regular` for the role name.
 Note that not all regular style icons are free, `fa-regular` role only works with free ones.
 
 ````{warning}
@@ -256,21 +256,21 @@ There can only be a maximum of 1 `;` in the `fa-*` roles' arguments
 ````{tab-set-code}
 ```markdown
 - An icon {fa-solid}`spinner;sd-text-primary`, some more text.
-- An icon {fa-brand}`github`, some more text.
-- An icon {fa-brand}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fa-brands}`github`, some more text.
+- An icon {fa-brands}`gitkraken;sd-text-success fa-xl`, some more text.
 - An icon {fa-solid}`skull;sd-text-danger`, some more text.
 ```
 ```rst
 - An icon :fa-solid:`spinner;sd-text-primary`, some more text.
-- An icon :fa-brand:`github`, some more text.
-- An icon :fa-brand:`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon :fa-brands:`github`, some more text.
+- An icon :fa-brands:`gitkraken;sd-text-success fa-xl`, some more text.
 - An icon :fa-solid:`skull;sd-text-danger`, some more text.
 ```
 ````
 
 - An icon {fa-solid}`spinner;sd-text-primary`, some more text.
-- An icon {fa-brand}`github`, some more text.
-- An icon {fa-brand}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fa-brands}`github`, some more text.
+- An icon {fa-brands}`gitkraken;sd-text-success fa-xl`, some more text.
 - An icon {fa-solid}`skull;sd-text-danger`, some more text.
 
 By default, icons will only be output in HTML formats. But if you want FontAwesome icons to be output on LaTeX, using the [fontawesome package](https://ctan.org/pkg/fontawesome), you can add to your configuration:

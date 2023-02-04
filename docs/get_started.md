@@ -101,7 +101,7 @@ Directive options have also been added to replace the use of classes:
 The default SVGs produced are now sized relative to the surrounding text (i.e. using `1em`).
 The syntax for specifying a custom size and adding classes is also changed.
 
-This is similar for favicon icons, where the `,` delimiter is also replaced by `;`, e.g. ``:fa:`name,class` `` -> ``:fa:`name;class` ``.
+This is similar for favicon icons, where the `,` delimiter is also replaced by `;`, e.g. ``:fa-solid:`name,class` `` -> ``:fa-solid:`name;class` ``.
 
 ### Improved CSS
 
