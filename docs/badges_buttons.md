@@ -242,36 +242,36 @@ html_css_files = [
 ]
 ```
 
-Use either `fa` (deprecated in font-awesome v5), `fas`, `fab` or `far` for the role name.
-Note that not all regular style icons are free, `far` role only works with free ones.
+Use either `fa-solid`, `fa-brand` or `fa-regular` for the role name.
+Note that not all regular style icons are free, `fa-regular` role only works with free ones.
 
 ````{warning}
-Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a height/size to the `fa*` roles is not supported.
+Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a height/size to the `fa-*` roles is not supported.
 However, you can always add your custom CSS class that controls the `font-size` property.
 
-If a height/size is supplied to a `fa*` role, then it will be interpreted as a CSS class.
-There can only be a maximum of 1 `;` in the `fa*` roles' arguments
+If a height/size is supplied to a `fa-*` role, then it will be interpreted as a CSS class.
+There can only be a maximum of 1 `;` in the `fa-*` roles' arguments
 ````
 
 ````{tab-set-code}
 ```markdown
-- An icon {fas}`spinner;sd-text-primary`, some more text.
-- An icon {fab}`github`, some more text.
-- An icon {fab}`gitkraken;sd-text-success fa-xl`, some more text.
-- An icon {fas}`skull;sd-text-danger`, some more text.
+- An icon {fa-solid}`spinner;sd-text-primary`, some more text.
+- An icon {fa-brand}`github`, some more text.
+- An icon {fa-brand}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fa-solid}`skull;sd-text-danger`, some more text.
 ```
 ```rst
-- An icon :fas:`spinner;sd-text-primary`, some more text.
-- An icon :fab:`github`, some more text.
-- An icon :fab:`gitkraken;sd-text-success fa-xl`, some more text.
-- An icon :fas:`skull;sd-text-danger`, some more text.
+- An icon :fa-solid:`spinner;sd-text-primary`, some more text.
+- An icon :fa-brand:`github`, some more text.
+- An icon :fa-brand:`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon :fa-solid:`skull;sd-text-danger`, some more text.
 ```
 ````
 
-- An icon {fas}`spinner;sd-text-primary`, some more text.
-- An icon {fab}`github`, some more text.
-- An icon {fab}`gitkraken;sd-text-success fa-xl`, some more text.
-- An icon {fas}`skull;sd-text-danger`, some more text.
+- An icon {fa-solid}`spinner;sd-text-primary`, some more text.
+- An icon {fa-brand}`github`, some more text.
+- An icon {fa-brand}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fa-solid}`skull;sd-text-danger`, some more text.
 
 By default, icons will only be output in HTML formats. But if you want FontAwesome icons to be output on LaTeX, using the [fontawesome package](https://ctan.org/pkg/fontawesome), you can add to your configuration:
 
