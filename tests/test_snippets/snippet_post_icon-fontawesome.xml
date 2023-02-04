@@ -3,6 +3,6 @@
         <title>
             Heading
         <paragraph>
-            An icon
+            An icon 
             <fontawesome classes="fa-solid fa-spinner sd-bg-primary sd-bg-text-primary" icon="spinner">
             , some more text.
