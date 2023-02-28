@@ -2,15 +2,15 @@
 import os
 
 project = "Sphinx Design"
-copyright = "2021, Executable Book Project"
-author = "Executable Book Project"
+copyright = "2022, Chris Sewell"
+author = "Chris Sewell"
 
 extensions = ["myst_parser", "sphinx_design"]
 
 suppress_warnings = ["design.fa-build"]
 sd_fontawesome_latex = True
 
-html_theme = os.environ.get("SPHINX_THEME", "alabaster")
+html_theme = os.environ.get("SPHINX_THEME", "furo")
 html_title = f"Sphinx Design ({html_theme.replace('_', '-')})"
 
 html_static_path = ["_static"]
@@ -30,12 +30,12 @@ if html_theme == "alabaster":
         "github_button": False,
         "github_type": "star",
         "github_banner": False,
-        "github_user": "executablebooks",
-        "github_repo": "sphinx-design",
+        "github_user": "chrisjsewell",
+        "github_repo": "sphinx-design2",
     }
 if html_theme == "sphinx_book_theme":
     html_theme_options = {
-        "repository_url": "https://github.com/executablebooks/sphinx-design",
+        "repository_url": "https://github.com/chrisjsewell/sphinx-design2",
         "use_repository_button": True,
         "use_edit_page_button": True,
         "use_issues_button": True,

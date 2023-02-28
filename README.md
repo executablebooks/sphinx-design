@@ -1,10 +1,12 @@
-# sphinx-design
+# sphinx-design2
 
 [![Github-CI][github-ci]][github-link]
 [![Coverage Status][codecov-badge]][codecov-link]
 [![PyPI][pypi-badge]][pypi-link]
 
 A sphinx extension for designing beautiful, view size responsive web components.
+
+Fork, of sphinx-design, for local development.
 
 Created with inspiration from [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io) and [Material-UI](https://material-ui.com/) design frameworks.
 
@@ -75,9 +77,9 @@ subtitle for card (see <https://material.io/components/cards#anatomy>)
 rtd PRs not working
 
 
-[github-ci]: https://github.com/executablebooks/sphinx-design/workflows/continuous-integration/badge.svg?branch=main
-[github-link]: https://github.com/executablebooks/sphinx-design
-[codecov-badge]: https://codecov.io/gh/executablebooks/sphinx-design/branch/main/graph/badge.svg
-[codecov-link]: https://codecov.io/gh/executablebooks/sphinx-design
-[pypi-badge]: https://img.shields.io/pypi/v/sphinx-design.svg
-[pypi-link]: https://pypi.org/project/sphinx-design
+[github-ci]: https://github.com/chrisjsewell/sphinx-design2/workflows/continuous-integration/badge.svg?branch=main
+[github-link]: https://github.com/chrisjsewell/sphinx-design2
+[codecov-badge]: https://codecov.io/gh/chrisjsewell/sphinx-design2/branch/main/graph/badge.svg
+[codecov-link]: https://codecov.io/gh/chrisjsewell/sphinx-design2
+[pypi-badge]: https://img.shields.io/pypi/v/sphinx-design2.svg
+[pypi-link]: https://pypi.org/project/sphinx-design2

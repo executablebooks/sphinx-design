@@ -11,7 +11,7 @@
 
 ## Usage
 
-Simply pip install `sphinx-design` and add the extension to your `conf.py`:
+Simply pip install `sphinx-design2` and add the extension to your `conf.py`:
 
 ```python
 extensions = ["sphinx_design"]

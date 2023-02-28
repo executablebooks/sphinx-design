@@ -2,7 +2,7 @@
 sd_hide_title: true
 ---
 
-# sphinx-design
+# sphinx-design2
 
 ::::::{div} landing-title
 :style: "padding: 0.1rem 0.5rem 0.6rem 0; background-image: linear-gradient(315deg, #438ff9 0%, #1572f4 74%); clip-path: polygon(0px 0px, 100% 0%, 100% 100%, 0% calc(100% - 1.5rem)); -webkit-clip-path: polygon(0px 0px, 100% 0%, 100% 100%, 0% calc(100% - 1.5rem));"
@@ -80,16 +80,16 @@ css_variables
 css_classes
 ```
 
-```{toctree}
-:caption: Themes
-:hidden:
+% ```{toctree}
+% :caption: Themes
+% :hidden:
 
-alabaster <https://sphinx-design.readthedocs.io/en/alabaster-theme>
-sphinx-book-theme <https://sphinx-design.readthedocs.io/en/sbt-theme>
-pydata-sphinx-theme <https://sphinx-design.readthedocs.io/en/pydata-theme>
-sphinx-rtd-theme <https://sphinx-design.readthedocs.io/en/rtd-theme>
-furo <https://sphinx-design.readthedocs.io/en/furo-theme>
-```
+% alabaster <https://sphinx-design.readthedocs.io/en/alabaster-theme>
+% sphinx-book-theme <https://sphinx-design.readthedocs.io/en/sbt-theme>
+% pydata-sphinx-theme <https://sphinx-design.readthedocs.io/en/pydata-theme>
+% sphinx-rtd-theme <https://sphinx-design.readthedocs.io/en/rtd-theme>
+% furo <https://sphinx-design.readthedocs.io/en/furo-theme>
+% ```
 
 ::::{grid} 1 2 2 3
 :margin: 4 4 0 0
