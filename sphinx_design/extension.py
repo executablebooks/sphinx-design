@@ -119,10 +119,9 @@ class Div(SphinxDirective):
 
     def run(self):
         try:
-            if self.arguments:
-                classes = directives.class_option(self.arguments[0])
-            else:
-                classes = []
+            classes = (
+                directives.class_option(self.arguments[0]) if self.arguments else []
+            )
         except ValueError:
             raise self.error(
                 'Invalid class attribute value for "%s" directive: "%s".'
