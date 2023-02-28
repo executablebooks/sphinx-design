@@ -1,7 +1,7 @@
 """A sphinx extension for designing beautiful, view size responsive web components."""
 from typing import TYPE_CHECKING
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 if TYPE_CHECKING:
     from sphinx.application import Sphinx
