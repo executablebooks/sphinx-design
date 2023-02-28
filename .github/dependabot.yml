@@ -10,10 +10,10 @@ updates:
     commit-message:
       prefix: ⬆️
     schedule:
-      interval: weekly
+      interval: monthly
   - package-ecosystem: pip
     directory: /
     commit-message:
       prefix: ⬆️
     schedule:
-      interval: weekly
+      interval: monthly
