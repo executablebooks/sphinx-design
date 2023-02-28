@@ -30,12 +30,12 @@ if html_theme == "alabaster":
         "github_button": False,
         "github_type": "star",
         "github_banner": False,
-        "github_user": "chrisjsewell",
+        "github_user": "sphinx-extensions2",
         "github_repo": "sphinx-design2",
     }
 if html_theme == "sphinx_book_theme":
     html_theme_options = {
-        "repository_url": "https://github.com/chrisjsewell/sphinx-design2",
+        "repository_url": "https://github.com/sphinx-extensions2/sphinx-design2",
         "use_repository_button": True,
         "use_edit_page_button": True,
         "use_issues_button": True,

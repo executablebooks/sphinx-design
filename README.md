@@ -77,9 +77,9 @@ subtitle for card (see <https://material.io/components/cards#anatomy>)
 rtd PRs not working
 
 
-[github-ci]: https://github.com/chrisjsewell/sphinx-design2/workflows/continuous-integration/badge.svg?branch=main
-[github-link]: https://github.com/chrisjsewell/sphinx-design2
-[codecov-badge]: https://codecov.io/gh/chrisjsewell/sphinx-design2/branch/main/graph/badge.svg
-[codecov-link]: https://codecov.io/gh/chrisjsewell/sphinx-design2
+[github-ci]: https://github.com/sphinx-extensions2/sphinx-design2/workflows/continuous-integration/badge.svg?branch=main
+[github-link]: https://github.com/sphinx-extensions2/sphinx-design2
+[codecov-badge]: https://codecov.io/gh/sphinx-extensions2/sphinx-design2/branch/main/graph/badge.svg
+[codecov-link]: https://codecov.io/gh/sphinx-extensions2/sphinx-design2
 [pypi-badge]: https://img.shields.io/pypi/v/sphinx-design2.svg
 [pypi-link]: https://pypi.org/project/sphinx-design2
