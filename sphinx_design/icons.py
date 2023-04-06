@@ -31,10 +31,10 @@ FA_STYLES = {
     "far": "fa-regular",
     "fa-solid": "fa-solid",
     "fa-brands": "fa-brands",
-    "fa-regular": "fa-regular"
+    "fa-regular": "fa-regular",
 }
 """The fontawesome correspondance table to make sure older fa descriptor does not raise errors
-fa is deprecated since v5 
+fa is deprecated since v5
 fas, fab and far are deprecated since v6
 """
 
