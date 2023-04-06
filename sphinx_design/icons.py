@@ -1,5 +1,4 @@
 from functools import lru_cache
-import importlib.resources as resources
 import json
 import re
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -11,6 +10,7 @@ from sphinx.util import logging
 from sphinx.util.docutils import SphinxDirective, SphinxRole
 
 from . import compiled
+from ._compat import read_text
 from .shared import WARNING_TYPE
 
 logger = logging.getLogger(__name__)
@@ -63,7 +63,7 @@ def setup_icons(app: Sphinx) -> None:
 @lru_cache(1)
 def get_octicon_data() -> Dict[str, Any]:
     """Load all octicon data."""
-    content = resources.read_text(compiled, "octicons.json")
+    content = read_text(compiled, "octicons.json")
     return json.loads(content)
 
 
@@ -255,7 +255,7 @@ def visit_fontawesome_warning(self, node: nodes.Element) -> None:
 @lru_cache(1)
 def get_material_icon_data(style: str) -> Dict[str, Any]:
     """Load all octicon data."""
-    content = resources.read_text(compiled, f"material_{style}.json")
+    content = read_text(compiled, f"material_{style}.json")
     return json.loads(content)
 
 
