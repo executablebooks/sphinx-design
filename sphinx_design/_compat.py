@@ -12,6 +12,7 @@ def findall(node: Element) -> Callable[..., Iterable[Element]]:
     return getattr(node, "findall", node.traverse)
 
 
+# TODO: >= Python 3.9, only use `resources.files` and drop `resources.read_text`
 def read_text(module: resources.Package, filename: str) -> str:
     if hasattr(resources, "files"):
         return resources.files(module).joinpath(filename).read_text()
