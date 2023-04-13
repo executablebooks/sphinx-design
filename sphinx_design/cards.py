@@ -59,6 +59,7 @@ class CardDirective(SphinxDirective):
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "img-background": directives.uri,
+        "img-alt": directives.unchanged,
         "link": directives.uri,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
@@ -96,13 +97,15 @@ class CardDirective(SphinxDirective):
         )
         inst.set_source_info(card)
 
+        img_alt = options.get("img-alt") or ""
+
         container = card
         if "img-background" in options:
             card.append(
                 nodes.image(
                     uri=options["img-background"],
                     classes=["sd-card-img"],
-                    alt="background image",
+                    alt=img_alt,
                 )
             )
             overlay = create_component("card-overlay", ["sd-card-img-overlay"])
@@ -114,7 +117,7 @@ class CardDirective(SphinxDirective):
             image_top = nodes.image(
                 "",
                 uri=options["img-top"],
-                alt="card-img-top",
+                alt=img_alt,
                 classes=["sd-card-img-top"] + options.get("class-img-top", []),
             )
             container.append(image_top)
@@ -156,7 +159,7 @@ class CardDirective(SphinxDirective):
             image_bottom = nodes.image(
                 "",
                 uri=options["img-bottom"],
-                alt="card-img-bottom",
+                alt=img_alt,
                 classes=["sd-card-img-bottom"] + options.get("class-img-bottom", []),
             )
             container.append(image_bottom)

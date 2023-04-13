@@ -84,6 +84,7 @@ You can also add an image as the background of a card or at the top/bottom of th
 :::{card} Title
 :img-background: images/particle_background.jpg
 :class-card: sd-text-black
+:img-alt: your desired alt text
 
 Text
 :::
@@ -92,6 +93,7 @@ Text
 
 ::::{grid-item-card} Title
 :img-top: images/particle_background.jpg
+:img-alt: your desired alt text
 
 Header
 ^^^
@@ -102,6 +104,7 @@ Footer
 
 ::::{grid-item-card} Title
 :img-bottom: images/particle_background.jpg
+:img-alt: your desired alt text
 
 Header
 ^^^
@@ -256,6 +259,9 @@ img-top
 
 img-bottom
 : A URI (relative file path or URL) to an image to be placed below the content.
+
+img-alt
+: Alternative text for the image (that will be used by screen-readers).
 
 link
 : Turn the entire card into a clickable link to an external/internal target.
