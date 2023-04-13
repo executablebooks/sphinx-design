@@ -216,6 +216,9 @@ class GridItemCardDirective(SphinxDirective):
         "columns": item_columns_option,
         "margin": margin_option,
         "padding": padding_option,
+        "class-item": directives.class_option,
+        # The options below must be sync'ed with CardDirective.option_spec (minus margin).
+        "width": make_choice(["auto", "25%", "50%", "75%", "100%"]),
         "text-align": text_align,
         "img-background": directives.uri,
         "img-top": directives.uri,
@@ -225,12 +228,13 @@ class GridItemCardDirective(SphinxDirective):
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
         "shadow": make_choice(["none", "sm", "md", "lg"]),
-        "class-item": directives.class_option,
         "class-card": directives.class_option,
         "class-body": directives.class_option,
         "class-title": directives.class_option,
         "class-header": directives.class_option,
         "class-footer": directives.class_option,
+        "class-img-top": directives.class_option,
+        "class-img-bottom": directives.class_option,
     }
 
     def run(self) -> List[nodes.Node]:
@@ -258,6 +262,7 @@ class GridItemCardDirective(SphinxDirective):
             for key, value in self.options.items()
             if key
             in [
+                "width",
                 "text-align",
                 "img-background",
                 "img-top",
@@ -272,9 +277,12 @@ class GridItemCardDirective(SphinxDirective):
                 "class-title",
                 "class-header",
                 "class-footer",
+                "class-img-top",
+                "class-img-bottom",
             ]
         }
-        card_options["width"] = "100%"
+        if "width" not in card_options:
+            card_options["width"] = "100%"
         card_options["margin"] = []
         card = CardDirective.create_card(self, self.arguments, card_options)
         column += card

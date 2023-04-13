@@ -1,5 +1,30 @@
 # Change Log
 
+## v0.4.0 - 2023-04-13
+
+
+([full changelog](https://github.com/executablebooks/sphinx-design/compare/v0.3.0...3d0db63f06a8f59a5ea1067e0f43782464eeff83))
+
+### Enhancements made
+
+- Make default blue color a11y friendly. [#124](https://github.com/executablebooks/sphinx-design/pull/124) ([@feanil](https://github.com/feanil), [@choldgraf](https://github.com/choldgraf))
+- Make card titles translatable [#113](https://github.com/executablebooks/sphinx-design/pull/113) ([@jpmckinney](https://github.com/jpmckinney), [@chrisjsewell](https://github.com/chrisjsewell))
+
+### Version upgrades
+
+- Sphinx 6.x. [#106](https://github.com/executablebooks/sphinx-design/pull/106) ([@marxin](https://github.com/marxin), [@choldgraf](https://github.com/choldgraf), [@srideep3](https://github.com/srideep3), [@jpmckinney](https://github.com/jpmckinney), [@akaszynski](https://github.com/akaszynski), [@benjaoming](https://github.com/benjaoming), [@codecov-commenter](https://github.com/codecov-commenter), [@spoorcc](https://github.com/spoorcc), [@nicoa](https://github.com/nicoa), [@LecrisUT](https://github.com/LecrisUT))
+- Support for Python 3.11 [#105](https://github.com/executablebooks/sphinx-design/pull/105) ([@tirthasheshpatel](https://github.com/tirthasheshpatel), [@choldgraf](https://github.com/choldgraf), [@jpmckinney](https://github.com/jpmckinney), [@codecov-commenter](https://github.com/codecov-commenter))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/executablebooks/sphinx-design/graphs/contributors?from=2022-08-22&to=2023-04-12&type=c))
+
+@akaszynski ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Aakaszynski+updated%3A2022-08-22..2023-04-12&type=Issues)) | @bastimeyer ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Abastimeyer+updated%3A2022-08-22..2023-04-12&type=Issues)) | @benjaoming ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Abenjaoming+updated%3A2022-08-22..2023-04-12&type=Issues)) | @choldgraf ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Acholdgraf+updated%3A2022-08-22..2023-04-12&type=Issues)) | @chrisjsewell ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Achrisjsewell+updated%3A2022-08-22..2023-04-12&type=Issues)) | @codecov-commenter ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Acodecov-commenter+updated%3A2022-08-22..2023-04-12&type=Issues)) | @feanil ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Afeanil+updated%3A2022-08-22..2023-04-12&type=Issues)) | @jpmckinney ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Ajpmckinney+updated%3A2022-08-22..2023-04-12&type=Issues)) | @LecrisUT ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3ALecrisUT+updated%3A2022-08-22..2023-04-12&type=Issues)) | @marxin ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Amarxin+updated%3A2022-08-22..2023-04-12&type=Issues)) | @mikemckiernan ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Amikemckiernan+updated%3A2022-08-22..2023-04-12&type=Issues)) | @nicoa ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Anicoa+updated%3A2022-08-22..2023-04-12&type=Issues)) | @pre-commit-ci ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Apre-commit-ci+updated%3A2022-08-22..2023-04-12&type=Issues)) | @spoorcc ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Aspoorcc+updated%3A2022-08-22..2023-04-12&type=Issues)) | @srideep3 ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Asrideep3+updated%3A2022-08-22..2023-04-12&type=Issues)) | @tirthasheshpatel ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Atirthasheshpatel+updated%3A2022-08-22..2023-04-12&type=Issues)) | @zerocewl ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Azerocewl+updated%3A2022-08-22..2023-04-12&type=Issues))
+
+
 ## v0.3.0 - 2022-08-22
 
 - ⬆️ Update Materials Design Icons to v4.0.0-46-gc9e5528, thanks to @2bndy5 (#69)
