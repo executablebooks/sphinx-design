@@ -99,6 +99,7 @@ class TabItemDirective(SphinxDirective):
         textnodes, _ = self.state.inline_text(self.arguments[0], self.lineno)
         tab_label = nodes.rubric(
             self.arguments[0],
+            "",
             *textnodes,
             classes=["sd-tab-label", *self.options.get("class-label", [])],
         )
@@ -255,6 +256,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
 
                 # create: <label for="id">...</label>
                 label_node = sd_tab_label(
+                    "",
                     "",
                     *tab_label.children,
                     input_id=tab_item_identity,
