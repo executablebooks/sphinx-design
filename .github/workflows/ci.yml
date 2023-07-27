@@ -100,6 +100,25 @@ jobs:
     - name: Build documentation
       run: sphinx-build -nW --keep-going -b ${{ matrix.format }} docs/ docs/_build/${{ matrix.format }}
 
+  # https://github.com/marketplace/actions/alls-green#why
+  check:  # This job does nothing and is only used for the branch protection
+
+    if: always()
+
+    needs:
+    - pre-commit
+    - tests
+    - tests-sphinx4
+    - docs-build-format
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Decide whether the needed jobs succeeded or failed
+      uses: re-actors/alls-green@release/v1
+      with:
+        jobs: ${{ toJSON(needs) }}
+
   publish:
 
     name: Publish to PyPi
