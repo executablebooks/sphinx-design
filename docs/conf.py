@@ -42,7 +42,6 @@ if html_theme == "sphinx_book_theme":
         "repository_branch": "main",
         "path_to_docs": "docs",
         "home_page_in_toc": False,
-        "logo_only": True,
     }
 if html_theme == "furo":
     html_css_files = [
