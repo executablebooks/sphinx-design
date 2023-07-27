@@ -24,6 +24,7 @@ jobs:
   tests:
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11"]
@@ -37,7 +38,7 @@ jobs:
           sphinx-version: "~=6.0"
         - os: windows-latest
           python-version: 3.8
-          sphinx-version: ""
+          sphinx-version: "~=7.0"
 
     runs-on: ${{ matrix.os }}
 
