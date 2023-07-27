@@ -42,7 +42,7 @@ testing = [
     "pytest-cov",
     "pytest-regressions",
 ]
-theme_furo = ["furo>=2022.06.04,<2022.07"]
+theme_furo = ["furo>=2022.06.04,<2023.8"]
 theme_pydata = ["pydata-sphinx-theme~=0.9.0"]
 theme_rtd = ["sphinx-rtd-theme~=1.0"]
 theme_sbt = ["sphinx-book-theme~=0.3.0"]
