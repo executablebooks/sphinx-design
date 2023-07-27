@@ -35,9 +35,9 @@ Documentation = "https://sphinx-design.readthedocs.io"
 
 [project.optional-dependencies]
 code_style = ["pre-commit>=2.12,<4.0"]
-rtd = ["myst-parser>=0.18.0,<2"]
+rtd = ["myst-parser>=0.18.0,<3"]
 testing = [
-    "myst-parser>=0.18.0,<2",
+    "myst-parser>=0.18.0,<3",
     "pytest~=7.1",
     "pytest-cov",
     "pytest-regressions",
