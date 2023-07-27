@@ -1,9 +1,17 @@
 # Change Log
 
+## 0.5.0 - 2023-07-27
+
+## What's Changed
+
+* ⬆️ Drop Python 3.7 support, by [@chrisjsewell](https://github.com/chrisjsewell)) in [#146](https://github.com/executablebooks/sphinx-design/pull/146)
+* ⬆️ UPGRADE: sphinx>=5,<8, by [@chrisjsewell](https://github.com/chrisjsewell)) in [#148](https://github.com/executablebooks/sphinx-design/pull/148)
+
+**Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.4.1...v0.5.0>
+
 ## v0.4.0 - 2023-04-13
 
-
-([full changelog](https://github.com/executablebooks/sphinx-design/compare/v0.3.0...3d0db63f06a8f59a5ea1067e0f43782464eeff83))
+**Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.3.0...v0.4.0>
 
 ### Enhancements made
 
