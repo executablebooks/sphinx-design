@@ -93,7 +93,6 @@ jobs:
     needs:
     - pre-commit
     - tests
-    - tests-sphinx4
     - docs-build-format
 
     runs-on: ubuntu-latest
