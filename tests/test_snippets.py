@@ -33,9 +33,10 @@ def test_snippets_rst(
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
-    pformat = builder.get_doctree("index").pformat()
+    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        pformat,
+        doctree.pformat(),
         basename=f"snippet_pre_{path.name[:-len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -56,8 +57,10 @@ def test_snippets_myst(
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
+    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        builder.get_doctree("index").pformat(),
+        doctree.pformat(),
         basename=f"snippet_pre_{path.name[:-len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -78,9 +81,10 @@ def test_snippets_rst_post(
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
-    pformat = builder.get_doctree("index", post_transforms=True).pformat()
+    doctree = builder.get_doctree("index", post_transforms=True)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        pformat,
+        doctree.pformat(),
         basename=f"snippet_post_{path.name[:-len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -101,8 +105,10 @@ def test_snippets_myst_post(
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
+    doctree = builder.get_doctree("index", post_transforms=True)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        builder.get_doctree("index", post_transforms=True).pformat(),
+        doctree.pformat(),
         basename=f"snippet_post_{path.name[:-len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -117,8 +123,10 @@ def test_sd_hide_title_rst(
     content = ":sd_hide_title:\n\nHeading\n-------\n\ncontent"
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     builder.build()
+    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        builder.get_doctree("index", post_transforms=False).pformat(),
+        doctree.pformat(),
         basename="sd_hide_title",
         extension=".xml",
         encoding="utf8",
@@ -133,8 +141,10 @@ def test_sd_hide_title_myst(
     content = "---\nsd_hide_title: true\n---\n\n# Heading\n\ncontent"
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
     builder.build()
+    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        builder.get_doctree("index", post_transforms=False).pformat(),
+        doctree.pformat(),
         basename="sd_hide_title",
         extension=".xml",
         encoding="utf8",
