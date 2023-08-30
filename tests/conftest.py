@@ -4,12 +4,18 @@ from typing import Any, Dict, Optional
 
 from docutils import nodes
 import pytest
-from sphinx.testing.path import path as sphinx_path
+from sphinx import version_info
 from sphinx.testing.util import SphinxTestApp
 
 from sphinx_design._compat import findall
 
 pytest_plugins = "sphinx.testing.fixtures"
+
+if version_info >= (7, 2):
+    # see https://github.com/sphinx-doc/sphinx/pull/11526
+    from pathlib import Path as sphinx_path
+else:
+    from sphinx.testing.path import path as sphinx_path  # type: ignore
 
 
 class SphinxBuilder:
