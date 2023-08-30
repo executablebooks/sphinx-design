@@ -60,7 +60,20 @@ See [Bootstrap badges](https://getbootstrap.com/docs/5.0/components/badge/) for 
 
 ## Buttons
 
-Buttons allow users to navigate to external (`button-link`) / internal (`button-ref`) links with a single tap.
+Buttons in Sphinx Design are actually links, which:
+
+- Can be styled to look like
+  [Bootstrap buttons](https://getbootstrap.com/docs/5.0/components/buttons/).
+- Can be external (`button-link`) or internal (`button-ref`)
+
+Most of the time, you should create links using the standard syntax for the
+language you've chosen:
+
+- [MyST links and cross-references](https://myst-parser.readthedocs.io/en/latest/syntax/cross-referencing.html#examples)
+- [rST links and cross-references](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#hyperlinks)
+
+Sometimes, though, you may want to call attention to a particular link or set of
+links, or set them apart visually from other links on the site.
 
 ```{button-link} https://example.com
 ```
@@ -138,8 +151,6 @@ Use the `click-parent` option to make the button's parent container also clickab
 ```
 
 :::
-
-See the [Material Design](https://material.io/components/buttons) and [Bootstrap](https://getbootstrap.com/docs/5.0/components/buttons/) descriptions for further details.
 
 ### `button-link` and `button-ref` options
 
