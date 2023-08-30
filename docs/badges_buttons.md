@@ -75,6 +75,15 @@ language you've chosen:
 Sometimes, though, you may want to call attention to a particular link or set of
 links, or set them apart visually from other links on the site.
 
+:::{admonition} Note on accessibility
+
+Despite the name, `button-link` and `button-ref` do **not** convert to
+`<button>` tags in HTML. They are output as `<a>` tags and use CSS to achieve
+the button look and feel. This has important accessibility implications. For
+example, assistive tech will include Sphinx Design "buttons" when asked for the
+all the links on the page.
+:::
+
 ```{button-link} https://example.com
 ```
 
