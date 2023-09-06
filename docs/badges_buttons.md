@@ -60,11 +60,11 @@ See [Bootstrap badges](https://getbootstrap.com/docs/5.0/components/badge/) for 
 
 ## Buttons
 
-Buttons in Sphinx Design are actually links, which:
+Buttons in Sphinx Design are actually links:
 
-- Can be styled to look like
+- Links that can be styled to look like
   [Bootstrap buttons](https://getbootstrap.com/docs/5.0/components/buttons/)
-- Can be external (`button-link`) or internal (`button-ref`)
+- Links that are either external (`button-link`) or internal (`button-ref`)
 
 Most of the time, you should create links using the link syntax for the language
 you've chosen:
@@ -79,9 +79,9 @@ links, or set them apart visually from other links on the site.
 
 Despite the name, `button-link` and `button-ref` do **not** convert to
 `<button>` tags in HTML. They are output as `<a>` tags and use CSS to achieve
-the button look and feel. This has important accessibility implications. For
-example, assistive tech will include Sphinx Design "buttons" when asked to
-present a list of all the links on the page.
+the button look. This has important accessibility implications. For example,
+assistive tech will include Sphinx Design "buttons" when asked to present a list
+of all the links on the page.
 :::
 
 ```{button-link} https://example.com
