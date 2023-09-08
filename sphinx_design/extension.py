@@ -1,6 +1,6 @@
 import hashlib
-import sys
 from pathlib import Path
+import sys
 
 from docutils import nodes
 from docutils.parsers.rst import directives
