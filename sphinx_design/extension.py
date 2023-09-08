@@ -1,4 +1,5 @@
 import hashlib
+import sys
 from pathlib import Path
 
 from docutils import nodes
@@ -67,7 +68,11 @@ def update_css_js(app: Sphinx):
         js_path.write_text(content)
     # Read the css content and hash it
     content = read_text(static_module, "style.min.css")
-    hash = hashlib.md5(content.encode("utf8"), usedforsecurity=False).hexdigest()
+    # Handle python >= 3.9 and specify md5 is not used for security reasons
+    # to avoid issue with FIPS
+    md5_has_usedforsecurity = float(sys.version[:3]) >= 3.9
+    md5_kwargs = {"usedforsecurity": False} if md5_has_usedforsecurity else {}
+    hash = hashlib.md5(content.encode("utf8"), **md5_kwargs).hexdigest()
     # Write the css file
     css_path = static_path / f"design-style.{hash}.min.css"
     app.add_css_file(css_path.name)
