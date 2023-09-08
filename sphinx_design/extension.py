@@ -67,7 +67,7 @@ def update_css_js(app: Sphinx):
         js_path.write_text(content)
     # Read the css content and hash it
     content = read_text(static_module, "style.min.css")
-    hash = hashlib.md5(content.encode("utf8")).hexdigest()
+    hash = hashlib.md5(content.encode("utf8"), usedforsecurity=False).hexdigest()
     # Write the css file
     css_path = static_path / f"design-style.{hash}.min.css"
     app.add_css_file(css_path.name)
