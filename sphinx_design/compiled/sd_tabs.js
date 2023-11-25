@@ -5,7 +5,7 @@ function ready() {
   for (const label of li) {
     syncId = label.getAttribute("data-sync-id");
     if (syncId) {
-      label.onclick = onLabelClick;
+      label.onclick = onSDLabelClick;
       if (!sd_labels_by_text[syncId]) {
         sd_labels_by_text[syncId] = [];
       }
@@ -14,7 +14,7 @@ function ready() {
   }
 }
 
-function onLabelClick() {
+function onSDLabelClick() {
   // Activate other inputs with the same sync id.
   syncId = this.getAttribute("data-sync-id");
   for (label of sd_labels_by_text[syncId]) {
