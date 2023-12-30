@@ -24,12 +24,27 @@ OCTICON_CSS = """\
   fill: currentColor;
 }"""
 
+FA_STYLES = {
+    "fa": "fa-solid",
+    "fas": "fa-solid",
+    "fab": "fa-brands",
+    "far": "fa-regular",
+    "fa-solid": "fa-solid",
+    "fa-brands": "fa-brands",
+    "fa-regular": "fa-regular",
+}
+"""The fontawesome correspondance table to make sure older fa descriptor does not raise errors
+fa is deprecated since v5
+fas, fab and far are deprecated since v6
+"""
+
 
 def setup_icons(app: Sphinx) -> None:
     app.add_role("octicon", OcticonRole())
     app.add_directive("_all-octicon", AllOcticons)
-    for style in ["fa", "fas", "fab", "far"]:
-        # note: fa is deprecated in v5, fas is the default and fab is the other free option
+    for style in FA_STYLES:
+        # note: fas, fab, far are deprecated in v6,
+        # fa-solid is the default and fa-brands is the other free option
         app.add_role(style, FontawesomeRole(style))
     for style in ["regular", "outlined", "round", "sharp", "twotone"]:
         app.add_role("material-" + style, MaterialRole(style))
@@ -184,7 +199,7 @@ class FontawesomeRole(SphinxRole):
 
     def __init__(self, style: str) -> None:
         super().__init__()
-        self.style = style
+        self.style = FA_STYLES[style]
 
     def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
         """Run the role."""
