@@ -1,5 +1,6 @@
 """Originally Adapted from sphinxcontrib.details.directive
 """
+
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
