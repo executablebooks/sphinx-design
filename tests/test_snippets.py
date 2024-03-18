@@ -1,4 +1,5 @@
 """Test the documented snippets run correctly, and are the same for both RST and MyST."""
+
 from pathlib import Path
 from typing import Callable
 
