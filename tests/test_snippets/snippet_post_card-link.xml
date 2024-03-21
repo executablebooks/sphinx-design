@@ -3,9 +3,17 @@
         <title>
             Heading
         <target refid="cards-clickable">
-        <section ids="cards-clickable id1" names="cards\ clickable cards-clickable">
+        <section ids="clickable-cards cards-clickable" names="clickable\ cards cards-clickable">
             <title>
-                Cards Clickable
+                Clickable cards
+            <paragraph>
+                Using the 
+                <literal>
+                    link
+                 and 
+                <literal>
+                    link-type
+                 options, you can turn an entire card into a clickable link. Try hovering over then clicking on the cards below:
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
@@ -16,8 +24,21 @@
                         <reference refuri="https://example.com">
                             https://example.com
                         .
+                    <paragraph classes="sd-card-text">
+                        For 
+                        <strong>
+                            external
+                         link cards, if you do not provide 
+                        <literal>
+                            link-alt
+                        , the URL will be used as the text of the link. Using URLs as link text makes it harder for disabled people and for search engines to digest your web page, so it’s best to provide link text via the 
+                        <literal>
+                            link-alt
+                         option.
                 <PassthroughTextElement>
-                    <reference classes="sd-stretched-link" refuri="https://example.com">
+                    <reference classes="sd-stretched-link sd-hide-link-text" refuri="https://example.com">
+                        <inline>
+                            example.com
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
@@ -26,8 +47,25 @@
                     <paragraph classes="sd-card-text">
                         The entire card can be clicked to navigate to the 
                         <literal>
-                            cards
+                            cards-clickable
                          reference target.
+                    <paragraph classes="sd-card-text">
+                        For 
+                        <strong>
+                            internal
+                         link cards, it’s unnecessary to provide 
+                        <literal>
+                            link-alt
+                        . The name of the section that you are referencing will be used as the link’s accessible name. For example, this card references 
+                        <literal>
+                            cards-clickable
+                        , so the link title will be “Clickable cards” (same as the section heading). If you wish to use a different title for the link, you can provide 
+                        <literal>
+                            link-alt
+                         and it will take precedence.
                 <PassthroughTextElement>
-                    <reference classes="sd-stretched-link" internal="True" refid="cards-clickable">
+                    <reference classes="sd-stretched-link sd-hide-link-text" internal="True" refid="cards-clickable">
                         <inline classes="std std-ref">
+                            Clickable cards
+            <paragraph>
+                Note: you cannot add additional links to the clickable card, neither in the card title nor in the card body. The entire card becomes a single link to the destination you specify, which overrides any other links inside the card.
