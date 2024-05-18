@@ -1,5 +1,5 @@
-"""Originally Adapted from sphinxcontrib.details.directive
-"""
+"""Originally Adapted from sphinxcontrib.details.directive"""
+
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
@@ -25,11 +25,11 @@ def setup_dropdown(app: Sphinx) -> None:
     app.add_post_transform(DropdownHtmlTransform)
 
 
-class dropdown_main(nodes.Element, nodes.General):
+class dropdown_main(nodes.Element, nodes.General):  # noqa: N801
     pass
 
 
-class dropdown_title(nodes.TextElement, nodes.General):
+class dropdown_title(nodes.TextElement, nodes.General):  # noqa: N801
     pass
 
 

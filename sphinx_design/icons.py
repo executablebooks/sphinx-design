@@ -72,8 +72,8 @@ def get_octicon(
     """
     try:
         data = get_octicon_data()[name]
-    except KeyError:
-        raise KeyError(f"Unrecognised octicon: {name}")
+    except KeyError as exc:
+        raise KeyError(f"Unrecognised octicon: {name}") from exc
 
     match = HEIGHT_REGEX.match(height)
     if not match:
@@ -85,7 +85,7 @@ def get_octicon(
 
     original_height = 16
     if "16" not in data["heights"]:
-        original_height = int(list(data["heights"].keys())[0])
+        original_height = int(next(iter(data["heights"].keys())))
     elif "24" in data["heights"]:
         if height_unit == "px":
             if height_value >= 24:
@@ -172,7 +172,7 @@ class AllOcticons(SphinxDirective):
         return [list_node]
 
 
-class fontawesome(nodes.Element, nodes.General):
+class fontawesome(nodes.Element, nodes.General):  # noqa: N801
     """Node for rendering fontawesome icon."""
 
 
@@ -191,7 +191,7 @@ class FontawesomeRole(SphinxRole):
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
         node = fontawesome(
-            icon=icon, classes=[self.style, f"fa-{icon}"] + classes.split()
+            icon=icon, classes=[self.style, f"fa-{icon}", *classes.split()]
         )
         self.set_source_info(node)
         return [node], []
@@ -257,8 +257,8 @@ def get_material_icon(
     """
     try:
         data = get_material_icon_data(style)[name]
-    except KeyError:
-        raise KeyError(f"Unrecognised material-{style} icon: {name}")
+    except KeyError as exc:
+        raise KeyError(f"Unrecognised material-{style} icon: {name}") from exc
 
     match = HEIGHT_REGEX.match(height)
     if not match:
@@ -270,7 +270,7 @@ def get_material_icon(
 
     original_height = 20
     if "20" not in data["heights"]:
-        original_height = int(list(data["heights"].keys())[0])
+        original_height = int(next(iter(data["heights"].keys())))
     elif "24" in data["heights"]:
         if height_unit == "px":
             if height_value >= 24:

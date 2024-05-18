@@ -60,8 +60,8 @@ def _media_option(
             continue
         try:
             int_value = int(value)
-        except Exception:
-            raise ValueError(validate_error_msg)
+        except Exception as exc:
+            raise ValueError(validate_error_msg) from exc
         if not (min_num <= int_value <= max_num):
             raise ValueError(validate_error_msg)
     return [f"{prefix}{values[0]}"] + [
@@ -118,7 +118,7 @@ class GridDirective(SphinxDirective):
                 row_columns_option(self.arguments[0]) if self.arguments else []
             )
         except ValueError as exc:
-            raise self.error(f"Invalid directive argument: {exc}")
+            raise self.error(f"Invalid directive argument: {exc}") from exc
         self.assert_has_content()
         # container-fluid is 100% width for all breakpoints,
         # rather than the fixed width of the breakpoint (like container)
@@ -251,11 +251,11 @@ class GridItemCardDirective(SphinxDirective):
             [
                 "sd-col",
                 "sd-d-flex-row",
-            ]
-            + self.options.get("columns", [])
-            + self.options.get("margin", [])
-            + self.options.get("padding", [])
-            + self.options.get("class-item", []),
+                *self.options.get("columns", []),
+                *self.options.get("margin", []),
+                *self.options.get("padding", []),
+                *self.options.get("class-item", []),
+            ],
         )
         card_options = {
             key: value

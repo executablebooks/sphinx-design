@@ -48,7 +48,7 @@ class ArticleInfoDirective(SphinxDirective):
             output = [para]
         return output
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> List[nodes.Node]:  # noqa: PLR0915
         """Run the directive."""
         parse_fields = True  # parse field text
 
@@ -60,8 +60,8 @@ class ArticleInfoDirective(SphinxDirective):
                 "sd-p-0",
                 "sd-mt-2",
                 "sd-mb-4",
-            ]
-            + self.options.get("class-container", []),
+                *self.options.get("class-container", []),
+            ],
         )
         self.set_source_info(top_grid)
 
