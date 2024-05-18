@@ -1,5 +1,5 @@
 import re
-from typing import List, NamedTuple, Optional, Tuple
+from typing import NamedTuple, Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -40,9 +40,9 @@ class CardContent(NamedTuple):
     (offset, content)
     """
 
-    body: Tuple[int, StringList]
-    header: Optional[Tuple[int, StringList]] = None
-    footer: Optional[Tuple[int, StringList]] = None
+    body: tuple[int, StringList]
+    header: Optional[tuple[int, StringList]] = None
+    footer: Optional[tuple[int, StringList]] = None
 
 
 class CardDirective(SphinxDirective):
@@ -73,7 +73,7 @@ class CardDirective(SphinxDirective):
         "class-img-bottom": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
@@ -266,7 +266,7 @@ class CardCarouselDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
         try:

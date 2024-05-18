@@ -1,7 +1,8 @@
+from collections.abc import Sequence
 from functools import lru_cache
 import json
 import re
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -46,13 +47,13 @@ def setup_icons(app: Sphinx) -> None:
 
 
 @lru_cache(1)
-def get_octicon_data() -> Dict[str, Any]:
+def get_octicon_data() -> dict[str, Any]:
     """Load all octicon data."""
     content = read_text(compiled, "octicons.json")
     return json.loads(content)
 
 
-def list_octicons() -> List[str]:
+def list_octicons() -> list[str]:
     """List available octicon names."""
     return list(get_octicon_data().keys())
 
@@ -120,7 +121,7 @@ class OcticonRole(SphinxRole):
     Additional classes can be added to the element after a semicolon.
     """
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         values = self.text.split(";") if ";" in self.text else [self.text]
         icon = values[0]
@@ -151,7 +152,7 @@ class AllOcticons(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         classes = self.options.get("class", [])
         list_node = nodes.bullet_list()
@@ -186,7 +187,7 @@ class FontawesomeRole(SphinxRole):
         super().__init__()
         self.style = style
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
@@ -238,7 +239,7 @@ def visit_fontawesome_warning(self, node: nodes.Element) -> None:
 
 
 @lru_cache(1)
-def get_material_icon_data(style: str) -> Dict[str, Any]:
+def get_material_icon_data(style: str) -> dict[str, Any]:
     """Load all octicon data."""
     content = read_text(compiled, f"material_{style}.json")
     return json.loads(content)
@@ -309,7 +310,7 @@ class MaterialRole(SphinxRole):
         super().__init__()
         self.style = style
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         values = self.text.split(";") if ";" in self.text else [self.text]
         icon = values[0]

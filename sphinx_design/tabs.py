@@ -1,5 +1,3 @@
-from typing import List
-
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
@@ -30,7 +28,7 @@ class TabSetDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
         tab_set = create_component(
@@ -81,7 +79,7 @@ class TabItemDirective(SphinxDirective):
         "class-content": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
         if not is_component(self.state_machine.node, "tab-set"):
@@ -130,7 +128,7 @@ class TabSetCodeDirective(SphinxDirective):
         "class-item": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         self.assert_has_content()
         tab_set = create_component(

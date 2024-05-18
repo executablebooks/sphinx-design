@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -48,7 +48,7 @@ class ArticleInfoDirective(SphinxDirective):
             output = [para]
         return output
 
-    def run(self) -> List[nodes.Node]:  # noqa: PLR0915
+    def run(self) -> list[nodes.Node]:  # noqa: PLR0915
         """Run the directive."""
         parse_fields = True  # parse field text
 
