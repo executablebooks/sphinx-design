@@ -1,7 +1,8 @@
 """Helpers for cross compatibility across dependency versions."""
 
+from collections.abc import Iterable
 from importlib import resources
-from typing import Callable, Iterable
+from typing import Callable
 
 from docutils.nodes import Element
 
