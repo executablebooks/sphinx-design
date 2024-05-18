@@ -155,22 +155,31 @@ class AllOcticons(SphinxDirective):
     def run(self) -> list[nodes.Node]:
         """Run the directive."""
         classes = self.options.get("class", [])
-        list_node = nodes.bullet_list()
-        for icon in list_octicons():
-            item_node = nodes.list_item()
-            item_node.extend(
-                (
-                    nodes.literal(icon, icon),
-                    nodes.Text(": "),
-                    nodes.raw(
-                        "",
-                        nodes.Text(get_octicon(icon, classes=classes)),
-                        format="html",
-                    ),
-                )
+        table = nodes.table()
+        group = nodes.tgroup(cols=2)
+        table += group
+        group.extend(
+            (
+                nodes.colspec(colwidth=1),
+                nodes.colspec(colwidth=1),
             )
-            list_node += item_node
-        return [list_node]
+        )
+        body = nodes.tbody()
+        group += body
+        for icon in list_octicons():
+            row = nodes.row()
+            body += row
+            cell = nodes.entry()
+            row += cell
+            cell += nodes.literal(icon, icon)
+            cell = nodes.entry()
+            row += cell
+            cell += nodes.raw(
+                "",
+                get_octicon(icon, classes=classes),
+                format="html",
+            )
+        return [table]
 
 
 class fontawesome(nodes.Element, nodes.General):  # noqa: N801
