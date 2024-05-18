@@ -13,9 +13,9 @@ pytest_plugins = "sphinx.testing.fixtures"
 
 if version_info >= (7, 2):
     # see https://github.com/sphinx-doc/sphinx/pull/11526
-    from pathlib import Path as sphinx_path
+    from pathlib import Path as sphinx_path  # noqa: N813
 else:
-    from sphinx.testing.path import path as sphinx_path  # type: ignore
+    from sphinx.testing.path import path as sphinx_path  # type: ignore[no-redef]
 
 
 class SphinxBuilder:
@@ -53,7 +53,7 @@ class SphinxBuilder:
             self.app.env.apply_post_transforms(doctree, docname)
         # make source path consistent for test comparisons
         for node in findall(doctree)(include_self=True):
-            if not ("source" in node and node["source"]):
+            if not (node.get("source")):
                 continue
             node["source"] = Path(node["source"]).relative_to(self.src_path).as_posix()
             if node["source"].endswith(".rst"):
@@ -82,7 +82,8 @@ def sphinx_builder(tmp_path: Path, make_app, monkeypatch):
         )
         src_path.joinpath("conf.py").write_text(content, encoding="utf8")
         app = make_app(
-            srcdir=sphinx_path(os.path.abspath(str(src_path))), buildername=buildername
+            srcdir=sphinx_path(os.path.abspath(str(src_path))),  # noqa: PTH100
+            buildername=buildername,
         )
         return SphinxBuilder(app, src_path)
 

@@ -34,7 +34,7 @@ class TabSetDirective(SphinxDirective):
         """Run the directive."""
         self.assert_has_content()
         tab_set = create_component(
-            "tab-set", classes=["sd-tab-set"] + self.options.get("class", [])
+            "tab-set", classes=["sd-tab-set", *self.options.get("class", [])]
         )
         self.set_source_info(tab_set)
         self.state.nested_parse(self.content, self.content_offset, tab_set)
@@ -93,7 +93,7 @@ class TabItemDirective(SphinxDirective):
             )
         tab_item = create_component(
             "tab-item",
-            classes=["sd-tab-item"] + self.options.get("class-container", []),
+            classes=["sd-tab-item", *self.options.get("class-container", [])],
             selected=("selected" in self.options),
         )
 
@@ -102,7 +102,7 @@ class TabItemDirective(SphinxDirective):
         tab_label = nodes.rubric(
             self.arguments[0],
             *textnodes,
-            classes=["sd-tab-label"] + self.options.get("class-label", []),
+            classes=["sd-tab-label", *self.options.get("class-label", [])],
         )
         if "sync" in self.options:
             tab_label["sync_id"] = self.options["sync"]
@@ -112,7 +112,7 @@ class TabItemDirective(SphinxDirective):
         # add tab content
         tab_content = create_component(
             "tab-content",
-            classes=["sd-tab-content"] + self.options.get("class-content", []),
+            classes=["sd-tab-content", *self.options.get("class-content", [])],
         )
         self.state.nested_parse(self.content, self.content_offset, tab_content)
         tab_item += tab_content
@@ -134,7 +134,7 @@ class TabSetCodeDirective(SphinxDirective):
         """Run the directive."""
         self.assert_has_content()
         tab_set = create_component(
-            "tab-set", classes=["sd-tab-set"] + self.options.get("class-set", [])
+            "tab-set", classes=["sd-tab-set", *self.options.get("class-set", [])]
         )
         self.set_source_info(tab_set)
         self.state.nested_parse(self.content, self.content_offset, tab_set)
@@ -153,30 +153,30 @@ class TabSetCodeDirective(SphinxDirective):
             tab_label = nodes.rubric(
                 language.upper(),
                 nodes.Text(language.upper()),
-                classes=["sd-tab-label"] + self.options.get("class-label", []),
+                classes=["sd-tab-label", *self.options.get("class-label", [])],
             )
             if "no-sync" not in self.options:
                 tab_label["sync_id"] = f"tabcode-{language}"
             tab_content = create_component(
                 "tab-content",
                 children=[item],
-                classes=["sd-tab-content"] + self.options.get("class-content", []),
+                classes=["sd-tab-content", *self.options.get("class-content", [])],
             )
             tab_item = create_component(
                 "tab-item",
                 children=[tab_label, tab_content],
-                classes=["sd-tab-item"] + self.options.get("class-item", []),
+                classes=["sd-tab-item", *self.options.get("class-item", [])],
             )
             new_children.append(tab_item)
         tab_set.children = new_children
         return [tab_set]
 
 
-class sd_tab_input(nodes.Element, nodes.General):
+class sd_tab_input(nodes.Element, nodes.General):  # noqa: N801
     pass
 
 
-class sd_tab_label(nodes.TextElement, nodes.General):
+class sd_tab_label(nodes.TextElement, nodes.General):  # noqa: N801
     pass
 
 
@@ -213,15 +213,13 @@ class TabSetHtmlTransform(SphinxPostTransform):
 
         # setup id generators
         tab_set_id_base = "sd-tab-set-"
-        tab_set_id_num = 0
         tab_item_id_base = "sd-tab-item-"
         tab_item_id_num = 0
 
-        for tab_set in findall(self.document)(
-            lambda node: is_component(node, "tab-set")
+        for tab_set_id_num, tab_set in enumerate(
+            findall(self.document)(lambda node: is_component(node, "tab-set"))
         ):
             tab_set_identity = tab_set_id_base + str(tab_set_id_num)
-            tab_set_id_num += 1
             children = []
             # get the first selected node
             selected_idx = None
@@ -242,7 +240,6 @@ class TabSetHtmlTransform(SphinxPostTransform):
                 try:
                     tab_label, tab_content = tab_item.children
                 except ValueError:
-                    print(tab_item)
                     raise
                 tab_item_identity = tab_item_id_base + str(tab_item_id_num)
                 tab_item_id_num += 1

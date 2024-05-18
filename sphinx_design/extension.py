@@ -122,11 +122,10 @@ class Div(SphinxDirective):
                 classes = directives.class_option(self.arguments[0])
             else:
                 classes = []
-        except ValueError:
+        except ValueError as exc:
             raise self.error(
-                'Invalid class attribute value for "%s" directive: "%s".'
-                % (self.name, self.arguments[0])
-            )
+                f'Invalid class attribute value for "{self.name}" directive: "{self.arguments[0]}".'
+            ) from exc
         node = create_component("div", rawtext="\n".join(self.content), classes=classes)
         if "style" in self.options:
             node["style"] = self.options["style"]
