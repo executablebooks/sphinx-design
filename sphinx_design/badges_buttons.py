@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -45,7 +45,7 @@ def setup_badges_and_buttons(app: Sphinx) -> None:
     app.add_directive(DIRECTIVE_NAME_BUTTON_REF, ButtonRefDirective)
 
 
-def create_bdg_classes(color: Optional[str], outline: bool) -> List[str]:
+def create_bdg_classes(color: Optional[str], outline: bool) -> list[str]:
     """Create the badge classes."""
     classes = [
         "sd-sphinx-override",
@@ -68,7 +68,7 @@ class BadgeRole(SphinxRole):
         self.color = color
         self.outline = outline
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         node = nodes.inline(
             self.rawtext,
@@ -87,7 +87,7 @@ class LinkBadgeRole(ReferenceRole):
         self.color = color
         self.outline = outline
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         node = nodes.reference(
             self.rawtext,
@@ -110,7 +110,7 @@ class XRefBadgeRole(ReferenceRole):
         self.color = color
         self.outline = outline
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         options = {
             "classes": create_bdg_classes(self.color, self.outline),
@@ -150,12 +150,12 @@ class _ButtonDirective(SphinxDirective):
     }
 
     def create_ref_node(
-        self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
+        self, rawtext: str, target: str, explicit_title: bool, classes: list[str]
     ) -> nodes.Node:
         """Create the reference node."""
         raise NotImplementedError
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         rawtext = self.arguments[0]
         target = directives.uri(rawtext)
@@ -205,7 +205,7 @@ class ButtonLinkDirective(_ButtonDirective):
     """A button directive with an external link."""
 
     def create_ref_node(
-        self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
+        self, rawtext: str, target: str, explicit_title: bool, classes: list[str]
     ) -> nodes.Node:
         """Create the reference node."""
         return nodes.reference(
@@ -219,7 +219,7 @@ class ButtonRefDirective(_ButtonDirective):
     """A button directive with an internal link."""
 
     def create_ref_node(
-        self, rawtext: str, target: str, explicit_title: bool, classes: List[str]
+        self, rawtext: str, target: str, explicit_title: bool, classes: list[str]
     ) -> nodes.Node:
         """Create the reference node."""
         ref_type = self.options.get("ref-type", "any")

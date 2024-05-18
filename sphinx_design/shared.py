@@ -1,6 +1,7 @@
 """Shared constants and functions."""
 
-from typing import List, Optional, Sequence
+from collections.abc import Sequence
+from typing import Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -55,7 +56,7 @@ def _margin_or_padding_option(
     argument: Optional[str],
     class_prefix: str,
     allowed: Sequence[str],
-) -> List[str]:
+) -> list[str]:
     """Validate the margin/padding is one (all) or four (top bottom left right) integers,
     between 0 and 5 or 'auto'.
     """
@@ -77,7 +78,7 @@ def _margin_or_padding_option(
     )
 
 
-def margin_option(argument: Optional[str]) -> List[str]:
+def margin_option(argument: Optional[str]) -> list[str]:
     """Validate the margin is one (all) or four (top bottom left right) integers,
     between 0 and 5 or 'auto'.
     """
@@ -86,14 +87,14 @@ def margin_option(argument: Optional[str]) -> List[str]:
     )
 
 
-def padding_option(argument: Optional[str]) -> List[str]:
+def padding_option(argument: Optional[str]) -> list[str]:
     """Validate the padding is one (all) or four (top bottom left right) integers,
     between 0 and 5.
     """
     return _margin_or_padding_option(argument, "sd-p", ("0", "1", "2", "3", "4", "5"))
 
 
-def text_align(argument: Optional[str]) -> List[str]:
+def text_align(argument: Optional[str]) -> list[str]:
     """Validate the text align is left, right, center or justify."""
     value = directives.choice(argument, ["left", "right", "center", "justify"])
     return [f"sd-text-{value}"]

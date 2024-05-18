@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.8
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
-        python-version: 3.8
-    - uses: pre-commit/action@v3.0.0
+        python-version: 3.9
+    - uses: pre-commit/action@v3.0.1
 
   tests:
 
@@ -27,23 +27,23 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         sphinx-version: ["~=7.0"]
         include:
         - os: ubuntu-latest
-          python-version: 3.8
+          python-version: 3.9
           sphinx-version: "~=5.0"
         - os: ubuntu-latest
-          python-version: 3.8
+          python-version: 3.9
           sphinx-version: "~=6.0"
         - os: windows-latest
-          python-version: 3.8
+          python-version: 3.9
           sphinx-version: "~=7.0"
 
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -57,9 +57,10 @@ jobs:
       run: |
         pytest --cov=sphinx_design --cov-report=xml --cov-report=term-missing
     - name: Upload to Codecov
-      if: matrix.python-version == '3.8' && matrix.os == 'ubuntu-latest'
+      if: matrix.python-version == '3.9' && matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         name: pytests
         flags: pytests
         file: ./coverage.xml
@@ -73,7 +74,7 @@ jobs:
         format: [html, latex, man]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
@@ -112,11 +113,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: 3.9
     - name: install flit
       run: |
         pip install flit~=3.4

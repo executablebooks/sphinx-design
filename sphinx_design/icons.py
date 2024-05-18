@@ -1,7 +1,8 @@
+from collections.abc import Sequence
 from functools import lru_cache
 import json
 import re
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -46,13 +47,13 @@ def setup_icons(app: Sphinx) -> None:
 
 
 @lru_cache(1)
-def get_octicon_data() -> Dict[str, Any]:
+def get_octicon_data() -> dict[str, Any]:
     """Load all octicon data."""
     content = read_text(compiled, "octicons.json")
     return json.loads(content)
 
 
-def list_octicons() -> List[str]:
+def list_octicons() -> list[str]:
     """List available octicon names."""
     return list(get_octicon_data().keys())
 
@@ -72,8 +73,8 @@ def get_octicon(
     """
     try:
         data = get_octicon_data()[name]
-    except KeyError:
-        raise KeyError(f"Unrecognised octicon: {name}")
+    except KeyError as exc:
+        raise KeyError(f"Unrecognised octicon: {name}") from exc
 
     match = HEIGHT_REGEX.match(height)
     if not match:
@@ -85,7 +86,7 @@ def get_octicon(
 
     original_height = 16
     if "16" not in data["heights"]:
-        original_height = int(list(data["heights"].keys())[0])
+        original_height = int(next(iter(data["heights"].keys())))
     elif "24" in data["heights"]:
         if height_unit == "px":
             if height_value >= 24:
@@ -120,7 +121,7 @@ class OcticonRole(SphinxRole):
     Additional classes can be added to the element after a semicolon.
     """
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         values = self.text.split(";") if ";" in self.text else [self.text]
         icon = values[0]
@@ -151,7 +152,7 @@ class AllOcticons(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         classes = self.options.get("class", [])
         list_node = nodes.bullet_list()
@@ -172,7 +173,7 @@ class AllOcticons(SphinxDirective):
         return [list_node]
 
 
-class fontawesome(nodes.Element, nodes.General):
+class fontawesome(nodes.Element, nodes.General):  # noqa: N801
     """Node for rendering fontawesome icon."""
 
 
@@ -186,12 +187,12 @@ class FontawesomeRole(SphinxRole):
         super().__init__()
         self.style = style
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
         node = fontawesome(
-            icon=icon, classes=[self.style, f"fa-{icon}"] + classes.split()
+            icon=icon, classes=[self.style, f"fa-{icon}", *classes.split()]
         )
         self.set_source_info(node)
         return [node], []
@@ -238,7 +239,7 @@ def visit_fontawesome_warning(self, node: nodes.Element) -> None:
 
 
 @lru_cache(1)
-def get_material_icon_data(style: str) -> Dict[str, Any]:
+def get_material_icon_data(style: str) -> dict[str, Any]:
     """Load all octicon data."""
     content = read_text(compiled, f"material_{style}.json")
     return json.loads(content)
@@ -257,8 +258,8 @@ def get_material_icon(
     """
     try:
         data = get_material_icon_data(style)[name]
-    except KeyError:
-        raise KeyError(f"Unrecognised material-{style} icon: {name}")
+    except KeyError as exc:
+        raise KeyError(f"Unrecognised material-{style} icon: {name}") from exc
 
     match = HEIGHT_REGEX.match(height)
     if not match:
@@ -270,7 +271,7 @@ def get_material_icon(
 
     original_height = 20
     if "20" not in data["heights"]:
-        original_height = int(list(data["heights"].keys())[0])
+        original_height = int(next(iter(data["heights"].keys())))
     elif "24" in data["heights"]:
         if height_unit == "px":
             if height_value >= 24:
@@ -309,7 +310,7 @@ class MaterialRole(SphinxRole):
         super().__init__()
         self.style = style
 
-    def run(self) -> Tuple[List[nodes.Node], List[nodes.system_message]]:
+    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
         values = self.text.split(";") if ";" in self.text else [self.text]
         icon = values[0]
