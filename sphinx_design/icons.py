@@ -16,7 +16,7 @@ from .shared import WARNING_TYPE
 
 logger = logging.getLogger(__name__)
 
-OCTICON_VERSION = "v16.1.1"
+OCTICON_VERSION = "v19.8.0"
 
 OCTICON_CSS = """\
 .octicon {
