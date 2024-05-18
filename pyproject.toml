@@ -41,6 +41,7 @@ testing = [
     "pytest~=7.1",
     "pytest-cov",
     "pytest-regressions",
+    "defusedxml",
 ]
 theme_furo = ["furo~=2023.7.0"]
 theme_pydata = ["pydata-sphinx-theme~=0.13.0"]
