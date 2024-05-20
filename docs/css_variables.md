@@ -63,6 +63,8 @@ The defaults are:
     --sd-color-tabs-underline-inactive: transparent;
     --sd-color-tabs-overline: rgb(222, 222, 222);
     --sd-color-tabs-underline: rgb(222, 222, 222);
-    --sd-fontsize-tabs-label: 1rem
+    --sd-fontsize-tabs-label: 1rem;
+    --sd-fontsize-dropdown-title: 1rem;
+    --sd-fontweight-dropdown-title: 700;
 }
 ```

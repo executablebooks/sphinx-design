@@ -76,6 +76,9 @@ class DropdownDirective(SphinxDirective):
         "open": directives.flag,  # make open by default
         "color": make_choice(SEMANTIC_COLORS),
         "icon": make_choice(list_octicons()),
+        "chevron": make_choice(
+            ["right-down", "down-up"]
+        ),  # chevron direction closed-open
         "animate": make_choice(("fade-in", "fade-in-slide-down")),
         "margin": margin_option,
         "name": directives.unchanged,
@@ -114,6 +117,7 @@ class DropdownDirective(SphinxDirective):
             type="dropdown",
             has_title=len(self.arguments) > 0,
             icon=self.options.get("icon"),
+            chevron=self.options.get("chevron"),
             **classes,
         )
         self.set_source_info(container)
@@ -152,27 +156,18 @@ class DropdownHtmlTransform(SphinxPostTransform):
             # TODO option to not have card css (but requires more formatting)
             use_card = True
 
-            open_marker = create_component(
-                "dropdown-open-marker",
-                classes=["sd-summary-up"],
-                children=[
-                    nodes.raw(
-                        "",
-                        nodes.Text(get_octicon("chevron-up", height="1.5em")),
-                        format="html",
-                    )
-                ],
+            marker_type = (
+                "chevron-down" if node["chevron"] == "down-up" else "chevron-right"
             )
-            closed_marker = create_component(
-                "dropdown-closed-marker",
-                classes=["sd-summary-down"],
-                children=[
-                    nodes.raw(
-                        "",
-                        nodes.Text(get_octicon("chevron-down", height="1.5em")),
-                        format="html",
-                    )
-                ],
+            state_marker = nodes.inline(
+                "",
+                "",
+                nodes.raw(
+                    "",
+                    nodes.Text(get_octicon(marker_type, height="1.5em")),
+                    format="html",
+                ),
+                classes=["sd-summary-state-marker", f"sd-summary-{marker_type}"],
             )
 
             newnode = dropdown_main(
@@ -183,25 +178,36 @@ class DropdownHtmlTransform(SphinxPostTransform):
             )
 
             if node["has_title"]:
-                title_children = node[0].children
+                title_text_children = node[0].children
                 if node[0].get("ids"):
                     newnode["ids"] += node[0]["ids"]
                 body_children = node[1:]
             else:
-                title_children = [
+                title_text_children = [
                     nodes.raw(
                         "...",
-                        nodes.Text(get_octicon("kebab-horizontal", height="1.5em")),
+                        nodes.Text(
+                            get_octicon(
+                                "kebab-horizontal", height="1.5em", classes=["no-title"]
+                            )
+                        ),
                         format="html",
                     )
                 ]
                 body_children = node.children
+            title_text_node = nodes.inline(
+                "",
+                "",
+                *title_text_children,
+                classes=["sd-summary-text"],
+            )
+            title_children = [title_text_node, state_marker]
             if node["icon"]:
                 title_children.insert(
                     0,
                     nodes.raw(
                         "",
-                        nodes.Text(get_octicon(node["icon"], height="1em")),
+                        get_octicon(node["icon"], height="1em"),
                         classes=["sd-summary-icon"],
                         format="html",
                     ),
@@ -211,8 +217,6 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 "",
                 "",
                 *title_children,
-                closed_marker,
-                open_marker,
                 classes=["sd-summary-title"]
                 + (["sd-card-header"] if use_card else [])
                 + node["title_classes"],

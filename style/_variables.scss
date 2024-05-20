@@ -7,6 +7,10 @@
   @each $color, $value in $semantic-colors {
     --sd-color-#{$color}-highlight: #{mix(black, $value, 15%)};
   }
+  // semantic colors for backgrounds
+  @each $color, $value in $semantic-colors {
+    --sd-color-#{$color}-bg: #{rgba($value, 0.2)};
+  }
   // colors for text on top of a semantic color background
   @each $color, $value in $semantic-colors {
     --sd-color-#{$color}-text: #{text-color($value)};
@@ -30,4 +34,8 @@
   --sd-color-tabs-overline: rgb(222, 222, 222);
   --sd-color-tabs-underline: rgb(222, 222, 222);
   --sd-fontsize-tabs-label: 1rem;
+  // dropdown
+  --sd-fontsize-dropdown: inherit;
+  --sd-fontsize-dropdown-title: 1rem;
+  --sd-fontweight-dropdown-title: 700;
 }
