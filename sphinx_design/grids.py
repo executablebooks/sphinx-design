@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -39,7 +39,7 @@ def _media_option(
     allow_auto: bool = False,
     min_num: int = 1,
     max_num: int = 12,
-) -> List[str]:
+) -> list[str]:
     """Validate the number of columns (out of 12).
 
     One or four integers (for "xs sm md lg") between 1 and 12.
@@ -60,8 +60,8 @@ def _media_option(
             continue
         try:
             int_value = int(value)
-        except Exception:
-            raise ValueError(validate_error_msg)
+        except Exception as exc:
+            raise ValueError(validate_error_msg) from exc
         if not (min_num <= int_value <= max_num):
             raise ValueError(validate_error_msg)
     return [f"{prefix}{values[0]}"] + [
@@ -70,7 +70,7 @@ def _media_option(
     ]
 
 
-def row_columns_option(argument: Optional[str]) -> List[str]:
+def row_columns_option(argument: Optional[str]) -> list[str]:
     """Validate the number of columns (out of 12) a grid row will have.
 
     One or four integers (for "xs sm md lg") between 1 and 12  (or 'auto').
@@ -78,7 +78,7 @@ def row_columns_option(argument: Optional[str]) -> List[str]:
     return _media_option(argument, "sd-row-cols-", allow_auto=True)
 
 
-def item_columns_option(argument: Optional[str]) -> List[str]:
+def item_columns_option(argument: Optional[str]) -> list[str]:
     """Validate the number of columns (out of 12) a grid-item will take up.
 
     One or four integers (for "xs sm md lg") between 1 and 12 (or 'auto').
@@ -86,7 +86,7 @@ def item_columns_option(argument: Optional[str]) -> List[str]:
     return _media_option(argument, "sd-col-", allow_auto=True)
 
 
-def gutter_option(argument: Optional[str]) -> List[str]:
+def gutter_option(argument: Optional[str]) -> list[str]:
     """Validate the gutter size between grid items.
 
     One or four integers (for "xs sm md lg") between 0 and 5.
@@ -111,14 +111,14 @@ class GridDirective(SphinxDirective):
         "class-row": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         try:
             column_classes = (
                 row_columns_option(self.arguments[0]) if self.arguments else []
             )
         except ValueError as exc:
-            raise self.error(f"Invalid directive argument: {exc}")
+            raise self.error(f"Invalid directive argument: {exc}") from exc
         self.assert_has_content()
         # container-fluid is 100% width for all breakpoints,
         # rather than the fixed width of the breakpoint (like container)
@@ -174,7 +174,7 @@ class GridItemDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         if not is_component(self.state_machine.node, "grid-row"):
             LOGGER.warning(
@@ -237,7 +237,7 @@ class GridItemCardDirective(SphinxDirective):
         "class-img-bottom": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run(self) -> list[nodes.Node]:
         """Run the directive."""
         if not is_component(self.state_machine.node, "grid-row"):
             LOGGER.warning(
@@ -251,11 +251,11 @@ class GridItemCardDirective(SphinxDirective):
             [
                 "sd-col",
                 "sd-d-flex-row",
-            ]
-            + self.options.get("columns", [])
-            + self.options.get("margin", [])
-            + self.options.get("padding", [])
-            + self.options.get("class-item", []),
+                *self.options.get("columns", []),
+                *self.options.get("margin", []),
+                *self.options.get("padding", []),
+                *self.options.get("class-item", []),
+            ],
         )
         card_options = {
             key: value

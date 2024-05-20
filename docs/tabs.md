@@ -19,7 +19,7 @@ Content 2
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/tab-basic.txt
@@ -72,7 +72,7 @@ Content 2
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/tab-sync.txt

@@ -11,7 +11,7 @@ Some CSS styled text
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/div-basic.txt

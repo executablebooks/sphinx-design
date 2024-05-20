@@ -72,8 +72,6 @@ horizontal card (grid row inside card, picture on left)
 
 subtitle for card (see <https://material.io/components/cards#anatomy>)
 
-rtd PRs not working
-
 
 [github-ci]: https://github.com/executablebooks/sphinx-design/workflows/continuous-integration/badge.svg?branch=main
 [github-link]: https://github.com/executablebooks/sphinx-design

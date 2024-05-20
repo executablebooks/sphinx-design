@@ -1,16 +1,7 @@
 details.sd-dropdown {
 
   position: relative;
-
-  .sd-summary-title {
-    font-weight: 700;
-    // don't overlap the chevron
-    padding-right: 3em !important;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
+  font-size: var(--sd-fontsize-dropdown);
 
   &:hover {
     cursor: pointer;
@@ -20,64 +11,88 @@ details.sd-dropdown {
     cursor: default;
   }
 
-  summary {
+  summary.sd-summary-title {
+    padding: 0.5em 1em;
+    font-size: var(--sd-fontsize-dropdown-title);
+    font-weight: var(--sd-fontweight-dropdown-title);
+
+    // make the text un-selectable
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+
     // hide the default triangle marker
     list-style: none;
-    padding: 1em;
-
-    // Ellipsis added when no title
-    .sd-octicon.no-title {
-      vertical-align: middle;
+    // chrome doesn't yet support list-style
+    &::-webkit-details-marker {
+      display: none;
     }
+
+    &:focus {
+      outline: none;
+    }
+
+    // The title is split into three parts:
+    // 1. The icon (optional), which should be on the left
+    // 2. The text, which should be in the middle, and take all available space
+    // 3. The state marker, which should be on the right
+
+    display: inline-flex;
+    justify-content: space-between;
+
+    .sd-summary-icon {
+      margin-right: 0.6em;
+      // align the icon vertically within its container
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .sd-summary-icon svg {
+      opacity: 0.8;
+    }
+
+    .sd-summary-text {
+      flex-grow: 1;
+      line-height: 1.5;
+      // note, we add right padding to the text, rather than a left margin to the state marker,
+      // because when you rotate the state marker, left is no longer left
+      padding-right: 0.5rem;
+    }
+
+    .sd-summary-state-marker {
+      pointer-events: none;
+      // align the icon vertically within its container
+      display: inline-flex;
+      align-items: center;
+    }
+
+    // make the state marker a bit more prominent when hovered
+    .sd-summary-state-marker svg {
+      opacity: 0.6;
+    }
+    &:hover .sd-summary-state-marker svg {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
   }
 
+  // Hide the octicon added as a placeholder for when no title is provided,
+  // but only when the summary is open
   &[open] summary .sd-octicon.no-title {
     visibility: hidden;
   }
 
-  // chrome doesn't yet support list-style
-  summary::-webkit-details-marker {
-    display: none;
+  // setup how state marker changes on open/close of the dropdown
+  .sd-summary-chevron-right {
+    transition: 0.25s;
   }
-
-  summary:focus {
-    outline: none;
+  &[open] > .sd-summary-title .sd-summary-chevron-right {
+    transform: rotate(90deg);
   }
-
-  .sd-summary-icon {
-    margin-right: 0.5em;
-  }
-
-  .sd-summary-icon svg {
-    opacity: 0.8;
-  }
-
-  summary:hover .sd-summary-up svg,
-  summary:hover .sd-summary-down svg {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-
-  .sd-summary-up svg,
-  .sd-summary-down svg {
-    display: block;
-    opacity: 0.6;
-  }
-
-  .sd-summary-up,
-  .sd-summary-down {
-    pointer-events: none;
-    position: absolute;
-    right: 1em;
-    top: 1em;
-  }
-
-  &[open] > .sd-summary-title .sd-summary-down {
-    visibility: hidden;
-  }
-
-  &:not([open]) > .sd-summary-title .sd-summary-up {
-    visibility: hidden;
+  &[open] > .sd-summary-title .sd-summary-chevron-down {
+    transform: rotate(180deg);
   }
 
   // Hide the card body border when not open

@@ -19,7 +19,7 @@ Badges are available in each semantic color, with filled and outline variants:
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/badge-basic.txt
@@ -42,7 +42,7 @@ The syntax is the same as for the `ref` role.
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/badge-link.txt
@@ -96,7 +96,7 @@ Reference Button text
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/button-link.txt

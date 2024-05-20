@@ -1,0 +1,5 @@
+body {
+    --sd-fontsize-dropdown: var(--admonition-font-size);
+    --sd-fontsize-dropdown-title: var(--admonition-title-font-size);
+    --sd-fontweight-dropdown-title: 500;
+}
