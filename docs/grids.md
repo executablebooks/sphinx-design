@@ -31,7 +31,7 @@ D
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-basic.txt
@@ -82,7 +82,7 @@ B
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-card.txt
@@ -123,7 +123,7 @@ B
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-gutter.txt
@@ -162,7 +162,7 @@ C
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-card-columns.txt
@@ -256,7 +256,7 @@ Content
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-nested.txt

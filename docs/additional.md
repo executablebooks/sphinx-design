@@ -21,7 +21,7 @@ normally positioned just below the title of the article (shown below with non-st
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/article-info.txt

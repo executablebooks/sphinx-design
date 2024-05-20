@@ -22,7 +22,7 @@ Dropdown content
 
 `````{dropdown} Syntax
 :icon: code
-:color: light
+:color: primary
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/dropdown-basic.txt
