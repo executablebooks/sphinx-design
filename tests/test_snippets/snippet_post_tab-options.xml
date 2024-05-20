@@ -5,7 +5,8 @@
         <container classes="sd-tab-set class-set" design_component="tab-set" is_div="True">
             <sd_tab_input checked="True" id="sd-tab-item-0" set_id="sd-tab-set-0" type="radio">
             <sd_tab_label classes="sd-tab-label class-label" ids="target" input_id="sd-tab-item-0">
-                Label
+                <strong>
+                    Label
             <container classes="sd-tab-content class-content" design_component="tab-content" is_div="True">
                 <paragraph>
                     Content

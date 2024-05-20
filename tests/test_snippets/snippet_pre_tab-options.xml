@@ -5,7 +5,8 @@
         <container classes="sd-tab-set class-set" design_component="tab-set" is_div="True">
             <container classes="sd-tab-item class-container" design_component="tab-item" is_div="True" selected="True">
                 <rubric classes="sd-tab-label class-label" ids="target" names="target">
-                    Label
+                    <strong>
+                        Label
                 <container classes="sd-tab-content class-content" design_component="tab-content" is_div="True">
                     <paragraph>
                         Content
