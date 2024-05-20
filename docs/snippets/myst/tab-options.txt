@@ -1,7 +1,7 @@
 ::::{tab-set}
 :class: class-set
 
-:::{tab-item} Label
+:::{tab-item} **Label**
 :name: target
 :selected:
 :class-container: class-container
