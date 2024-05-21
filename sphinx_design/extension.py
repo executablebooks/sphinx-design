@@ -1,6 +1,5 @@
 import hashlib
 from pathlib import Path
-import sys
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -71,8 +70,7 @@ def update_css_js(app: Sphinx):
     content = read_text(static_module, "style.min.css")
     # Write the css file
     if sphinx_version < (7, 1):
-        md5_kwargs = {"usedforsecurity": False} if sys.version_info >= (3, 9) else {}
-        hash = hashlib.md5(content.encode("utf8"), **md5_kwargs).hexdigest()
+        hash = hashlib.md5(content.encode("utf8"), usedforsecurity=False).hexdigest()
         css_path = static_path / f"sphinx-design.{hash}.min.css"
     else:
         # since sphinx 7.1 a checksum is added to the css file URL, so there is no need to do it here
