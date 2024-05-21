@@ -3,6 +3,7 @@ from pathlib import Path
 
 from docutils import nodes
 from docutils.parsers.rst import directives
+from sphinx import version_info as sphinx_version
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 from sphinx.transforms import SphinxTransform
@@ -67,9 +68,14 @@ def update_css_js(app: Sphinx):
         js_path.write_text(content)
     # Read the css content and hash it
     content = read_text(static_module, "style.min.css")
-    hash = hashlib.md5(content.encode("utf8")).hexdigest()
     # Write the css file
-    css_path = static_path / f"design-style.{hash}.min.css"
+    if sphinx_version < (7, 1):
+        hash = hashlib.md5(content.encode("utf8")).hexdigest()
+        css_path = static_path / f"sphinx-design.{hash}.min.css"
+    else:
+        # since sphinx 7.1 a checksum is added to the css file URL, so there is no need to do it here
+        # https://github.com/sphinx-doc/sphinx/pull/11415
+        css_path = static_path / "sphinx-design.min.css"
     app.add_css_file(css_path.name)
     if css_path.exists():
         return
