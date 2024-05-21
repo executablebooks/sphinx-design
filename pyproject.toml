@@ -15,10 +15,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: Markup",
@@ -26,7 +26,7 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: reStructuredText",
 ]
 keywords = ["sphinx", "extension", "material design", "web components"]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = ["sphinx>=5,<8"]
 
 [project.urls]
@@ -34,18 +34,21 @@ Homepage = "https://github.com/executablebooks/sphinx-design"
 Documentation = "https://sphinx-design.readthedocs.io"
 
 [project.optional-dependencies]
-code_style = ["pre-commit>=3,<4"]
+code-style = ["pre-commit>=3,<4"]
 rtd = ["myst-parser>=1,<3"]
 testing = [
     "myst-parser>=1,<3",
     "pytest~=7.1",
     "pytest-cov",
     "pytest-regressions",
+    "defusedxml",
 ]
-theme_furo = ["furo~=2023.7.0"]
-theme_pydata = ["pydata-sphinx-theme~=0.13.0"]
-theme_rtd = ["sphinx-rtd-theme~=1.0"]
-theme_sbt = ["sphinx-book-theme~=1.0"]
+
+theme-furo = ["furo~=2024.5.4"]
+theme-pydata = ["pydata-sphinx-theme~=0.15.2"]
+theme-rtd = ["sphinx-rtd-theme~=2.0"]
+theme-sbt = ["sphinx-book-theme~=1.1"]
+theme-im = ["sphinx-immaterial~=0.11.11"]
 
 [tool.flit.sdist]
 exclude = [
@@ -53,6 +56,37 @@ exclude = [
     "style/",
     "tests/",
 ]
+
+[tool.ruff.lint]
+extend-select = [
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    # "FURB",# refurb (modernising code)
+    "I",   # isort
+    "ICN", # flake8-import-conventions
+    "ISC", # flake8-implicit-str-concat
+    "N",   # pep8-naming
+    "PERF",# perflint (performance anti-patterns)
+    "PGH", # pygrep-hooks
+    "PIE", # flake8-pie
+    "PL",  # pylint
+    "PTH", # flake8-use-pathlib
+    "RUF", # Ruff-specific rules
+    "SIM", # flake8-simplify
+    "UP",  # pyupgrade
+    "T20", # flake8-print
+]
+extend-ignore = [
+    "ISC001",    # implicit-str-concat
+    "PLR2004",
+    "RUF012",
+]
+
+# [tool.ruff.lint.per-file-ignores]
+# "..." = ["N801"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
 
 [tool.mypy]
 show_error_codes = true
@@ -64,8 +98,3 @@ strict_equality = true
 [[tool.mypy.overrides]]
 module = ["docutils.*"]
 ignore_missing_imports = true
-
-[tool.isort]
-profile = "black"
-src_paths = ["sphinx_design", "tests"]
-force_sort_within_sections = true

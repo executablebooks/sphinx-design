@@ -4,6 +4,7 @@ import sys
 
 from docutils import nodes
 from docutils.parsers.rst import directives
+from sphinx import version_info as sphinx_version
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 from sphinx.transforms import SphinxTransform
@@ -68,13 +69,15 @@ def update_css_js(app: Sphinx):
         js_path.write_text(content)
     # Read the css content and hash it
     content = read_text(static_module, "style.min.css")
-    # Handle python >= 3.9 and specify md5 is not used for security reasons
-    # to avoid issue with FIPS
-    md5_has_usedforsecurity = float(sys.version[:3]) >= 3.9
-    md5_kwargs = {"usedforsecurity": False} if md5_has_usedforsecurity else {}
-    hash = hashlib.md5(content.encode("utf8"), **md5_kwargs).hexdigest()
     # Write the css file
-    css_path = static_path / f"design-style.{hash}.min.css"
+    if sphinx_version < (7, 1):
+        md5_kwargs = {"usedforsecurity": False} if sys.version_info >= (3, 9) else {}
+        hash = hashlib.md5(content.encode("utf8"), **md5_kwargs).hexdigest()
+        css_path = static_path / f"sphinx-design.{hash}.min.css"
+    else:
+        # since sphinx 7.1 a checksum is added to the css file URL, so there is no need to do it here
+        # https://github.com/sphinx-doc/sphinx/pull/11415
+        css_path = static_path / "sphinx-design.min.css"
     app.add_css_file(css_path.name)
     if css_path.exists():
         return
@@ -127,11 +130,10 @@ class Div(SphinxDirective):
                 classes = directives.class_option(self.arguments[0])
             else:
                 classes = []
-        except ValueError:
+        except ValueError as exc:
             raise self.error(
-                'Invalid class attribute value for "%s" directive: "%s".'
-                % (self.name, self.arguments[0])
-            )
+                f'Invalid class attribute value for "{self.name}" directive: "{self.arguments[0]}".'
+            ) from exc
         node = create_component("div", rawtext="\n".join(self.content), classes=classes)
         if "style" in self.options:
             node["style"] = self.options["style"]

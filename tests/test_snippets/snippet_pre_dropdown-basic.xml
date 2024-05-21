@@ -2,15 +2,15 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <container body_classes="" container_classes="sd-mb-3" design_component="dropdown" has_title="False" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
+        <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" has_title="False" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
             <paragraph>
                 Dropdown content
-        <container body_classes="" container_classes="sd-mb-3" design_component="dropdown" has_title="True" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
+        <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" has_title="True" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
             <rubric>
                 Dropdown title
             <paragraph>
                 Dropdown content
-        <container body_classes="" container_classes="sd-mb-3" design_component="dropdown" has_title="True" icon="True" is_div="True" opened="True" title_classes="" type="dropdown">
+        <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" has_title="True" icon="True" is_div="True" opened="True" title_classes="" type="dropdown">
             <rubric>
                 Open dropdown
             <paragraph>
