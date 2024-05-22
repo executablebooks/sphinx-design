@@ -2,11 +2,10 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.transforms.post_transforms import SphinxPostTransform
-from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
 from ._compat import findall
-from .shared import WARNING_TYPE, create_component, is_component
+from .shared import WARNING_TYPE, SdDirective, create_component, is_component
 
 LOGGER = getLogger(__name__)
 
@@ -20,7 +19,7 @@ def setup_tabs(app: Sphinx) -> None:
     app.add_node(sd_tab_label, html=(visit_tab_label, depart_tab_label))
 
 
-class TabSetDirective(SphinxDirective):
+class TabSetDirective(SdDirective):
     """A container for a set of tab items."""
 
     has_content = True
@@ -28,8 +27,7 @@ class TabSetDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         tab_set = create_component(
             "tab-set", classes=["sd-tab-set", *self.options.get("class", [])]
@@ -49,7 +47,7 @@ class TabSetDirective(SphinxDirective):
         return [tab_set]
 
 
-class TabItemDirective(SphinxDirective):
+class TabItemDirective(SdDirective):
     """A single tab item in a tab set.
 
     Note: This directive generates a single container,
@@ -79,8 +77,7 @@ class TabItemDirective(SphinxDirective):
         "class-content": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         if not is_component(self.state_machine.node, "tab-set"):
             LOGGER.warning(
@@ -119,7 +116,7 @@ class TabItemDirective(SphinxDirective):
         return [tab_item]
 
 
-class TabSetCodeDirective(SphinxDirective):
+class TabSetCodeDirective(SdDirective):
     """A container for a set of tab items, generated from code blocks."""
 
     has_content = True
@@ -129,8 +126,7 @@ class TabSetCodeDirective(SphinxDirective):
         "class-item": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         tab_set = create_component(
             "tab-set", classes=["sd-tab-set", *self.options.get("class-set", [])]

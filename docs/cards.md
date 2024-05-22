@@ -13,9 +13,7 @@ Card content
 
 See the [Material Design](https://material.io/components/cards) and [Bootstrap card](https://getbootstrap.com/docs/5.0/layout/grid/) descriptions for further details.
 
-`````{dropdown} Syntax
-:icon: code
-:color: primary
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-basic.txt
@@ -38,9 +36,7 @@ Card content
 Footer
 :::
 
-`````{dropdown} Syntax
-:icon: code
-:color: primary
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-head-foot.txt
@@ -115,9 +111,7 @@ Footer
 
 :::::
 
-`````{dropdown} Syntax
-:icon: code
-:color: primary
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-images.txt
@@ -151,9 +145,7 @@ The entire card can be clicked to navigate to <https://example.com>.
 The entire card can be clicked to navigate to the `cards-clickable` reference target.
 :::
 
-`````{dropdown} Syntax
-:icon: code
-:color: primary
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-link.txt
@@ -223,9 +215,7 @@ content
 :::
 ::::
 
-`````{dropdown} Syntax
-:icon: code
-:color: primary
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-carousel.txt

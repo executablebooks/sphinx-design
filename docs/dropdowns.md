@@ -20,9 +20,7 @@ Dropdown content
 Dropdown content
 :::
 
-`````{dropdown} Syntax
-:icon: code
-:color: primary
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/dropdown-basic.txt

@@ -8,11 +8,11 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util import logging
-from sphinx.util.docutils import SphinxDirective, SphinxRole
+from sphinx.util.docutils import SphinxRole
 
 from . import compiled
 from ._compat import read_text
-from .shared import WARNING_TYPE
+from .shared import WARNING_TYPE, SdDirective
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +142,7 @@ class OcticonRole(SphinxRole):
         return [node], []
 
 
-class AllOcticons(SphinxDirective):
+class AllOcticons(SdDirective):
     """Directive to generate all octicon icons.
 
     Primarily for self documentation.
@@ -152,8 +152,7 @@ class AllOcticons(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         classes = self.options.get("class", [])
         table = nodes.table()
         group = nodes.tgroup(cols=2)
