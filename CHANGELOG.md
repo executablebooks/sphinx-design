@@ -79,6 +79,7 @@ Internally, the HTML / CSS is changed, such that the title is now an `inline-fle
 
 | icon (optional) | text (`flex-grow: 1`) | state chevron |
 | -------------- | -------------------- | -------------- |
+|                |                      |                |
 
 Also, the state chevron was previously two distinct SVGs (with one hidden), but now is one that get rotated on open/close.
 
