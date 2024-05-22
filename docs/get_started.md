@@ -43,6 +43,27 @@ sd_hide_title: true
 :::
 ::::
 
+### Creating custom directives
+
+You can use the `sd_custom_directives` configuration option in your `conf.py` to add custom directives, with default option values:
+
+```python
+sd_custom_directives = {
+    "dropdown-syntax": {
+        "inherit": "dropdown",
+        "options": {
+            "color": "primary",
+            "icon": "code",
+        },
+    }
+}
+```
+
+The key is the new directive name to add, and the value is a dictionary with the following keys:
+
+- `inherit`: The directive to inherit from (e.g. `dropdown`)
+- `options`: A dictionary of default options for the directive
+
 ## Supported browsers
 
 - Chrome >= 60

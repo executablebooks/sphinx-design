@@ -3,12 +3,12 @@ from typing import Optional
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
-from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
 from .cards import CardDirective
 from .shared import (
     WARNING_TYPE,
+    SdDirective,
     create_component,
     is_component,
     make_choice,
@@ -94,7 +94,7 @@ def gutter_option(argument: Optional[str]) -> list[str]:
     return _media_option(argument, "sd-g-", min_num=0, max_num=5)
 
 
-class GridDirective(SphinxDirective):
+class GridDirective(SdDirective):
     """A grid component, which is a container for grid items (i.e. columns)."""
 
     has_content = True
@@ -111,8 +111,7 @@ class GridDirective(SphinxDirective):
         "class-row": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         try:
             column_classes = (
                 row_columns_option(self.arguments[0]) if self.arguments else []
@@ -157,7 +156,7 @@ class GridDirective(SphinxDirective):
         return [container]
 
 
-class GridItemDirective(SphinxDirective):
+class GridItemDirective(SdDirective):
     """An item within a grid row.
 
     Can "occupy" 1 to 12 columns.
@@ -174,8 +173,7 @@ class GridItemDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         if not is_component(self.state_machine.node, "grid-row"):
             LOGGER.warning(
                 f"The parent of a 'grid-item' should be a 'grid-row' [{WARNING_TYPE}.grid]",
@@ -205,7 +203,7 @@ class GridItemDirective(SphinxDirective):
         return [column]
 
 
-class GridItemCardDirective(SphinxDirective):
+class GridItemCardDirective(SdDirective):
     """An item within a grid row, with an internal card."""
 
     has_content = True
@@ -237,8 +235,7 @@ class GridItemCardDirective(SphinxDirective):
         "class-img-bottom": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         if not is_component(self.state_machine.node, "grid-row"):
             LOGGER.warning(
                 f"The parent of a 'grid-item' should be a 'grid-row' [{WARNING_TYPE}.grid]",

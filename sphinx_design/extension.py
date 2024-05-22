@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+from functools import partial
 import hashlib
 from pathlib import Path
 
@@ -7,7 +9,6 @@ from sphinx import version_info as sphinx_version
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
 from sphinx.transforms import SphinxTransform
-from sphinx.util.docutils import SphinxDirective
 
 from . import compiled as static_module
 from ._compat import findall, read_text
@@ -17,7 +18,12 @@ from .cards import setup_cards
 from .dropdown import setup_dropdown
 from .grids import setup_grids
 from .icons import setup_icons
-from .shared import PassthroughTextElement, create_component
+from .shared import (
+    PassthroughTextElement,
+    SdDirective,
+    create_component,
+    setup_custom_directives,
+)
 from .tabs import setup_tabs
 
 
@@ -38,17 +44,36 @@ def setup_extension(app: Sphinx) -> None:
         man=(visit_depart_null, visit_depart_null),
         texinfo=(visit_depart_null, visit_depart_null),
     )
-    app.add_directive(
-        "div", Div, override=True
-    )  # override sphinx-panels implementation
-    app.add_transform(AddFirstTitleCss)
-    setup_badges_and_buttons(app)
-    setup_cards(app)
-    setup_grids(app)
-    setup_dropdown(app)
-    setup_icons(app)
-    setup_tabs(app)
-    setup_article_info(app)
+    with capture_directives(app) as directive_map:
+        app.add_directive("div", Div, override=True)
+        app.add_transform(AddFirstTitleCss)
+        setup_badges_and_buttons(app)
+        setup_cards(app)
+        setup_grids(app)
+        setup_dropdown(app)
+        setup_icons(app)
+        setup_tabs(app)
+        setup_article_info(app)
+
+    app.add_config_value("sd_custom_directives", {}, "env")
+    app.connect(
+        "config-inited", partial(setup_custom_directives, directive_map=directive_map)
+    )
+
+
+@contextmanager
+def capture_directives(app: Sphinx):
+    """Capture the directives that are registered by the extension."""
+    directive_map = {}
+    add_directive = app.add_directive
+
+    def _add_directive(name, directive, **kwargs):
+        directive_map[name] = directive
+        add_directive(name, directive, **kwargs)
+
+    app.add_directive = _add_directive
+    yield directive_map
+    app.add_directive = add_directive
 
 
 def update_css_js(app: Sphinx):
@@ -111,7 +136,7 @@ def visit_depart_null(self, node: nodes.Element) -> None:
     """visit/depart passthrough"""
 
 
-class Div(SphinxDirective):
+class Div(SdDirective):
     """Same as the ``container`` directive,
     but does not add the ``container`` class in HTML outputs,
     which can interfere with Bootstrap CSS.
@@ -122,7 +147,7 @@ class Div(SphinxDirective):
     option_spec = {"style": directives.unchanged, "name": directives.unchanged}
     has_content = True
 
-    def run(self):
+    def run_with_defaults(self) -> list[nodes.Node]:
         try:
             if self.arguments:
                 classes = directives.class_option(self.arguments[0])

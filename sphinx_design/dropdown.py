@@ -4,10 +4,10 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.transforms.post_transforms import SphinxPostTransform
-from sphinx.util.docutils import SphinxDirective
 
 from sphinx_design.shared import (
     SEMANTIC_COLORS,
+    SdDirective,
     create_component,
     is_component,
     make_choice,
@@ -52,7 +52,7 @@ def depart_dropdown_title(self, node):
     self.body.append("</summary>")
 
 
-class DropdownDirective(SphinxDirective):
+class DropdownDirective(SdDirective):
     """A directive to generate a collapsible container.
 
     Note: This directive generates a single container,
@@ -87,8 +87,7 @@ class DropdownDirective(SphinxDirective):
         "class-body": directives.class_option,
     }
 
-    def run(self):
-        """Run the directive"""
+    def run_with_defaults(self) -> list[nodes.Node]:
         # default classes
         classes = {
             "container_classes": self.options.get("margin", ["sd-mb-3"])
@@ -149,7 +148,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
     default_priority = 199
     formats = ("html",)
 
-    def run(self):
+    def run(self) -> None:
         """Run the transform"""
         document: nodes.document = self.document
         for node in findall(document)(lambda node: is_component(node, "dropdown")):

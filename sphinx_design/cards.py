@@ -13,6 +13,7 @@ from ._compat import findall
 from .shared import (
     WARNING_TYPE,
     PassthroughTextElement,
+    SdDirective,
     create_component,
     is_component,
     make_choice,
@@ -45,7 +46,7 @@ class CardContent(NamedTuple):
     footer: Optional[tuple[int, StringList]] = None
 
 
-class CardDirective(SphinxDirective):
+class CardDirective(SdDirective):
     """A card component."""
 
     has_content = True
@@ -73,7 +74,7 @@ class CardDirective(SphinxDirective):
         "class-img-bottom": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
+    def run_with_defaults(self) -> list[nodes.Node]:
         return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
@@ -256,7 +257,7 @@ class CardDirective(SphinxDirective):
         #     ]
 
 
-class CardCarouselDirective(SphinxDirective):
+class CardCarouselDirective(SdDirective):
     """A component, which is a container for cards in a single scrollable row."""
 
     has_content = True
@@ -266,8 +267,7 @@ class CardCarouselDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         try:
             cols = make_choice([str(i) for i in range(1, 13)])(

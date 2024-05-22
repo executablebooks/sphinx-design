@@ -4,9 +4,9 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx import addnodes
 from sphinx.application import Sphinx
-from sphinx.util.docutils import ReferenceRole, SphinxDirective, SphinxRole
+from sphinx.util.docutils import ReferenceRole, SphinxRole
 
-from sphinx_design.shared import SEMANTIC_COLORS, make_choice, text_align
+from sphinx_design.shared import SEMANTIC_COLORS, SdDirective, make_choice, text_align
 
 ROLE_NAME_BADGE_PREFIX = "bdg"
 ROLE_NAME_LINK_PREFIX = "bdg-link"
@@ -127,7 +127,7 @@ class XRefBadgeRole(ReferenceRole):
         return [node], []
 
 
-class _ButtonDirective(SphinxDirective):
+class _ButtonDirective(SdDirective):
     """A base button directive."""
 
     required_arguments = 1
@@ -155,8 +155,7 @@ class _ButtonDirective(SphinxDirective):
         """Create the reference node."""
         raise NotImplementedError
 
-    def run(self) -> list[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         rawtext = self.arguments[0]
         target = directives.uri(rawtext)
         classes = ["sd-sphinx-override", "sd-btn", "sd-text-wrap"]
