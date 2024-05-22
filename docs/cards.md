@@ -132,15 +132,14 @@ Try hovering over then clicking on the cards below:
 
 :::{card} Clickable Card (external)
 :link: https://example.com
-:link-alt: example
+:link-alt: example.com
 
-The entire card can be clicked to navigate to <https://example.com>.
+The entire card can be clicked to navigate to `https://example.com`.
 :::
 
 :::{card} Clickable Card (internal)
 :link: cards-clickable
 :link-type: ref
-:link-alt: cards-clickable
 
 The entire card can be clicked to navigate to the `cards-clickable` reference target.
 :::
@@ -156,6 +155,30 @@ The entire card can be clicked to navigate to the `cards-clickable` reference ta
 ```
 ````
 `````
+
+The **external link** created above is equivalent to using `<https://example.com>`
+(<https://example.com>),
+or if the `link-alt` option is provided, `[alt text](https://example.com)`
+([alt text](https://example.com)).
+
+:::{tip}
+Using URLs as link text makes it harder
+for disabled people and for search engines to digest your web page,
+so it's best to provide link text via the `link-alt` option.
+:::
+
+The **internal link** created above is equivalent to using `` {ref}`cards-clickable` ``
+({ref}`cards-clickable`),
+or if the `link-alt` option is provided, `` {ref}`alt text <cards-clickable>` ``
+({ref}`alt text <cards-clickable>`).
+
+:::{note}
+You cannot add additional links to the clickable card, neither in the card
+title nor in the card body. The entire card becomes a single link to the
+destination you specify, which overrides any other links inside the card.
+:::
+
+
 
 ## Aligning cards
 
