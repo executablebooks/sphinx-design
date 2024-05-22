@@ -17,7 +17,7 @@ Content 2
 
 ::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/tab-basic.txt
@@ -68,7 +68,7 @@ Content 2
 
 ::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/tab-sync.txt

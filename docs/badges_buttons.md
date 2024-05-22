@@ -17,7 +17,7 @@ Badges are available in each semantic color, with filled and outline variants:
 - {bdg-light}`light`, {bdg-light-line}`light-line`
 - {bdg-dark}`dark`, {bdg-dark-line}`dark-line`
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/badge-basic.txt
@@ -38,7 +38,7 @@ The syntax is the same as for the `ref` role.
 
 {bdg-ref-primary}`badges`
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/badge-link.txt
@@ -90,7 +90,7 @@ Button text
 Reference Button text
 ```
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/button-link.txt

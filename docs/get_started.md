@@ -51,6 +51,7 @@ You can use the `sd_custom_directives` configuration option in your `conf.py` to
 sd_custom_directives = {
     "dropdown-syntax": {
         "inherit": "dropdown",
+        "argument": "Syntax",
         "options": {
             "color": "primary",
             "icon": "code",
@@ -62,7 +63,8 @@ sd_custom_directives = {
 The key is the new directive name to add, and the value is a dictionary with the following keys:
 
 - `inherit`: The directive to inherit from (e.g. `dropdown`)
-- `options`: A dictionary of default options for the directive
+- `argument`: The default argument (optional, only for directives that take a single optional argument)
+- `options`: A dictionary of default options for the directive (optional)
 
 ## Supported browsers
 

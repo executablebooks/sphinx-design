@@ -9,7 +9,7 @@ All CSS classes that are part of sphinx-design are prefixed with `sd-`.
 Some CSS styled text
 :::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/div-basic.txt

@@ -29,7 +29,7 @@ D
 :::
 ::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-basic.txt
@@ -78,7 +78,7 @@ B
 :::
 ::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-card.txt
@@ -117,7 +117,7 @@ B
 :::
 ::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-gutter.txt
@@ -154,7 +154,7 @@ C
 :::
 ::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-card-columns.txt
@@ -246,7 +246,7 @@ Content
 
 ::::::
 
-`````{dropdown-syntax} Syntax
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/grid-nested.txt

@@ -13,6 +13,7 @@ sd_fontawesome_latex = True
 sd_custom_directives = {
     "dropdown-syntax": {
         "inherit": "dropdown",
+        "argument": "Syntax",
         "options": {
             "color": "primary",
             "icon": "code",

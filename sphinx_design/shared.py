@@ -63,6 +63,9 @@ def setup_custom_directives(
             if not isinstance(data["options"], dict):
                 _warn(f"'{name}.options' value must be a dictionary")
                 continue
+            if "argument" in data and not isinstance(data["argument"], str):
+                _warn(f"'{name}.argument' value must be a string")
+                continue
             for key, value in data["options"].items():
                 if key not in directive_cls.option_spec:
                     _warn(f"'{name}.options' unknown key {key!r}")
@@ -79,7 +82,7 @@ class SdDirective(SphinxDirective):
     Having a base class allows for shared functionality to be implemented in one place.
     Namely, we allow for default options to be configured, per directive name.
 
-    This class should be subclassed by all directives in the sphinx-design extension.
+    This class should be sub-classed by all directives in the sphinx-design extension.
     """
 
     # TODO perhaps ideally there would be separate sphinx extension,
@@ -92,13 +95,20 @@ class SdDirective(SphinxDirective):
 
         This method should not be overridden, instead override `run_with_defaults`.
         """
-        if (data := self.config.sd_custom_directives.get(self.name)) and (
-            options := data.get("options")
-        ):
-            for key, value in options.items():
+        if data := self.config.sd_custom_directives.get(self.name):
+            if (not self.arguments) and (argument := data.get("argument")):  # type: ignore[has-type]
+                self.arguments = [str(argument)]
+            for key, value in data.get("options", {}).items():
                 if key not in self.options and key in self.option_spec:
-                    # TODO check for exceptions and handle them
-                    self.options[key] = self.option_spec[key](str(value))
+                    try:
+                        self.options[key] = self.option_spec[key](str(value))
+                    except Exception as exc:
+                        LOGGER.warning(
+                            f"Invalid default option {key!r} for {self.name!r}: {exc}",
+                            type=WARNING_TYPE,
+                            subtype="directive",
+                            location=(self.env.docname, self.lineno),
+                        )
         return self.run_with_defaults()
 
     def run_with_defaults(self) -> list[nodes.Node]:
