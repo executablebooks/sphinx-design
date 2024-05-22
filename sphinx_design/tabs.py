@@ -24,6 +24,7 @@ class TabSetDirective(SdDirective):
 
     has_content = True
     option_spec = {
+        "sync-group": directives.unchanged_required,
         "class": directives.class_option,
     }
 
@@ -44,6 +45,8 @@ class TabSetDirective(SdDirective):
                     subtype="tab",
                 )
                 break
+            if "sync_id" in item.children[0]:
+                item.children[0]["sync_group"] = self.options.get("sync-group", "tab")
         return [tab_set]
 
 
@@ -122,6 +125,7 @@ class TabSetCodeDirective(SdDirective):
     has_content = True
     option_spec = {
         "no-sync": directives.flag,
+        "sync-group": directives.unchanged_required,
         "class-set": directives.class_option,
         "class-item": directives.class_option,
     }
@@ -151,7 +155,8 @@ class TabSetCodeDirective(SdDirective):
                 classes=["sd-tab-label", *self.options.get("class-label", [])],
             )
             if "no-sync" not in self.options:
-                tab_label["sync_id"] = f"tabcode-{language}"
+                tab_label["sync_group"] = self.options.get("sync-group", "code")
+                tab_label["sync_id"] = language
             tab_content = create_component(
                 "tab-content",
                 children=[item],
@@ -190,8 +195,9 @@ def depart_tab_input(self, node):
 
 def visit_tab_label(self, node):
     attributes = {"for": node["input_id"]}
-    if "sync_id" in node:
+    if "sync_id" in node and "sync_group" in node:
         attributes["data-sync-id"] = node["sync_id"]
+        attributes["data-sync-group"] = node["sync_group"]
     self.body.append(self.starttag(node, "label", **attributes))
 
 
@@ -262,7 +268,8 @@ class TabSetHtmlTransform(SphinxPostTransform):
                 )
                 if tab_label.get("ids"):
                     label_node["ids"] += tab_label["ids"]
-                if "sync_id" in tab_label:
+                if "sync_group" in tab_label and "sync_id" in tab_label:
+                    label_node["sync_group"] = tab_label["sync_group"]
                     label_node["sync_id"] = tab_label["sync_id"]
                 label_node.source, label_node.line = tab_item.source, tab_item.line
                 children.append(label_node)

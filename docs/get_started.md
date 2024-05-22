@@ -45,6 +45,9 @@ sd_hide_title: true
 
 ### Creating custom directives
 
+:::{versionadded} 0.6.0
+:::
+
 You can use the `sd_custom_directives` configuration option in your `conf.py` to add custom directives, with default option values:
 
 ```python

@@ -4,26 +4,26 @@
             Heading
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
             <sd_tab_input checked="True" id="sd-tab-item-0" set_id="sd-tab-set-0" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-0" sync_id="key1">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-0" sync_group="category" sync_id="key1">
                 Label1
             <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                 <paragraph>
                     Content 1
             <sd_tab_input checked="False" id="sd-tab-item-1" set_id="sd-tab-set-0" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-1" sync_id="key2">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-1" sync_group="category" sync_id="key2">
                 Label2
             <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                 <paragraph>
                     Content 2
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
             <sd_tab_input checked="True" id="sd-tab-item-2" set_id="sd-tab-set-1" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-2" sync_id="key1">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-2" sync_group="category" sync_id="key1">
                 Label1
             <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                 <paragraph>
                     Content 1
             <sd_tab_input checked="False" id="sd-tab-item-3" set_id="sd-tab-set-1" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-3" sync_id="key2">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-3" sync_group="category" sync_id="key2">
                 Label2
             <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                 <paragraph>

@@ -4,13 +4,13 @@
             Heading
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
             <container classes="sd-tab-item" design_component="tab-item" is_div="True">
-                <rubric classes="sd-tab-label" sync_id="tabcode-python">
+                <rubric classes="sd-tab-label" sync_group="code" sync_id="python">
                     PYTHON
                 <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                     <literal_block force="False" highlight_args="{'linenostart': 1}" language="python" source="snippet.py" xml:space="preserve">
                         a = 1
             <container classes="sd-tab-item" design_component="tab-item" is_div="True">
-                <rubric classes="sd-tab-label" sync_id="tabcode-javascript">
+                <rubric classes="sd-tab-label" sync_group="code" sync_id="javascript">
                     JAVASCRIPT
                 <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                     <literal_block force="False" highlight_args="{}" language="javascript" xml:space="preserve">
