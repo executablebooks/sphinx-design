@@ -63,7 +63,7 @@ sd_custom_directives = {
 The key is the new directive name to add, and the value is a dictionary with the following keys:
 
 - `inherit`: The directive to inherit from (e.g. `dropdown`)
-- `argument`: The default argument (optional, only for directives that take a single optional argument)
+- `argument`: The default argument (optional, only for directives that take a single argument)
 - `options`: A dictionary of default options for the directive (optional)
 
 ## Supported browsers
