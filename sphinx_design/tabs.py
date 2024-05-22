@@ -183,7 +183,9 @@ def visit_tab_input(self, node):
 
 
 def depart_tab_input(self, node):
-    self.body.append("</input>")
+    # note do not add a closing tag, since this is a void element:
+    # https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+    pass
 
 
 def visit_tab_label(self, node):
