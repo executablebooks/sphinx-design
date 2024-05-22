@@ -4,26 +4,26 @@
             Heading
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
             <container classes="sd-tab-item" design_component="tab-item" is_div="True" selected="False">
-                <rubric classes="sd-tab-label" sync_id="key1">
+                <rubric classes="sd-tab-label" sync_group="category" sync_id="key1">
                     Label1
                 <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                     <paragraph>
                         Content 1
             <container classes="sd-tab-item" design_component="tab-item" is_div="True" selected="False">
-                <rubric classes="sd-tab-label" sync_id="key2">
+                <rubric classes="sd-tab-label" sync_group="category" sync_id="key2">
                     Label2
                 <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                     <paragraph>
                         Content 2
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
             <container classes="sd-tab-item" design_component="tab-item" is_div="True" selected="False">
-                <rubric classes="sd-tab-label" sync_id="key1">
+                <rubric classes="sd-tab-label" sync_group="category" sync_id="key1">
                     Label1
                 <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                     <paragraph>
                         Content 1
             <container classes="sd-tab-item" design_component="tab-item" is_div="True" selected="False">
-                <rubric classes="sd-tab-label" sync_id="key2">
+                <rubric classes="sd-tab-label" sync_group="category" sync_id="key2">
                     Label2
                 <container classes="sd-tab-content" design_component="tab-content" is_div="True">
                     <paragraph>

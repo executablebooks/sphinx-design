@@ -44,3 +44,13 @@ repos:
       require_serial: true
       pass_filenames: false
       # args: [--style=compressed, --no-source-map, style/index.scss, sphinx_design/compiled/style.min.css]
+
+    - id: tsc
+      name: tsc (jsdoc)
+      entry: tsc
+      language: node
+      files: \.(js)$
+      types_or: [javascript]
+      args: [--allowJs, --noEmit, --strict]
+      additional_dependencies:
+      - typescript
