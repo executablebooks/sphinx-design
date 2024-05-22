@@ -150,3 +150,35 @@ def test_sd_hide_title_myst(
         extension=".xml",
         encoding="utf8",
     )
+
+
+def test_sd_custom_directives(
+    sphinx_builder: Callable[..., SphinxBuilder], file_regression
+):
+    """Test that the defaults are used."""
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["myst_parser", "sphinx_design"],
+            "sd_custom_directives": {
+                "dropdown-syntax": {
+                    "inherit": "dropdown",
+                    "argument": "Syntax",
+                    "options": {
+                        "color": "primary",
+                        "icon": "code",
+                    },
+                }
+            },
+        }
+    )
+    content = "# Heading\n\n```{dropdown-syntax}\ncontent\n```"
+    builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
+    builder.build()
+    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
+    file_regression.check(
+        doctree.pformat(),
+        basename="sd_custom_directives",
+        extension=".xml",
+        encoding="utf8",
+    )
