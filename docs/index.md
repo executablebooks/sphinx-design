@@ -91,6 +91,14 @@ sphinx-rtd-theme <https://sphinx-design.readthedocs.io/en/rtd-theme>
 furo <https://sphinx-design.readthedocs.io/en/furo-theme>
 ```
 
+
+```{toctree}
+:caption: Development
+:hidden:
+
+changelog
+```
+
 ::::{grid} 1 2 2 3
 :margin: 4 4 0 0
 :gutter: 1
