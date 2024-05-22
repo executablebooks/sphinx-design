@@ -6,7 +6,7 @@ project = "Sphinx Design"
 copyright = "2021, Executable Book Project"
 author = "Executable Book Project"
 
-extensions = ["myst_parser", "sphinx_design"]
+extensions = ["myst_parser", "sphinx_design", "sphinx.ext.extlinks"]
 
 suppress_warnings = ["design.fa-build"]
 sd_fontawesome_latex = True
@@ -19,6 +19,11 @@ sd_custom_directives = {
             "icon": "code",
         },
     }
+}
+
+extlinks = {
+    "pr": ("https://github.com/executablebooks/sphinx-design/pull/%s", "PR #%s"),
+    "user": ("https://github.com/%s", "@%s"),
 }
 
 html_theme = os.environ.get("SPHINX_THEME", "alabaster")

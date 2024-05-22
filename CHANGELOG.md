@@ -1,11 +1,112 @@
 # Change Log
 
+## 0.6.0 - 2024-05-23
+
+### Dependencies
+
+* ⬆️ Python v3.9-3.12 by {user}`chrisjsewell` in {pr}`186`
+* ⬆️ Octicon icons to v19.8.0 by {user}`ffvpor` in {pr}`171`
+
+### New
+
+#### ✨ Create custom directives
+
+You can use the `sd_custom_directives` configuration option in your `conf.py` to add custom directives, with default option values:
+
+```python
+sd_custom_directives = {
+  "dropdown-syntax": {
+    "inherit": "dropdown",
+    "argument": "Syntax",
+    "options": {
+      "color": "primary",
+      "icon": "code",
+    },
+  }
+}
+```
+
+The key is the new directive name to add, and the value is a dictionary with the following keys:
+
+- `inherit`: The directive to inherit from (e.g. `dropdown`)
+- `argument`: The default argument (optional, only for directives that take a single argument)
+- `options`: A dictionary of default options for the directive (optional)
+
+by {user}`chrisjsewell` in {pr}`194`
+
+#### ✨ sync tabs by URL query parameters
+
+Synchronised tabs can now be selected by adding a query parameter to the URL, for that sync-group, such as `?code=python` for
+
+```restructuredtext
+.. tab-set-code::
+
+    .. literalinclude:: snippet.py
+        :language: python
+
+    .. literalinclude:: snippet.js
+        :language: javascript
+```
+
+The last selected tab key, per group, is also persisted to `SessionStorage`
+
+by {user}`mikemckiernan` and {user}`chrisjsewell` in {pr}`196`
+
+### Improve
+
+* 👌 Use reference name by default for internal link cards by {user}`gabalafou` in {pr}`183`
+* 👌 Improve specificity of JS function name by {user}`danirus` in {pr}`153`
+* 👌 Remove duplicate CSS hashing for sphinx >= 7.1 by {user}`chrisjsewell` in {pr}`193`
+
+#### 👌 Improve `dropdown` title bar
+
+There are three visible changes:
+
+1. The "default" behaviour of the right chevron is to go from right-facing (closed) to down-facing (open), instead of down-facing (closed) to up-facing (open). There is also a rotate transition on opening/closing.
+The old default behaviour can be retained by using the new `:chevron: down-up` directive option.
+2. The prefix icon (optional), title text, and chevron state icon are now all better aligned
+3. The top/bottom padding is now 0.5em instead of 1em
+
+The PR also introduces three new CSS variables to control font sizes of the dropdown:
+
+```css
+--sd-fontsize-tabs-label: 1rem;
+--sd-fontsize-dropdown-title: 1rem;
+--sd-fontweight-dropdown-title: 700;
+```
+
+Internally, the HTML / CSS is changed, such that the title is now an `inline-flex` box, with three columns arranged with `justify-content: space-between`:
+
+| icon (optional) | text (`flex-grow: 1`) | state chevron |
+| -------------- | -------------------- | -------------- |
+|                |                      |                |
+
+Also, the state chevron was previously two distinct SVGs (with one hidden), but now is one that get rotated on open/close.
+
+by {user}`chrisjsewell` in {pr}`192`
+
+### Fix
+
+* 🐛 Fix tab-item label with nested syntax by {user}`Praecordi` in {pr}`135`
+* 🐛 Fix do not close `input` tag by {user}`chrisjsewell` in {pr}`195`
+
+### Internal
+
+* 📚 Update theme versions by {user}`chrisjsewell` in {pr}`189`
+* 📚 Make octicon list a table by {user}`chrisjsewell` in {pr}`188`
+* 📚 Add sphinx-immaterial to doc theme builds by {user}`chrisjsewell` in {pr}`190`
+* 📚 Change syntax dropdown color by {user}`chrisjsewell` in {pr}`191`
+
+* 🔧 Add FIPS compliant flag to md5 call by {user}`gabor-varga` in {pr}`162`
+* 🔧 define `build.os` for RTD to fix build by {user}`sciencewhiz` in {pr}`176`
+* 🔧 Move to ruff by {user}`chrisjsewell` in {pr}`185`
+
+**Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.5.0...v0.6.0>
+
 ## 0.5.0 - 2023-07-27
 
-## What's Changed
-
-* ⬆️ Drop Python 3.7 support, by [@chrisjsewell](https://github.com/chrisjsewell)) in [#146](https://github.com/executablebooks/sphinx-design/pull/146)
-* ⬆️ UPGRADE: sphinx>=5,<8, by [@chrisjsewell](https://github.com/chrisjsewell)) in [#148](https://github.com/executablebooks/sphinx-design/pull/148)
+* ⬆️ Drop Python 3.7 support, by {user}`chrisjsewell` in {pr}`146`
+* ⬆️ UPGRADE: sphinx>=5,<8, by {user}`chrisjsewell` in {pr}`148`
 
 **Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.4.1...v0.5.0>
 
@@ -15,13 +116,13 @@
 
 ### Enhancements made
 
-- Make default blue color a11y friendly. [#124](https://github.com/executablebooks/sphinx-design/pull/124) ([@feanil](https://github.com/feanil), [@choldgraf](https://github.com/choldgraf))
-- Make card titles translatable [#113](https://github.com/executablebooks/sphinx-design/pull/113) ([@jpmckinney](https://github.com/jpmckinney), [@chrisjsewell](https://github.com/chrisjsewell))
+- Make default blue color a11y friendly. {pr}`124` ({user}`feanil`, {user}`choldgraf`)
+- Make card titles translatable {pr}`113` ({user}`jpmckinney`, {user}`chrisjsewell`)
 
 ### Version upgrades
 
-- Sphinx 6.x. [#106](https://github.com/executablebooks/sphinx-design/pull/106) ([@marxin](https://github.com/marxin), [@choldgraf](https://github.com/choldgraf), [@srideep3](https://github.com/srideep3), [@jpmckinney](https://github.com/jpmckinney), [@akaszynski](https://github.com/akaszynski), [@benjaoming](https://github.com/benjaoming), [@codecov-commenter](https://github.com/codecov-commenter), [@spoorcc](https://github.com/spoorcc), [@nicoa](https://github.com/nicoa), [@LecrisUT](https://github.com/LecrisUT))
-- Support for Python 3.11 [#105](https://github.com/executablebooks/sphinx-design/pull/105) ([@tirthasheshpatel](https://github.com/tirthasheshpatel), [@choldgraf](https://github.com/choldgraf), [@jpmckinney](https://github.com/jpmckinney), [@codecov-commenter](https://github.com/codecov-commenter))
+- Sphinx 6.x. {pr}`106`
+- Support for Python 3.11 {pr}`105`
 
 ### Contributors to this release
 
@@ -30,21 +131,18 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 
 ([GitHub contributors page for this release](https://github.com/executablebooks/sphinx-design/graphs/contributors?from=2022-08-22&to=2023-04-12&type=c))
 
-@akaszynski ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Aakaszynski+updated%3A2022-08-22..2023-04-12&type=Issues)) | @bastimeyer ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Abastimeyer+updated%3A2022-08-22..2023-04-12&type=Issues)) | @benjaoming ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Abenjaoming+updated%3A2022-08-22..2023-04-12&type=Issues)) | @choldgraf ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Acholdgraf+updated%3A2022-08-22..2023-04-12&type=Issues)) | @chrisjsewell ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Achrisjsewell+updated%3A2022-08-22..2023-04-12&type=Issues)) | @codecov-commenter ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Acodecov-commenter+updated%3A2022-08-22..2023-04-12&type=Issues)) | @feanil ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Afeanil+updated%3A2022-08-22..2023-04-12&type=Issues)) | @jpmckinney ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Ajpmckinney+updated%3A2022-08-22..2023-04-12&type=Issues)) | @LecrisUT ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3ALecrisUT+updated%3A2022-08-22..2023-04-12&type=Issues)) | @marxin ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Amarxin+updated%3A2022-08-22..2023-04-12&type=Issues)) | @mikemckiernan ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Amikemckiernan+updated%3A2022-08-22..2023-04-12&type=Issues)) | @nicoa ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Anicoa+updated%3A2022-08-22..2023-04-12&type=Issues)) | @pre-commit-ci ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Apre-commit-ci+updated%3A2022-08-22..2023-04-12&type=Issues)) | @spoorcc ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Aspoorcc+updated%3A2022-08-22..2023-04-12&type=Issues)) | @srideep3 ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Asrideep3+updated%3A2022-08-22..2023-04-12&type=Issues)) | @tirthasheshpatel ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Atirthasheshpatel+updated%3A2022-08-22..2023-04-12&type=Issues)) | @zerocewl ([activity](https://github.com/search?q=repo%3Aexecutablebooks%2Fsphinx-design+involves%3Azerocewl+updated%3A2022-08-22..2023-04-12&type=Issues))
-
-
 ## v0.3.0 - 2022-08-22
 
-- ⬆️ Update Materials Design Icons to v4.0.0-46-gc9e5528, thanks to @2bndy5 (#69)
-- 🐛 FIX: dropdown/tab-item `:name:` options (#91)
-- 🐛 FIX: Docs build against non-html formats (#88)
-- 👌 IMPROVE: Add card options `class-img-top`/`class-img-bottom` (#92)
-- 👌 IMPROVE: Add `link-alt` to fix card link accessibility (#89)
+- ⬆️ Update Materials Design Icons to v4.0.0-46-gc9e5528, thanks to {user}`2bndy5` ({pr}`69`)
+- 🐛 FIX: dropdown/tab-item `:name:` options ({pr}`91`)
+- 🐛 FIX: Docs build against non-html formats ({pr}`88`)
+- 👌 IMPROVE: Add card options `class-img-top`/`class-img-bottom` ({pr}`92`)
+- 👌 IMPROVE: Add `link-alt` to fix card link accessibility ({pr}`89`)
   - adds the `link-alt` option to `card` (and `grid-item-card`) directives, in order to assign a discernable name to the link (for screen readers).
-- 👌 IMPROVE: Make tab ids deterministic (#93)
+- 👌 IMPROVE: Make tab ids deterministic ({pr}`93`)
   - Use increasing indices, rather than UUIDs
-- 🔧 MAINTAIN: Fix docutils `PendingDeprecationWarning` (#94)
-- 📚 DOCS: Update font awesome icons (#64)
+- 🔧 MAINTAIN: Fix docutils `PendingDeprecationWarning` ({pr}`94`)
+- 📚 DOCS: Update font awesome icons ({pr}`64`)
 
 **Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.2.0...v0.3.0>
 
@@ -57,24 +155,24 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 
 ## v0.1.0 - 2022-04-21
 
-- ✨ NEW: Add material design icons roles, thanks to @2bndy5 in [#41](https://github.com/executablebooks/sphinx-design/pull/41)
-- ⬆️ UPGRADE: octicons to v16.1.1, thanks to @pocek in [#43](https://github.com/executablebooks/sphinx-design/pull/43)
-- 🐛 FIX: Links in card titles by @chrisjsewell in [#59](https://github.com/executablebooks/sphinx-design/pull/59)
-- 🐛 FIX: Exception on missing card link by @chrisjsewell in [#60](https://github.com/executablebooks/sphinx-design/pull/60)
-- 🔧 MAINTAIN: Move from setuptools to flit for package build by @chrisjsewell in [#58](https://github.com/executablebooks/sphinx-design/pull/58)
-- 🔧 MAINTAIN: Drop furo-specific stylesheet, thanks to @pradyunsg in [#22](https://github.com/executablebooks/sphinx-design/pull/22)
+- ✨ NEW: Add material design icons roles, thanks to {user}`2bndy5` in {pr}`41`
+- ⬆️ UPGRADE: octicons to v16.1.1, thanks to {user}`pocek` in {pr}`43`
+- 🐛 FIX: Links in card titles by {user}`chrisjsewell` in {pr}`59`
+- 🐛 FIX: Exception on missing card link by {user}`chrisjsewell` in {pr}`60`
+- 🔧 MAINTAIN: Move from setuptools to flit for package build by {user}`chrisjsewell` in {pr}`58`
+- 🔧 MAINTAIN: Drop furo-specific stylesheet, thanks to {user}`pradyunsg` in {pr}`22`
 
 **Full Changelog**: <https://github.com/executablebooks/sphinx-design/compare/v0.0.13...v0.1.0>
 
 ## v0.0.13 - 2021-10-27
 
-✨ NEW: add icon `far` role (#35), thanks to @OriolAbril
+✨ NEW: add icon `far` role ({pr}`35`), thanks to {user}`OriolAbril`
 
-👌 IMPROVE: Styling for tabs (#21), thanks to @pradyunsg
+👌 IMPROVE: Styling for tabs ({pr}`21`), thanks to {user}`pradyunsg`
 
-👌 IMPROVE: Properly remove the border on dropdown card body (#23), thanks to @pradyunsg
+👌 IMPROVE: Properly remove the border on dropdown card body ({pr}`23`), thanks to {user}`pradyunsg`
 
-🐛 FIX: `sd-outline-*` classes color (#25)
+🐛 FIX: `sd-outline-*` classes color ({pr}`25`)
 
 ## v0.0.11 - 2021-09-08
 
