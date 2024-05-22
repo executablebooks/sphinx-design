@@ -1,4 +1,5 @@
 """Configuration file for the Sphinx documentation builder."""
+
 import os
 
 project = "Sphinx Design"
@@ -9,6 +10,16 @@ extensions = ["myst_parser", "sphinx_design"]
 
 suppress_warnings = ["design.fa-build"]
 sd_fontawesome_latex = True
+sd_custom_directives = {
+    "dropdown-syntax": {
+        "inherit": "dropdown",
+        "argument": "Syntax",
+        "options": {
+            "color": "primary",
+            "icon": "code",
+        },
+    }
+}
 
 html_theme = os.environ.get("SPHINX_THEME", "alabaster")
 html_title = f"Sphinx Design ({html_theme.replace('_', '-')})"
@@ -45,7 +56,8 @@ if html_theme == "sphinx_book_theme":
     }
 if html_theme == "furo":
     html_css_files = [
-        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css"
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css",
+        "furo.css",
     ]
     html_theme_options = {
         "sidebar_hide_name": True,
@@ -53,6 +65,39 @@ if html_theme == "furo":
 if html_theme == "sphinx_rtd_theme":
     html_theme_options = {
         "logo_only": True,
+    }
+if html_theme == "sphinx_immaterial":
+    extensions.append("sphinx_immaterial")
+    html_css_files = ["sphinx_immaterial.css"]
+    html_theme_options = {
+        "icon": {
+            "repo": "fontawesome/brands/github",
+        },
+        "site_url": "https://sphinx-design.readthedocs.io/",
+        "repo_url": "https://github.com/executablebooks/sphinx-design",
+        "repo_name": "Sphinx-Design",
+        "palette": [
+            {
+                "media": "(prefers-color-scheme: light)",
+                "scheme": "default",
+                "primary": "blue",
+                "accent": "light-blue",
+                "toggle": {
+                    "icon": "material/weather-night",
+                    "name": "Switch to dark mode",
+                },
+            },
+            {
+                "media": "(prefers-color-scheme: dark)",
+                "scheme": "slate",
+                "primary": "blue",
+                "accent": "yellow",
+                "toggle": {
+                    "icon": "material/weather-sunny",
+                    "name": "Switch to light mode",
+                },
+            },
+        ],
     }
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]

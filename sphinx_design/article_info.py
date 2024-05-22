@@ -1,12 +1,11 @@
-from typing import List, Optional
+from typing import Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
-from sphinx.util.docutils import SphinxDirective
 
 from .icons import get_octicon
-from .shared import SEMANTIC_COLORS, create_component, make_choice
+from .shared import SEMANTIC_COLORS, SdDirective, create_component, make_choice
 
 
 def setup_article_info(app: Sphinx):
@@ -14,7 +13,7 @@ def setup_article_info(app: Sphinx):
     app.add_directive("article-info", ArticleInfoDirective)
 
 
-class ArticleInfoDirective(SphinxDirective):
+class ArticleInfoDirective(SdDirective):
     """ """
 
     has_content = False
@@ -48,8 +47,7 @@ class ArticleInfoDirective(SphinxDirective):
             output = [para]
         return output
 
-    def run(self) -> List[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:  # noqa: PLR0915
         parse_fields = True  # parse field text
 
         top_grid = create_component(
@@ -60,8 +58,8 @@ class ArticleInfoDirective(SphinxDirective):
                 "sd-p-0",
                 "sd-mt-2",
                 "sd-mb-4",
-            ]
-            + self.options.get("class-container", []),
+                *self.options.get("class-container", []),
+            ],
         )
         self.set_source_info(top_grid)
 

@@ -1,0 +1,30 @@
+body {
+    --sd-fontsize-dropdown: .64rem;
+    --sd-fontsize-dropdown-title: .64rem;
+    --sd-fontweight-dropdown-title: 700;
+}
+
+details.sd-dropdown {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+summary.sd-summary-title::after {
+    display: none;
+    right: 0 !important;
+}
+
+summary.sd-summary-title::before {
+    display: none;
+    left: 0 !important;
+}
+
+summary.sd-summary-title {
+    width: 100% !important;
+    margin-left: 0;
+    padding: .5em 1em !important;
+}
+
+summary.sd-summary-title svg.sd-octicon {
+    max-width: none !important;
+}

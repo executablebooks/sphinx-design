@@ -20,9 +20,7 @@ Dropdown content
 Dropdown content
 :::
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/dropdown-basic.txt
@@ -34,7 +32,7 @@ Dropdown content
 ````
 `````
 
-## Dropdown opening animations
+## Opening animations
 
 Use `:animate: fade-in` or `:animate: fade-in-slide-down` options to animate the reveal of the hidden content.
 
@@ -50,9 +48,40 @@ Use `:animate: fade-in` or `:animate: fade-in-slide-down` options to animate the
 {{ loremipsum }}
 :::
 
+## More examples
+
+:::{dropdown} Dropdown with icon
+:icon: quote
+
+Dropdown content
+:::
+
+:::{dropdown} Dropdown with icon and very long title, *lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nunc nec fermentum ultricies, nunc sapien ultricies nunc, nec ultricies sapien sapien nec sapien*
+:icon: quote
+
+Dropdown content
+:::
+
+:::{dropdown} Using option `:chevron: down-up`
+:chevron: down-up
+
+Dropdown content
+:::
+
 ## Dropdowns in other components
 
 Dropdowns can be nested inside other components, such as inside parent dropdowns or within [grid items](./grids.md).
+
+::::{admonition} Here is an admonition with a dropdown
+
+Admonition content
+
+:::{dropdown} Dropdown inside admonition
+:icon: quote
+
+{{ loremipsum }}
+:::
+::::
 
 ::::{dropdown} Parent dropdown title
 :open:
@@ -93,6 +122,10 @@ color
 
 icon
 : Set an [octicon icon](icons) to prefix the dropdown header.
+
+chevron
+: The open-close direction of the chevron.
+  One of: `right-down`, `down-up`.
 
 animate
 : Animate the dropdown opening (`fade-in` or `fade-in-slide-down`).

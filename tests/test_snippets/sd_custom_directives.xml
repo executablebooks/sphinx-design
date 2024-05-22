@@ -1,0 +1,9 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" has_title="True" icon="code" is_div="True" opened="False" title_classes="sd-bg-primary sd-bg-text-primary" type="dropdown">
+            <rubric>
+                Syntax
+            <paragraph>
+                content

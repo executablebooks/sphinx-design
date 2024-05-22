@@ -19,9 +19,7 @@ normally positioned just below the title of the article (shown below with non-st
 :class-container: sd-p-2 sd-outline-muted sd-rounded-1
 ```
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/article-info.txt

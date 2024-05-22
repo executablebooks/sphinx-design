@@ -1,5 +1,5 @@
 import re
-from typing import List, NamedTuple, Optional, Tuple
+from typing import NamedTuple, Optional
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -13,6 +13,7 @@ from ._compat import findall
 from .shared import (
     WARNING_TYPE,
     PassthroughTextElement,
+    SdDirective,
     create_component,
     is_component,
     make_choice,
@@ -40,12 +41,12 @@ class CardContent(NamedTuple):
     (offset, content)
     """
 
-    body: Tuple[int, StringList]
-    header: Optional[Tuple[int, StringList]] = None
-    footer: Optional[Tuple[int, StringList]] = None
+    body: tuple[int, StringList]
+    header: Optional[tuple[int, StringList]] = None
+    footer: Optional[tuple[int, StringList]] = None
 
 
-class CardDirective(SphinxDirective):
+class CardDirective(SdDirective):
     """A card component."""
 
     has_content = True
@@ -73,11 +74,11 @@ class CardDirective(SphinxDirective):
         "class-img-bottom": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
+    def run_with_defaults(self) -> list[nodes.Node]:
         return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
-    def create_card(
+    def create_card(  # noqa: PLR0912, PLR0915
         cls, inst: SphinxDirective, arguments: Optional[list], options: dict
     ) -> nodes.Node:
         """Run the directive."""
@@ -118,7 +119,7 @@ class CardDirective(SphinxDirective):
                 "",
                 uri=options["img-top"],
                 alt=img_alt,
-                classes=["sd-card-img-top"] + options.get("class-img-top", []),
+                classes=["sd-card-img-top", *options.get("class-img-top", [])],
             )
             container.append(image_top)
 
@@ -137,8 +138,11 @@ class CardDirective(SphinxDirective):
         if arguments:
             title = create_component(
                 "card-title",
-                ["sd-card-title", "sd-font-weight-bold"]
-                + options.get("class-title", []),
+                [
+                    "sd-card-title",
+                    "sd-font-weight-bold",
+                    *options.get("class-title", []),
+                ],
             )
             textnodes, _ = inst.state.inline_text(arguments[0], inst.lineno)
             title_container = PassthroughTextElement()
@@ -160,7 +164,7 @@ class CardDirective(SphinxDirective):
                 "",
                 uri=options["img-bottom"],
                 alt=img_alt,
-                classes=["sd-card-img-bottom"] + options.get("class-img-bottom", []),
+                classes=["sd-card-img-bottom", *options.get("class-img-bottom", [])],
             )
             container.append(image_bottom)
 
@@ -222,7 +226,7 @@ class CardDirective(SphinxDirective):
         return CardContent(body, header, footer)
 
     @classmethod
-    def _create_component(
+    def _create_component(  # noqa: PLR0913
         cls,
         inst: SphinxDirective,
         name: str,
@@ -232,7 +236,7 @@ class CardDirective(SphinxDirective):
     ) -> nodes.container:
         """Create the header, body, or footer."""
         component = create_component(
-            f"card-{name}", [f"sd-card-{name}"] + options.get(f"class-{name}", [])
+            f"card-{name}", [f"sd-card-{name}", *options.get(f"class-{name}", [])]
         )
         inst.set_source_info(component)  # TODO set proper lines
         inst.state.nested_parse(content, offset, component)
@@ -243,16 +247,14 @@ class CardDirective(SphinxDirective):
     def add_card_child_classes(node):
         """Add classes to specific child nodes."""
         for para in findall(node)(nodes.paragraph):
-            para["classes"] = ([] if "classes" not in para else para["classes"]) + [
-                "sd-card-text"
-            ]
+            para["classes"] = [*para.get("classes", []), "sd-card-text"]
         # for title in findall(node)(nodes.title):
         #     title["classes"] = ([] if "classes" not in title else title["classes"]) + [
         #         "sd-card-title"
         #     ]
 
 
-class CardCarouselDirective(SphinxDirective):
+class CardCarouselDirective(SdDirective):
     """A component, which is a container for cards in a single scrollable row."""
 
     has_content = True
@@ -262,19 +264,22 @@ class CardCarouselDirective(SphinxDirective):
         "class": directives.class_option,
     }
 
-    def run(self) -> List[nodes.Node]:
-        """Run the directive."""
+    def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         try:
             cols = make_choice([str(i) for i in range(1, 13)])(
                 self.arguments[0].strip()
             )
         except ValueError as exc:
-            raise self.error(f"Invalid directive argument: {exc}")
+            raise self.error(f"Invalid directive argument: {exc}") from exc
         container = create_component(
             "card-carousel",
-            ["sd-sphinx-override", "sd-cards-carousel", f"sd-card-cols-{cols}"]
-            + self.options.get("class", []),
+            [
+                "sd-sphinx-override",
+                "sd-cards-carousel",
+                f"sd-card-cols-{cols}",
+                *self.options.get("class", []),
+            ],
         )
         self.set_source_info(container)
         self.state.nested_parse(self.content, self.content_offset, container)

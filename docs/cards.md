@@ -13,9 +13,7 @@ Card content
 
 See the [Material Design](https://material.io/components/cards) and [Bootstrap card](https://getbootstrap.com/docs/5.0/layout/grid/) descriptions for further details.
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-basic.txt
@@ -38,9 +36,7 @@ Card content
 Footer
 :::
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-head-foot.txt
@@ -115,9 +111,7 @@ Footer
 
 :::::
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-images.txt
@@ -166,9 +160,7 @@ Note: you cannot add additional links to the clickable card, neither in the card
 title nor in the card body. The entire card becomes a single link to the
 destination you specify, which overrides any other links inside the card.
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-link.txt
@@ -238,9 +230,7 @@ content
 :::
 ::::
 
-`````{dropdown} Syntax
-:icon: code
-:color: light
+`````{dropdown-syntax}
 
 ````{tab-set-code}
 ```{literalinclude} ./snippets/myst/card-carousel.txt
