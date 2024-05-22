@@ -78,7 +78,7 @@ class CardDirective(SdDirective):
         return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
-    def create_card(  # noqa: PLR0912, PLR0915
+    def create_card(  # noqa: PLR0915
         cls, inst: SphinxDirective, arguments: Optional[list], options: dict
     ) -> nodes.Node:
         """Run the directive."""
