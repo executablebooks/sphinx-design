@@ -226,7 +226,7 @@ class CardDirective(SdDirective):
         return CardContent(body, header, footer)
 
     @classmethod
-    def _create_component(  # noqa: PLR0913
+    def _create_component(
         cls,
         inst: SphinxDirective,
         name: str,
