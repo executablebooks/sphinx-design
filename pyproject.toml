@@ -27,7 +27,7 @@ classifiers = [
 ]
 keywords = ["sphinx", "extension", "material design", "web components"]
 requires-python = ">=3.9"
-dependencies = ["sphinx>=5,<8"]
+dependencies = ["sphinx>=5,<9"]
 
 [project.urls]
 Homepage = "https://github.com/executablebooks/sphinx-design"
