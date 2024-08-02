@@ -46,7 +46,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    name: Tests (Python ${{ matrix.python-version }} with Sphinx${{ matrix.sphinx-version }} on ${{ matrix.os }})
+    name: Tests (py${{ matrix.python-version }}, Sphinx${{ matrix.sphinx-version }}, on ${{ matrix.os }})
 
     steps:
     - uses: actions/checkout@v4
