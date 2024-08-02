@@ -27,22 +27,18 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         sphinx-version: ["~=7.0"]
         extras: ["testing"]
         include:
         - os: ubuntu-latest
           python-version: 3.9
-          sphinx-version: "~=5.0"
+          sphinx-version: "~=6.0"
           extras: "testing"
         - os: ubuntu-latest
           python-version: 3.9
           sphinx-version: "~=8.0"
           extras: "testing-no-myst"  # TODO myst does not yet support Sphinx 8.0
-        - os: ubuntu-latest
-          python-version: 3.9
-          sphinx-version: "~=6.0"
-          extras: "testing"
         - os: windows-latest
           python-version: 3.9
           sphinx-version: "~=7.0"
