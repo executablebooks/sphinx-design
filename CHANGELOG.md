@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.1 - 2024-08-02
+
+- ⬆️ Update sphinx to >=6,<9 by {user}`chrisjsewell` in {pr}`212`
+- 👌 Reduce right-padding of dropdown title by {user}`chrisjsewell` in {pr}`198`
+
 ## 0.6.0 - 2024-05-23
 
 ### Dependencies
