@@ -2,24 +2,36 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <paragraph>
-            <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
-                <inline>
-                    https://example.com
-        <paragraph>
-            <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
-                <inline>
-                    Button text
-        <paragraph>
-            <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow-sm" refuri="https://example.com">
-                <inline>
-                    https://example.com
-        <paragraph>
-            <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary" refuri="https://example.com">
-                <inline>
-                    https://example.com
-        <paragraph>
-            <inline classes="sd-d-grid">
-                <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary" refuri="https://example.com">
+        <target refid="buttons">
+        <section dupnames="buttons" ids="buttons id1" names="buttons">
+            <title>
+                Buttons
+            <paragraph>
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
                     <inline>
                         https://example.com
+            <paragraph>
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
+                    <inline>
+                        Button text
+            <paragraph>
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow-sm" refuri="https://example.com">
+                    <inline>
+                        https://example.com
+            <paragraph>
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary" refuri="https://example.com">
+                    <inline>
+                        https://example.com
+            <paragraph>
+                <inline classes="sd-d-grid">
+                    <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary" refuri="https://example.com">
+                        <inline>
+                            https://example.com
+            <paragraph>
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-info" internal="True" refid="buttons">
+                    <inline classes="std std-ref std std-ref">
+                        Buttons
+            <paragraph>
+                <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-info" internal="True" refid="buttons">
+                    <inline classes="std std-ref std std-ref">
+                        Reference Button Text

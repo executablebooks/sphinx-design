@@ -1,3 +1,6 @@
+(buttons)=
+## Buttons
+
 ```{button-link} https://example.com
 ```
 
@@ -18,4 +21,14 @@ Button text
 ```{button-link} https://example.com
 :color: secondary
 :expand:
+```
+
+```{button-ref} buttons
+:color: info
+```
+
+```{button-ref} buttons
+:color: info
+
+Reference Button Text
 ```
