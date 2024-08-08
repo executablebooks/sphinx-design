@@ -14,4 +14,10 @@
 
 :bdg-light:`light`, :bdg-light-line:`light-line`
 
+:bdg-muted:`muted`, :bdg-muted-line:`muted-line`
+
 :bdg-dark:`dark`, :bdg-dark-line:`dark-line`
+
+:bdg-white:`white`, :bdg-white-line:`white-line`
+
+:bdg-black:`black`, :bdg-black-line:`black-line`
