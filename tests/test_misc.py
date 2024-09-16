@@ -1,5 +1,6 @@
 import pytest
-from sphinx_design.icons import get_octicon_data, get_material_icon_data
+
+from sphinx_design.icons import get_material_icon_data, get_octicon_data
 
 
 def test_octicons(file_regression):
