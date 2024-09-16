@@ -222,7 +222,7 @@ bakery_dining: 24,20
 balance: 24,20
 balcony: 24,20
 ballot: 24
-bar_chart: 24
+bar_chart: 24,20
 batch_prediction: 24,20
 bathroom: 24
 bathtub: 24,20
@@ -472,10 +472,10 @@ credit_score: 24
 crib: 24,20
 crisis_alert: 24,20
 crop: 24
-crop_16_9: 24
-crop_3_2: 24
-crop_5_4: 24
-crop_7_5: 24
+crop_16_9: 24,20
+crop_3_2: 24,20
+crop_5_4: 24,20
+crop_7_5: 24,20
 crop_din: 24
 crop_free: 24
 crop_landscape: 24
@@ -2026,7 +2026,7 @@ view_carousel: 24,20
 view_column: 24,20
 view_comfy: 24,20
 view_comfy_alt: 24,20
-view_compact: 24
+view_compact: 24,20
 view_compact_alt: 24,20
 view_cozy: 24,20
 view_day: 24
@@ -2111,7 +2111,7 @@ wifi_tethering_error: 24,20
 wifi_tethering_error_rounded: 24
 wifi_tethering_off: 24
 wind_power: 24,20
-window: 24
+window: 24,20
 wine_bar: 24
 woman: 24,20
 woman_2: 24,20
