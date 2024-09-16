@@ -51,7 +51,7 @@ testing-no-myst = [
     "defusedxml",
 ]
 
-theme-furo = ["furo~=2024.7.18"]
+theme-furo = ["furo>=2024.7.18,<2024.9.0"]
 theme-pydata = ["pydata-sphinx-theme~=0.15.2"]
 theme-rtd = ["sphinx-rtd-theme~=2.0"]
 theme-sbt = ["sphinx-book-theme~=1.1"]
