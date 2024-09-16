@@ -180,6 +180,7 @@ article: 24
 aspect_ratio: 24
 assessment: 24
 assignment: 24
+assignment_add: 24,20
 assignment_ind: 24
 assignment_late: 24
 assignment_return: 24
@@ -224,7 +225,8 @@ bakery_dining: 24,20
 balance: 24,20
 balcony: 24,20
 ballot: 24
-bar_chart: 24
+bar_chart: 24,20
+barcode_reader: 24,20
 batch_prediction: 24,20
 bathroom: 24
 bathtub: 24,20
@@ -461,6 +463,7 @@ contrast: 24,20
 control_camera: 24
 control_point: 24
 control_point_duplicate: 24
+conveyor_belt: 24,20
 cookie: 24,20
 copy_all: 24,20
 copyright: 24
@@ -476,10 +479,10 @@ credit_score: 24
 crib: 24,20
 crisis_alert: 24,20
 crop: 24
-crop_16_9: 24
-crop_3_2: 24
-crop_5_4: 24
-crop_7_5: 24
+crop_16_9: 24,20
+crop_3_2: 24,20
+crop_5_4: 24,20
+crop_7_5: 24,20
 crop_din: 24
 crop_free: 24
 crop_landscape: 24
@@ -818,6 +821,7 @@ food_bank: 24
 forest: 24,20
 fork_left: 24,20
 fork_right: 24,20
+forklift: 24,20
 format_align_center: 24
 format_align_justify: 24
 format_align_left: 24
@@ -832,6 +836,7 @@ format_indent_increase: 24
 format_italic: 24
 format_line_spacing: 24
 format_list_bulleted: 24
+format_list_bulleted_add: 24,20
 format_list_numbered: 24
 format_list_numbered_rtl: 24
 format_overline: 24,20
@@ -854,6 +859,7 @@ foundation: 24
 free_breakfast: 24
 free_cancellation: 24,20
 front_hand: 24,20
+front_loader: 24,20
 fullscreen: 24
 fullscreen_exit: 24
 functions: 24
@@ -1242,6 +1248,7 @@ move_to_inbox: 24
 move_up: 24,20
 movie: 24
 movie_creation: 24
+movie_edit: 24,20
 movie_filter: 24
 moving: 24,20
 mp: 24
@@ -1349,6 +1356,7 @@ pages: 24
 pageview: 24
 paid: 24
 palette: 24,20
+pallet: 24,20
 pan_tool: 24
 pan_tool_alt: 24,20
 panorama: 24
@@ -1533,6 +1541,7 @@ raw_off: 24
 raw_on: 24
 read_more: 24,20
 real_estate_agent: 24,20
+rebase_edit: 24,20
 receipt: 24
 receipt_long: 24
 recent_actors: 24
@@ -1564,7 +1573,7 @@ replay: 24
 replay_10: 24
 replay_30: 24
 replay_5: 24
-replay_circle_filled: 36,24
+replay_circle_filled: 24,36
 reply: 24
 reply_all: 24
 report: 24
@@ -1695,6 +1704,7 @@ severe_cold: 24,20
 shape_line: 24,20
 share: 24
 share_location: 24
+shelves: 24,20
 shield: 24
 shield_moon: 24,20
 shop: 24
@@ -1980,6 +1990,7 @@ trending_down: 24
 trending_flat: 24
 trending_up: 24
 trip_origin: 24
+trolley: 24,20
 troubleshoot: 24,20
 try: 24
 tsunami: 24,20
@@ -2049,7 +2060,7 @@ view_carousel: 24,20
 view_column: 24,20
 view_comfy: 24,20
 view_comfy_alt: 24,20
-view_compact: 24
+view_compact: 24,20
 view_compact_alt: 24,20
 view_cozy: 24,20
 view_day: 24
@@ -2136,7 +2147,7 @@ wifi_tethering_error: 24,20
 wifi_tethering_error_rounded: 24
 wifi_tethering_off: 24
 wind_power: 24,20
-window: 24
+window: 24,20
 wine_bar: 24
 woman: 24,20
 woman_2: 24,20
