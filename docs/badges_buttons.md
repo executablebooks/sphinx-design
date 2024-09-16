@@ -15,7 +15,10 @@ Badges are available in each semantic color, with filled and outline variants:
 - {bdg-warning}`warning`, {bdg-warning-line}`warning-line`
 - {bdg-danger}`danger`, {bdg-danger-line}`danger-line`
 - {bdg-light}`light`, {bdg-light-line}`light-line`
+- {bdg-muted}`muted`, {bdg-muted-line}`muted-line`
 - {bdg-dark}`dark`, {bdg-dark-line}`dark-line`
+- {bdg-white}`white`, {bdg-white-line}`white-line`
+- {bdg-black}`black`, {bdg-black-line}`black-line`
 
 `````{dropdown-syntax}
 

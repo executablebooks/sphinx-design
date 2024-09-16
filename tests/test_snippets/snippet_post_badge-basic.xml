@@ -48,8 +48,26 @@
             <inline classes="sd-sphinx-override sd-badge sd-outline-light sd-text-light">
                 light-line
         <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-muted sd-bg-text-muted">
+                muted
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-muted sd-text-muted">
+                muted-line
+        <paragraph>
             <inline classes="sd-sphinx-override sd-badge sd-bg-dark sd-bg-text-dark">
                 dark
             , 
             <inline classes="sd-sphinx-override sd-badge sd-outline-dark sd-text-dark">
                 dark-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-white sd-bg-text-white">
+                white
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-white sd-text-white">
+                white-line
+        <paragraph>
+            <inline classes="sd-sphinx-override sd-badge sd-bg-black sd-bg-text-black">
+                black
+            , 
+            <inline classes="sd-sphinx-override sd-badge sd-outline-black sd-text-black">
+                black-line
