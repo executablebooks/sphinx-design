@@ -29,10 +29,6 @@ details.sd-dropdown {
       display: none;
     }
 
-    &:focus {
-      outline: none;
-    }
-
     // The title is split into three parts:
     // 1. The icon (optional), which should be on the left
     // 2. The text, which should be in the middle, and take all available space
