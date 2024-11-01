@@ -35,7 +35,7 @@ Homepage = "https://github.com/executablebooks/sphinx-design"
 Documentation = "https://sphinx-design.readthedocs.io"
 
 [project.optional-dependencies]
-code-style = ["pre-commit>=3,<4"]
+code-style = ["pre-commit>=3,<5"]
 rtd = ["myst-parser>=2,<4"]
 testing = [
     "myst-parser>=2,<4",
