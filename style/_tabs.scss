@@ -33,7 +33,7 @@
     }
 
     // Disable focus indicator for pointer devices
-    &:not(.focus-visible) + label {
+    &:not(:focus-visible) + label {
       outline: none;
       -webkit-tap-highlight-color: transparent;
     }
