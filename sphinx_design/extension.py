@@ -83,7 +83,7 @@ def update_css_js(app: Sphinx):
     # setup up new static path in output dir
     static_path = (Path(app.outdir) / "_sphinx_design_static").absolute()
     static_existed = static_path.exists()
-    static_path.mkdir(exist_ok=True)
+    static_path.mkdir(exist_ok=True, parents=True)
     app.config.html_static_path.append(str(static_path))
     # Copy JS to the build directory.
     js_path = static_path / "design-tabs.js"
