@@ -80,35 +80,37 @@ def update_css_js(app: Sphinx):
     """Copy the CSS to the build directory."""
     # reset changed identifier
     app.env.sphinx_design_css_changed = False
-    # setup up new static path in output dir
-    static_path = (Path(app.outdir) / "_sphinx_design_static").absolute()
-    static_existed = static_path.exists()
-    static_path.mkdir(exist_ok=True)
-    app.config.html_static_path.append(str(static_path))
-    # Copy JS to the build directory.
-    js_path = static_path / "design-tabs.js"
-    app.add_js_file(js_path.name)
-    if not js_path.exists():
-        content = read_text(static_module, "sd_tabs.js")
-        js_path.write_text(content)
-    # Read the css content and hash it
-    content = read_text(static_module, "style.min.css")
-    # Write the css file
-    if sphinx_version < (7, 1):
-        hash = hashlib.md5(content.encode("utf8"), usedforsecurity=False).hexdigest()
-        css_path = static_path / f"sphinx-design.{hash}.min.css"
-    else:
-        # since sphinx 7.1 a checksum is added to the css file URL, so there is no need to do it here
-        # https://github.com/sphinx-doc/sphinx/pull/11415
-        css_path = static_path / "sphinx-design.min.css"
-    app.add_css_file(css_path.name)
-    if css_path.exists():
-        return
-    if static_existed:
-        app.env.sphinx_design_css_changed = True
-    for path in static_path.glob("*.css"):
-        path.unlink()
-    css_path.write_text(content, encoding="utf8")
+    # only do this for html builders
+    if 'html' in app.builder.name:
+        # setup up new static path in output dir
+        static_path = (Path(app.outdir) / "_sphinx_design_static").absolute()
+        static_existed = static_path.exists()
+        static_path.mkdir(exist_ok=True)
+        app.config.html_static_path.append(str(static_path))
+        # Copy JS to the build directory.
+        js_path = static_path / "design-tabs.js"
+        app.add_js_file(js_path.name)
+        if not js_path.exists():
+            content = read_text(static_module, "sd_tabs.js")
+            js_path.write_text(content)
+        # Read the css content and hash it
+        content = read_text(static_module, "style.min.css")
+        # Write the css file
+        if sphinx_version < (7, 1):
+            hash = hashlib.md5(content.encode("utf8"), usedforsecurity=False).hexdigest()
+            css_path = static_path / f"sphinx-design.{hash}.min.css"
+        else:
+            # since sphinx 7.1 a checksum is added to the css file URL, so there is no need to do it here
+            # https://github.com/sphinx-doc/sphinx/pull/11415
+            css_path = static_path / "sphinx-design.min.css"
+        app.add_css_file(css_path.name)
+        if css_path.exists():
+            return
+        if static_existed:
+            app.env.sphinx_design_css_changed = True
+        for path in static_path.glob("*.css"):
+            path.unlink()
+        css_path.write_text(content, encoding="utf8")
 
 
 def update_css_links(app: Sphinx, env: BuildEnvironment):
