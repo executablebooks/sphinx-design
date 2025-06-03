@@ -81,7 +81,7 @@ def update_css_js(app: Sphinx):
     # reset changed identifier
     app.env.sphinx_design_css_changed = False
     # only do this for html builders
-    if 'html' in app.builder.name:
+    if "html" in app.builder.name:
         # setup up new static path in output dir
         static_path = (Path(app.outdir) / "_sphinx_design_static").absolute()
         static_existed = static_path.exists()
@@ -97,7 +97,9 @@ def update_css_js(app: Sphinx):
         content = read_text(static_module, "style.min.css")
         # Write the css file
         if sphinx_version < (7, 1):
-            hash = hashlib.md5(content.encode("utf8"), usedforsecurity=False).hexdigest()
+            hash = hashlib.md5(
+                content.encode("utf8"), usedforsecurity=False
+            ).hexdigest()
             css_path = static_path / f"sphinx-design.{hash}.min.css"
         else:
             # since sphinx 7.1 a checksum is added to the css file URL, so there is no need to do it here
