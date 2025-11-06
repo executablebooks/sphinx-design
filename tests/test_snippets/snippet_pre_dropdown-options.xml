@@ -2,7 +2,7 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <container body_classes="class-body" chevron="True" container_classes="sd-m-1 class-container" design_component="dropdown" has_title="True" icon="alert" is_div="True" opened="False" title_classes="class-title sd-bg-info sd-bg-text-info" type="dropdown">
+        <container body_classes="class-body" chevron="True" container_classes="sd-m-1 class-container" design_component="dropdown" has_title="1" icon="alert" is_div="1" opened="0" title_classes="class-title sd-bg-info sd-bg-text-info" type="dropdown">
             <rubric ids="target" names="target">
                 Title
             <paragraph>
