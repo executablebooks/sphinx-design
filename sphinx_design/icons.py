@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from functools import lru_cache
 import json
 import re
-from typing import Any, Optional
+from typing import Any
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -65,7 +65,7 @@ def get_octicon(
     name: str,
     height: str = "1em",
     classes: Sequence[str] = (),
-    aria_label: Optional[str] = None,
+    aria_label: str | None = None,
 ) -> str:
     """Return the HTML for an GitHub octicon SVG icon.
 
@@ -258,7 +258,7 @@ def get_material_icon(
     name: str,
     height: str = "1em",
     classes: Sequence[str] = (),
-    aria_label: Optional[str] = None,
+    aria_label: str | None = None,
 ) -> str:
     """Return the HTML for an Google material icon SVG icon.
 

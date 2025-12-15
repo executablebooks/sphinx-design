@@ -1,5 +1,3 @@
-from typing import Optional
-
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
@@ -33,7 +31,7 @@ def setup_grids(app: Sphinx):
 
 
 def _media_option(
-    argument: Optional[str],
+    argument: str | None,
     prefix: str,
     *,
     allow_auto: bool = False,
@@ -66,11 +64,11 @@ def _media_option(
             raise ValueError(validate_error_msg)
     return [f"{prefix}{values[0]}"] + [
         f"{prefix}{size}-{value}"
-        for size, value in zip(["xs", "sm", "md", "lg"], values)
+        for size, value in zip(["xs", "sm", "md", "lg"], values, strict=False)
     ]
 
 
-def row_columns_option(argument: Optional[str]) -> list[str]:
+def row_columns_option(argument: str | None) -> list[str]:
     """Validate the number of columns (out of 12) a grid row will have.
 
     One or four integers (for "xs sm md lg") between 1 and 12  (or 'auto').
@@ -78,7 +76,7 @@ def row_columns_option(argument: Optional[str]) -> list[str]:
     return _media_option(argument, "sd-row-cols-", allow_auto=True)
 
 
-def item_columns_option(argument: Optional[str]) -> list[str]:
+def item_columns_option(argument: str | None) -> list[str]:
     """Validate the number of columns (out of 12) a grid-item will take up.
 
     One or four integers (for "xs sm md lg") between 1 and 12 (or 'auto').
@@ -86,7 +84,7 @@ def item_columns_option(argument: Optional[str]) -> list[str]:
     return _media_option(argument, "sd-col-", allow_auto=True)
 
 
-def gutter_option(argument: Optional[str]) -> list[str]:
+def gutter_option(argument: str | None) -> list[str]:
     """Validate the gutter size between grid items.
 
     One or four integers (for "xs sm md lg") between 0 and 5.
@@ -191,7 +189,7 @@ class GridItemDirective(SdDirective):
             + self.options.get("margin", [])
             + self.options.get("padding", [])
             + (
-                [f'sd-align-major-{self.options["child-align"]}']
+                [f"sd-align-major-{self.options['child-align']}"]
                 if "child-align" in self.options
                 else []
             )

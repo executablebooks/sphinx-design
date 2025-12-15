@@ -167,7 +167,7 @@ def _margin_or_padding_option(
     if len(values) == 4:
         return [
             f"{class_prefix}{side}-{value}"
-            for side, value in zip(["t", "b", "l", "r"], values)
+            for side, value in zip(["t", "b", "l", "r"], values, strict=False)
         ]
     raise ValueError(
         "argument must be one (all) or four (top bottom left right) integers"

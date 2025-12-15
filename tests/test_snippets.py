@@ -1,7 +1,7 @@
 """Test the documented snippets run correctly, and are the same for both RST and MyST."""
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 
@@ -45,7 +45,7 @@ def test_snippets_rst(
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         doctree.pformat(),
-        basename=f"snippet_pre_{path.name[:-len(path.suffix)]}",
+        basename=f"snippet_pre_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
     )
@@ -70,7 +70,7 @@ def test_snippets_myst(
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         doctree.pformat(),
-        basename=f"snippet_pre_{path.name[:-len(path.suffix)]}",
+        basename=f"snippet_pre_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
     )
@@ -94,7 +94,7 @@ def test_snippets_rst_post(
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         doctree.pformat(),
-        basename=f"snippet_post_{path.name[:-len(path.suffix)]}",
+        basename=f"snippet_post_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
     )
@@ -119,7 +119,7 @@ def test_snippets_myst_post(
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         doctree.pformat(),
-        basename=f"snippet_post_{path.name[:-len(path.suffix)]}",
+        basename=f"snippet_post_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
     )

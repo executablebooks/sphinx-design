@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from docutils import nodes
 import pytest
@@ -69,7 +69,7 @@ class SphinxBuilder:
 @pytest.fixture()
 def sphinx_builder(tmp_path: Path, make_app, monkeypatch):
     def _create_project(
-        buildername: str = "html", conf_kwargs: Optional[dict[str, Any]] = None
+        buildername: str = "html", conf_kwargs: dict[str, Any] | None = None
     ):
         src_path = tmp_path / "srcdir"
         src_path.mkdir()
