@@ -1,8 +1,7 @@
 """Helpers for cross compatibility across dependency versions."""
 
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from importlib import resources
-from typing import Callable
 
 from docutils.nodes import Element
 
@@ -14,8 +13,5 @@ def findall(node: Element) -> Callable[..., Iterable[Element]]:
     return getattr(node, "findall", node.traverse)
 
 
-# TODO: >= Python 3.9, only use `resources.files` and drop `resources.read_text`
 def read_text(module: resources.Package, filename: str) -> str:
-    if hasattr(resources, "files"):
-        return resources.files(module).joinpath(filename).read_text()
-    return resources.read_text(module, filename)
+    return resources.files(module).joinpath(filename).read_text()

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 def setup(app: "Sphinx") -> dict:
-    from .extension import setup_extension
+    from .extension import setup_extension  # noqa: PLC0415
 
     setup_extension(app)
     return {
