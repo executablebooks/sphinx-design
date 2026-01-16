@@ -205,6 +205,35 @@ Item 2
     file_regression.check(doctree.pformat(), extension=".xml")
 `````
 
+## Commit Message Format
+
+Use this format:
+
+```
+<EMOJI> <KEYWORD>: Summarize in 72 chars or less (#<PR>)
+
+Optional detailed explanation.
+```
+
+Keywords:
+
+- `✨ NEW:` – New feature
+- `🐛 FIX:` – Bug fix
+- `👌 IMPROVE:` – Improvement (no breaking changes)
+- `‼️ BREAKING:` – Breaking change
+- `📚 DOCS:` – Documentation
+- `🔧 MAINTAIN:` – Maintenance changes only (typos, etc.)
+- `🧪 TEST:` – Tests or CI changes only
+- `♻️ REFACTOR:` – Refactoring
+
+If the commit only makes changes to a single module,
+consider including the name in the title.
+
+## PR title and description format
+
+Use the same as for the commit message format,
+but for the title you can omit the `KEYWORD` and only use `EMOJI`
+
 ## Pull Request Requirements
 
 When submitting changes:
