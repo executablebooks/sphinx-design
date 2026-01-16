@@ -1,19 +1,30 @@
 name: Copilot Setup Steps
 
-# This workflow is designed to be referenced by GitHub Copilot
-# to understand how to set up the development environment
-
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
 
 jobs:
-  setup:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
     runs-on: ubuntu-latest
+    
+    # Set the permissions to the lowest permissions possible needed for your steps.
+    # Copilot will be given its own token for its operations.
     permissions:
       contents: read
     
+    # You can define any steps you want, and they will run before the agent starts.
+    # If you do not check out your code, Copilot will do this for you.
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Set up Python
@@ -28,50 +39,14 @@ jobs:
         node-version: "20"
         cache: npm
 
-    - name: Upgrade pip
-      run: |
-        python -m pip install --upgrade pip
-
-    - name: Install uv (optional, for faster package management)
-      run: |
-        pip install uv
+    - name: Install uv
+      run: pip install uv
 
     - name: Install pre-commit and pre-commit-uv
-      run: |
-        pip install pre-commit pre-commit-uv
+      run: pip install pre-commit pre-commit-uv
 
     - name: Install tox and tox-uv
-      run: |
-        pip install tox tox-uv
+      run: pip install tox tox-uv
 
-    - name: Install project dependencies
-      run: |
-        pip install -e .[testing,code-style]
-
-    - name: Install Node.js dependencies (for SASS compilation)
-      run: |
-        npm install
-
-    - name: Setup pre-commit hooks
-      run: |
-        pre-commit install
-
-    - name: Verify installations
-      run: |
-        echo "Python version:"
-        python --version
-        echo ""
-        echo "Node.js version:"
-        node --version
-        echo ""
-        echo "npm version:"
-        npm --version
-        echo ""
-        echo "pre-commit version:"
-        pre-commit --version
-        echo ""
-        echo "tox version:"
-        tox --version
-        echo ""
-        echo "Installed Python packages:"
-        pip list | grep -E "(pre-commit|tox|sphinx|pytest)"
+    - name: Install Node.js dependencies
+      run: npm install
