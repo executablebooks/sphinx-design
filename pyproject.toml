@@ -27,7 +27,7 @@ classifiers = [
 ]
 keywords = ["sphinx", "extension", "material design", "web components"]
 requires-python = ">=3.11"
-dependencies = ["sphinx>=7,<9"]
+dependencies = ["sphinx>=7,<10"]
 
 [project.urls]
 Homepage = "https://github.com/executablebooks/sphinx-design"
@@ -35,9 +35,9 @@ Documentation = "https://sphinx-design.readthedocs.io"
 
 [project.optional-dependencies]
 code-style = ["pre-commit>=3,<4"]
-rtd = ["myst-parser>=3,<5"]
+rtd = ["myst-parser>=4,<6"]
 testing = [
-    "myst-parser>=3,<5",
+    "myst-parser>=4,<6",
     "pytest~=8.3",
     "pytest-cov",
     "pytest-regressions",
