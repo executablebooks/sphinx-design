@@ -33,7 +33,10 @@ def write_assets(src_path: Path):
     ids=[path.name[: -len(path.suffix)] for path in SNIPPETS_GLOB_RST],
 )
 def test_snippets_rst(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression, normalize_doctree_xml
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in RestructuredText (before post-transforms)."""
     builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
@@ -58,7 +61,10 @@ def test_snippets_rst(
 )
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_snippets_myst(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression, normalize_doctree_xml
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in MyST Markdown (before post-transforms)."""
     builder = sphinx_builder()
@@ -82,7 +88,10 @@ def test_snippets_myst(
     ids=[path.name[: -len(path.suffix)] for path in SNIPPETS_GLOB_RST],
 )
 def test_snippets_rst_post(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression, normalize_doctree_xml
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in RestructuredText (after HTML post-transforms)."""
     builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
@@ -107,7 +116,10 @@ def test_snippets_rst_post(
 )
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_snippets_myst_post(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression, normalize_doctree_xml
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in MyST Markdown (after HTML post-transforms)."""
     builder = sphinx_builder()
