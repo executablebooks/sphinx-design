@@ -26,7 +26,7 @@ myst_enable_extensions = ["colon_fence"]
 
 ## Configuration
 
-To hide the the title header of a page, add to the top of the page:
+To hide the title header of a page, add to the top of the page:
 
 ::::{tab-set}
 :::{tab-item} MyST Markdown
