@@ -1,0 +1,17 @@
+<document source="index">
+    <section ids="tab-test-document" names="tab\ test\ document">
+        <title>
+            Tab Test document
+        <container classes="sd-tab-set" design_component="tab-set" is_div="True">
+            <sd_tab_input checked="True" id="sd-tab-item-0" set_id="sd-tab-set-0" type="radio">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-0">
+                A
+            <container classes="sd-tab-content" design_component="tab-content" is_div="True">
+                <paragraph>
+                    A content
+            <sd_tab_input checked="False" id="sd-tab-item-1" set_id="sd-tab-set-0" type="radio">
+            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-1">
+                B
+            <container classes="sd-tab-content" design_component="tab-content" is_div="True">
+                <paragraph>
+                    B content

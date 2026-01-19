@@ -35,6 +35,7 @@ class TabSetDirective(SdDirective):
         )
         self.set_source_info(tab_set)
         self.state.nested_parse(self.content, self.content_offset, tab_set)
+        valid_children = []
         for item in tab_set.children:
             if not is_component(item, "tab-item"):
                 LOGGER.warning(
@@ -44,9 +45,12 @@ class TabSetDirective(SdDirective):
                     type=WARNING_TYPE,
                     subtype="tab",
                 )
-                break
+                continue  # Skip invalid children instead of breaking
             if "sync_id" in item.children[0]:
                 item.children[0]["sync_group"] = self.options.get("sync-group", "tab")
+            valid_children.append(item)
+
+        tab_set.children = valid_children
         return [tab_set]
 
 
@@ -240,10 +244,17 @@ class TabSetHtmlTransform(SphinxPostTransform):
             selected_idx = 0 if selected_idx is None else selected_idx
 
             for idx, tab_item in enumerate(tab_set.children):
-                try:
-                    tab_label, tab_content = tab_item.children
-                except ValueError:
-                    raise
+                if not is_component(tab_item, "tab-item"):
+                    continue  # Skip non tab-item children
+                if len(tab_item.children) != 2:
+                    LOGGER.warning(
+                        f"Malformed 'tab-item' directive [{WARNING_TYPE}.tab]",
+                        location=tab_item,
+                        type=WARNING_TYPE,
+                        subtype="tab",
+                    )
+                    continue
+                tab_label, tab_content = tab_item.children
                 tab_item_identity = tab_item_id_base + str(tab_item_id_num)
                 tab_item_id_num += 1
 
