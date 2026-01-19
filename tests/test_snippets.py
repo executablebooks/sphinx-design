@@ -33,7 +33,10 @@ def write_assets(src_path: Path):
     ids=[path.name[: -len(path.suffix)] for path in SNIPPETS_GLOB_RST],
 )
 def test_snippets_rst(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in RestructuredText (before post-transforms)."""
     builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
@@ -44,7 +47,7 @@ def test_snippets_rst(
     doctree = builder.get_doctree("index", post_transforms=False)
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        doctree.pformat(),
+        normalize_doctree_xml(doctree.pformat()),
         basename=f"snippet_pre_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -58,7 +61,10 @@ def test_snippets_rst(
 )
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_snippets_myst(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in MyST Markdown (before post-transforms)."""
     builder = sphinx_builder()
@@ -69,7 +75,7 @@ def test_snippets_myst(
     doctree = builder.get_doctree("index", post_transforms=False)
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        doctree.pformat(),
+        normalize_doctree_xml(doctree.pformat()),
         basename=f"snippet_pre_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -82,7 +88,10 @@ def test_snippets_myst(
     ids=[path.name[: -len(path.suffix)] for path in SNIPPETS_GLOB_RST],
 )
 def test_snippets_rst_post(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in RestructuredText (after HTML post-transforms)."""
     builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
@@ -93,7 +102,7 @@ def test_snippets_rst_post(
     doctree = builder.get_doctree("index", post_transforms=True)
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        doctree.pformat(),
+        normalize_doctree_xml(doctree.pformat()),
         basename=f"snippet_post_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -107,7 +116,10 @@ def test_snippets_rst_post(
 )
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_snippets_myst_post(
-    sphinx_builder: Callable[..., SphinxBuilder], path: Path, file_regression
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    file_regression,
+    normalize_doctree_xml,
 ):
     """Test snippets written in MyST Markdown (after HTML post-transforms)."""
     builder = sphinx_builder()
@@ -118,7 +130,7 @@ def test_snippets_myst_post(
     doctree = builder.get_doctree("index", post_transforms=True)
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        doctree.pformat(),
+        normalize_doctree_xml(doctree.pformat()),
         basename=f"snippet_post_{path.name[: -len(path.suffix)]}",
         extension=".xml",
         encoding="utf8",
@@ -164,7 +176,7 @@ def test_sd_hide_title_myst(
 
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_sd_custom_directives(
-    sphinx_builder: Callable[..., SphinxBuilder], file_regression
+    sphinx_builder: Callable[..., SphinxBuilder], file_regression, normalize_doctree_xml
 ):
     """Test that the defaults are used."""
     builder = sphinx_builder(
@@ -188,7 +200,7 @@ def test_sd_custom_directives(
     doctree = builder.get_doctree("index", post_transforms=False)
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
-        doctree.pformat(),
+        normalize_doctree_xml(doctree.pformat()),
         basename="sd_custom_directives",
         extension=".xml",
         encoding="utf8",
