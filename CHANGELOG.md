@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.7.0 - 2025-01-19
+
+### Dependencies
+
+- ⬆️ Drop Python 3.9 & 3.10, support Python 3.14 by {user}`chrisjsewell` in {pr}`250`
+- ⬆️ Drop Sphinx v6, add Sphinx v9 support by {user}`chrisjsewell` in {pr}`250` and {pr}`255`
+- ⬆️ Update Material Design Icons to v4.0.0-116-ge9da21 by {user}`2bndy5` in {pr}`223`
+
+### Docs
+
+- 📚 Document `muted`, `white`, and `black` semantic colors by {user}`agriyakhetarpal` in {pr}`216`
+
 ## 0.6.1 - 2024-08-02
 
 - ⬆️ Update sphinx to >=6,<9 by {user}`chrisjsewell` in {pr}`212`
