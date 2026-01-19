@@ -1,5 +1,3 @@
-from typing import Optional
-
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
@@ -32,7 +30,7 @@ class ArticleInfoDirective(SdDirective):
     }
 
     def _parse_text(
-        self, text: str, icon: Optional[nodes.Node] = None, parse: bool = False
+        self, text: str, icon: nodes.Node | None = None, parse: bool = False
     ) -> nodes.Node:
         """Parse the text."""
         if not parse:

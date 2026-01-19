@@ -1,5 +1,3 @@
-from typing import Optional
-
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx import addnodes
@@ -45,7 +43,7 @@ def setup_badges_and_buttons(app: Sphinx) -> None:
     app.add_directive(DIRECTIVE_NAME_BUTTON_REF, ButtonRefDirective)
 
 
-def create_bdg_classes(color: Optional[str], outline: bool) -> list[str]:
+def create_bdg_classes(color: str | None, outline: bool) -> list[str]:
     """Create the badge classes."""
     classes = [
         "sd-sphinx-override",
@@ -63,7 +61,7 @@ def create_bdg_classes(color: Optional[str], outline: bool) -> list[str]:
 class BadgeRole(SphinxRole):
     """Role to display a badge."""
 
-    def __init__(self, color: Optional[str] = None, *, outline: bool = False) -> None:
+    def __init__(self, color: str | None = None, *, outline: bool = False) -> None:
         super().__init__()
         self.color = color
         self.outline = outline
@@ -82,7 +80,7 @@ class BadgeRole(SphinxRole):
 class LinkBadgeRole(ReferenceRole):
     """Role to display a badge with an external link."""
 
-    def __init__(self, color: Optional[str] = None, *, outline: bool = False) -> None:
+    def __init__(self, color: str | None = None, *, outline: bool = False) -> None:
         super().__init__()
         self.color = color
         self.outline = outline
@@ -105,7 +103,7 @@ class LinkBadgeRole(ReferenceRole):
 class XRefBadgeRole(ReferenceRole):
     """Role to display a badge with an internal link."""
 
-    def __init__(self, color: Optional[str] = None, *, outline: bool = False) -> None:
+    def __init__(self, color: str | None = None, *, outline: bool = False) -> None:
         super().__init__()
         self.color = color
         self.outline = outline

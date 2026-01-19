@@ -1,5 +1,5 @@
 import re
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -42,8 +42,8 @@ class CardContent(NamedTuple):
     """
 
     body: tuple[int, StringList]
-    header: Optional[tuple[int, StringList]] = None
-    footer: Optional[tuple[int, StringList]] = None
+    header: tuple[int, StringList] | None = None
+    footer: tuple[int, StringList] | None = None
 
 
 class CardDirective(SdDirective):
@@ -79,13 +79,13 @@ class CardDirective(SdDirective):
 
     @classmethod
     def create_card(  # noqa: PLR0915
-        cls, inst: SphinxDirective, arguments: Optional[list], options: dict
+        cls, inst: SphinxDirective, arguments: list | None, options: dict
     ) -> nodes.Node:
         """Run the directive."""
         # TODO better degradation for latex
         card_classes = ["sd-card", "sd-sphinx-override"]
         if "width" in options:
-            card_classes += [f'sd-w-{options["width"].rstrip("%")}']
+            card_classes += [f"sd-w-{options['width'].rstrip('%')}"]
         card_classes += options.get("margin", ["sd-mb-3"])
         card_classes += [f"sd-shadow-{options.get('shadow', 'sm')}"]
         if "link" in options:

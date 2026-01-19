@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
-from typing import Any, Optional
+import re
+from typing import Any
 
+from docutils import __version_info__ as docutils_version_info
 from docutils import nodes
 import pytest
 from sphinx import version_info
@@ -69,7 +71,7 @@ class SphinxBuilder:
 @pytest.fixture()
 def sphinx_builder(tmp_path: Path, make_app, monkeypatch):
     def _create_project(
-        buildername: str = "html", conf_kwargs: Optional[dict[str, Any]] = None
+        buildername: str = "html", conf_kwargs: dict[str, Any] | None = None
     ):
         src_path = tmp_path / "srcdir"
         src_path.mkdir()
@@ -88,3 +90,39 @@ def sphinx_builder(tmp_path: Path, make_app, monkeypatch):
         return SphinxBuilder(app, src_path)
 
     yield _create_project
+
+
+DOCUTILS_0_22_PLUS = docutils_version_info >= (0, 22)
+
+
+@pytest.fixture
+def normalize_doctree_xml():
+    """Normalize docutils XML output for cross-version compatibility.
+
+    In docutils 0.22+, boolean attributes are serialized as "1"/"0"
+    instead of "True"/"False". This function normalizes to the old format
+    for consistent test fixtures.
+    """
+
+    def _normalize(text: str) -> str:
+        if DOCUTILS_0_22_PLUS:
+            # Normalize new format (1/0) to old format (1/0)
+            # Only replace when it's clearly a boolean attribute value
+            # Pattern: attribute="1" or attribute="0"
+            attrs = [
+                "checked",
+                "force",
+                "has_title",
+                "internal",
+                "is_div",
+                "linenos",
+                "opened",
+                "refexplicit",
+                "refwarn",
+                "selected",
+            ]
+            text = re.sub(rf' ({"|".join(attrs)})="1"', r' \1="True"', text)
+            text = re.sub(rf' ({"|".join(attrs)})="0"', r' \1="False"', text)
+        return text
+
+    return _normalize
