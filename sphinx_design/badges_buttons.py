@@ -175,11 +175,8 @@ class _ButtonDirective(SdDirective):
             node["reftitle"] = self.options["tooltip"]  # TODO escape HTML
 
         if self.content:
-            textnodes, _ = self.state.inline_text(
-                "\n".join(self.content), self.lineno + self.content_offset
-            )
-            content = nodes.inline("", "")
-            content.extend(textnodes)
+            content = nodes.paragraph()
+            self.state.nested_parse(self.content, self.content_offset, content)
         else:
             content = nodes.inline(target, target)
         node.append(content)
@@ -192,7 +189,6 @@ class _ButtonDirective(SdDirective):
 
         # `visit_reference` requires that a reference be inside a `TextElement` parent
         container = nodes.paragraph(classes=self.options.get("align", []))
-        self.set_source_info(container)
         container += node
 
         return [container]
