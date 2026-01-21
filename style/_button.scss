@@ -24,6 +24,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
+  outline-offset: 0.25rem;
 
   &:hover {
     text-decoration: none;
@@ -76,6 +77,12 @@
     border-color: var(--sd-color-#{$color}) !important;
     border-width: 1px !important;
     border-style: solid !important;
+  }
+  .sd-btn-#{$color}:focus-visible {
+    outline-color: var(--sd-color-#{$color}) !important;
+    &::after {
+      outline-color: var(--sd-color-#{$color}) !important;
+    }
   }
 }
 

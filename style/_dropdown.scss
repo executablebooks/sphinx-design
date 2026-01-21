@@ -29,10 +29,6 @@ details.sd-dropdown {
       display: none;
     }
 
-    &:focus {
-      outline: none;
-    }
-
     // The title is split into three parts:
     // 1. The icon (optional), which should be on the left
     // 2. The text, which should be in the middle, and take all available space
@@ -40,6 +36,7 @@ details.sd-dropdown {
 
     display: inline-flex;
     justify-content: space-between;
+    outline-offset: 0.25rem;
 
     .sd-summary-icon {
       margin-right: 0.6em;
@@ -64,7 +61,7 @@ details.sd-dropdown {
       pointer-events: none;
       // align the icon vertically within its container
       display: inline-flex;
-      align-items: center;
+      align-self: center;
     }
 
     // make the state marker a bit more prominent when hovered

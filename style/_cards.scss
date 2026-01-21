@@ -22,6 +22,15 @@
     margin-left: 0;
     margin-right: 0;
   }
+
+  .sd-stretched-link:focus-visible {
+    outline: none;
+
+    &::after {
+      outline-style: auto;
+      outline-color: var(--sd-color-primary);
+    }
+  }
 }
 
 .sd-card-hover:hover {
