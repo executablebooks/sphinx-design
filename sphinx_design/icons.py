@@ -16,15 +16,6 @@ from .shared import WARNING_TYPE, SdDirective
 
 logger = logging.getLogger(__name__)
 
-OCTICON_VERSION = "v19.8.0"
-
-OCTICON_CSS = """\
-.octicon {
-  display: inline-block;
-  vertical-align: text-top;
-  fill: currentColor;
-}"""
-
 
 def setup_icons(app: Sphinx) -> None:
     app.add_role("octicon", OcticonRole())
