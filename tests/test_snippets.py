@@ -17,6 +17,12 @@ except ImportError:
 SNIPPETS_PATH = Path(__file__).parent.parent / "docs" / "snippets"
 SNIPPETS_GLOB_RST = list((SNIPPETS_PATH / "rst").glob("[!_]*"))
 SNIPPETS_GLOB_MYST = list((SNIPPETS_PATH / "myst").glob("[!_]*"))
+EXPECTED_PATH = Path(__file__).parent / "test_snippets"
+I18N_GLOB_MYST = [
+    p
+    for p in SNIPPETS_GLOB_MYST
+    if (EXPECTED_PATH / f"snippet_i18n_{p.stem}.pot").exists()
+]
 
 
 def write_assets(src_path: Path):
@@ -203,5 +209,37 @@ def test_sd_custom_directives(
         normalize_doctree_xml(doctree.pformat()),
         basename="sd_custom_directives",
         extension=".xml",
+        encoding="utf8",
+    )
+
+
+@pytest.mark.parametrize("sphinx_builder", ["gettext"], indirect=True)
+@pytest.mark.parametrize(
+    "path",
+    I18N_GLOB_MYST,
+    ids=[path.stem for path in I18N_GLOB_MYST],
+)
+@pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
+def test_i18n_myst(
+    sphinx_builder: Callable[..., SphinxBuilder],
+    path: Path,
+    normalize_doctree_xml,
+    file_regression,
+):
+    builder = sphinx_builder()
+    content = path.read_text(encoding="utf8")
+    builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
+    write_assets(builder.src_path)
+    builder.build()
+
+    # strip metadata (that includes a constantly-varying timestamp)
+    out_path = builder.out_path / "index.pot"
+    out = out_path.read_text()
+    out = out[out.find("#: ../../index") :]
+
+    file_regression.check(
+        out,
+        basename=f"snippet_i18n_{path.stem}",
+        extension=".pot",
         encoding="utf8",
     )

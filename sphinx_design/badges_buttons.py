@@ -178,8 +178,13 @@ class _ButtonDirective(SdDirective):
             textnodes, _ = self.state.inline_text(
                 "\n".join(self.content), self.lineno + self.content_offset
             )
-            content = nodes.inline("", "")
+            content = nodes.inline("", "", translatable=True)
             content.extend(textnodes)
+
+            # make link text translatable -
+            # target gettext to the content lines, not the outer directive
+            self.set_source_info(content)
+            content.line += self.content_offset
         else:
             content = nodes.inline(target, target)
         node.append(content)
@@ -191,7 +196,9 @@ class _ButtonDirective(SdDirective):
             node = grid_container
 
         # `visit_reference` requires that a reference be inside a `TextElement` parent
-        container = nodes.paragraph(classes=self.options.get("align", []))
+        container = nodes.paragraph(
+            classes=self.options.get("align", []), translatable=False
+        )
         self.set_source_info(container)
         container += node
 
