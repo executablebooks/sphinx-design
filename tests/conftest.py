@@ -122,6 +122,8 @@ def normalize_doctree_xml():
                 "refexplicit",
                 "refwarn",
                 "selected",
+                "translatable",
+                "translated",
             ]
             text = re.sub(rf' ({"|".join(attrs)})="1"', r' \1="True"', text)
             text = re.sub(rf' ({"|".join(attrs)})="0"', r' \1="False"', text)

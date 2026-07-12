@@ -345,8 +345,11 @@ Test
     builder.build(assert_pass=False)
     assert "All children of a 'tab-set' should be 'tab-item'" in builder.warnings
     assert "[design.tab]" in builder.warnings
+
+
 I18N_INDEX_RST = """\
 Heading
+=======
 
 .. _target-section:
 

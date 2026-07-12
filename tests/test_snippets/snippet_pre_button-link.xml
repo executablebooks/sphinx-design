@@ -2,27 +2,27 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <paragraph translatable="0">
+        <paragraph translatable="False">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
                 <inline>
                     https://example.com
-        <paragraph translatable="0">
+        <paragraph translatable="False">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
                 <inline>
                     Button text
-        <paragraph translatable="0">
+        <paragraph translatable="False">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary" refuri="https://example.com">
                 <inline>
                     Button text with options
-        <paragraph translatable="0">
+        <paragraph translatable="False">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow-sm" refuri="https://example.com">
                 <inline>
                     https://example.com
-        <paragraph translatable="0">
+        <paragraph translatable="False">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary" refuri="https://example.com">
                 <inline>
                     https://example.com
-        <paragraph translatable="0">
+        <paragraph translatable="False">
             <inline classes="sd-d-grid">
                 <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-secondary" refuri="https://example.com">
                     <inline>
