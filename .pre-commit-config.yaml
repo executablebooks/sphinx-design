@@ -29,7 +29,9 @@ repos:
     rev: v2.1.0
     hooks:
     - id: mypy
-      additional_dependencies: []
+      # install sphinx so the hook type-checks with real types,
+      # matching the tox mypy environment (which installs the package)
+      additional_dependencies: [sphinx]
 
   - repo: local
     hooks:

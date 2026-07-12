@@ -1,5 +1,7 @@
 """Originally Adapted from sphinxcontrib.details.directive"""
 
+from typing import Any
+
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
@@ -148,7 +150,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
     default_priority = 199
     formats = ("html",)
 
-    def run(self) -> None:
+    def run(self, **kwargs: Any) -> None:
         """Run the transform"""
         document: nodes.document = self.document
         for node in findall(document)(lambda node: is_component(node, "dropdown")):
