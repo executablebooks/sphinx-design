@@ -552,9 +552,9 @@ def test_config_warnings_suppressible(sphinx_builder):
 def test_config_strict_validation():
     """Directly instantiating ``SdConfig`` with invalid values should raise."""
     with pytest.raises(TypeError, match="'fontawesome_latex' must be of type"):
-        SdConfig(fontawesome_latex="not-a-bool")  # type: ignore[arg-type]
+        SdConfig(fontawesome_latex="not-a-bool")
     with pytest.raises(TypeError, match="'custom_directives' must be a dictionary"):
-        SdConfig(custom_directives="not-a-dict")  # type: ignore[arg-type]
+        SdConfig(custom_directives="not-a-dict")
     with pytest.raises(ValueError, match="must have an 'inherit' key"):
         SdConfig(custom_directives={"foo": {}})
 
