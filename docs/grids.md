@@ -10,6 +10,10 @@ A `grid` directive can be set with the number of default columns (1 to 12);
 either a single number for all screen sizes, or four numbers for extra-small (<576px), small (768px), medium (992px) and large screens (>1200px),
 then child `grid-item` directives should be set for each item.
 
+Note, a single number **fixes** the number of columns for all screen sizes,
+whereas four numbers allow the layout to adapt responsively to the screen size,
+as in the example below.
+
 Try re-sizing the screen to see the number of columns change:
 
 ::::{grid} 1 2 3 4
@@ -62,6 +66,54 @@ some longer text content
 :padding: 2
 
 short text content
+:::
+::::
+
+## Multiple rows
+
+There is no need to add a directive per row;
+when the number of items exceeds the number of columns,
+the additional items simply wrap onto new rows, as required:
+
+::::{grid} 3
+:outline:
+
+:::{grid-item}
+A
+:::
+:::{grid-item}
+B
+:::
+:::{grid-item}
+C
+:::
+:::{grid-item}
+D
+:::
+::::
+
+However, to deliberately separate items into distinct rows,
+use a separate `grid` directive for each row:
+
+::::{grid} 3
+:outline:
+
+:::{grid-item}
+A
+:::
+:::{grid-item}
+B
+:::
+::::
+
+::::{grid} 3
+:outline:
+
+:::{grid-item}
+C
+:::
+:::{grid-item}
+D
 :::
 ::::
 
@@ -134,7 +186,9 @@ B
 You can override the number of columns a single item takes up by using the `columns` option of the `grid-item` directive.
 Given the total columns are 12, this means 12 would indicate a single item takes up the entire grid row, or 6 half.
 Alternatively, use `auto` to automatically decide how many columns to use based on the item content.
-Like for grid columns, you can either provide a single number or four for small, medium and large and extra-large screens.
+Like for grid columns, you can either provide a single number or four for small, medium and large and extra-large screens,
+and likewise, a single number fixes the item's width for all screen sizes,
+overriding any responsive behaviour set by the parent `grid`.
 
 ::::{grid} 2
 :::{grid-item-card}
