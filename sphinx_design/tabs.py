@@ -159,6 +159,11 @@ class TabSetCodeDirective(SdDirective):
         new_children = []
         for item in tab_set.children:
             if is_ignorable_child(item):
+                # comments and system messages can be safely dropped,
+                # but hyperlink targets must be kept,
+                # so that references to them still resolve
+                if isinstance(item, nodes.target):
+                    new_children.append(item)
                 continue
             if not isinstance(item, nodes.literal_block):
                 LOGGER.warning(
@@ -304,6 +309,11 @@ class TabSetHtmlTransform(SphinxPostTransform):
                 )
                 if tab_label.get("ids"):
                     label_node["ids"] += tab_label["ids"]
+                if tab_item.get("ids"):
+                    # ids propagated onto the container (e.g. from a preceding
+                    # hyperlink target, via docutils PropagateTargets) must
+                    # survive the container's removal, or anchors break
+                    label_node["ids"] += tab_item["ids"]
                 if "sync_group" in tab_label and "sync_id" in tab_label:
                     label_node["sync_group"] = tab_label["sync_group"]
                     label_node["sync_id"] = tab_label["sync_id"]

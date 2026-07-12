@@ -25,7 +25,7 @@ myst_enable_extensions = ["colon_fence"]
 ```
 
 :::{note}
-The MyST Markdown examples in this documentation assume that certain optional [MyST syntax extensions](https://myst-parser.readthedocs.io/en/latest/syntax/optional.html) have been enabled, *via* the `myst_enable_extensions` configuration above:
+The MyST Markdown examples in this documentation assume that certain optional [MyST syntax extensions](https://myst-parser.readthedocs.io/en/latest/syntax/optional.html) are enabled — extend the `myst_enable_extensions` list shown above with them as needed:
 
 - `colon_fence`: used by all examples, to write directives delimited by `:::` fences
 - `html_image`: only for examples using raw HTML `<img>` tags, such as the avatar images in [CSS Classes](./css_classes.md)
