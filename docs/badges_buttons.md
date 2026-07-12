@@ -180,6 +180,19 @@ By default the icon will be of height `1em` (i.e. the height of the font).
 A specific height can be set after a semi-colon (`;`) with units of either `px`, `em` or `rem`.
 Additional CSS classes can also be added to the SVG after a second semi-colon (`;`) delimiter.
 
+Icon roles can be used within section titles, and the icon is preserved when the
+title is referenced from a `toctree` (whilst no longer leaking its SVG markup
+into plain-text contexts such as the search index).
+
+:::{note}
+Icon roles cannot be used inside a `toctree` *entry title*
+(the `Title <target>` form written directly in the `toctree` directive),
+because Sphinx parses those titles as plain text, so roles are never processed.
+To show an icon next to a page's toctree entry, place the icon role in that
+page's own top-level heading instead, and reference the page without an explicit
+title.
+:::
+
 ### Octicon Icons
 
 A coloured icon: {octicon}`report;1em;sd-text-info`, some more text.

@@ -2,7 +2,7 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 
-from .icons import get_octicon
+from .icons import create_icon_node, get_octicon
 from .shared import SEMANTIC_COLORS, SdDirective, create_component, make_choice
 
 
@@ -148,11 +148,8 @@ class ArticleInfoDirective(SdDirective):
                 ["sd-col", "sd-col-auto", "sd-d-flex-row", "sd-align-minor-center"],
             )
             self.set_source_info(date_column)
-            date_icon = nodes.raw(
-                "",
-                nodes.Text(get_octicon("calendar", height="16px")),
-                classes=["sd-pr-2"],
-                format="html",
+            date_icon = create_icon_node(
+                get_octicon("calendar", height="16px", classes=["sd-pr-2"])
             )
             date_nodes = self._parse_text(date_text, icon=date_icon, parse=parse_fields)
             date_column.extend(date_nodes)
@@ -165,11 +162,8 @@ class ArticleInfoDirective(SdDirective):
                 ["sd-col", "sd-col-auto", "sd-d-flex-row", "sd-align-minor-center"],
             )
             self.set_source_info(read_time_column)
-            read_time_icon = nodes.raw(
-                "",
-                nodes.Text(get_octicon("clock", height="16px")),
-                classes=["sd-pr-2"],
-                format="html",
+            read_time_icon = create_icon_node(
+                get_octicon("clock", height="16px", classes=["sd-pr-2"])
             )
             read_time_nodes = self._parse_text(
                 read_time_text, icon=read_time_icon, parse=parse_fields
