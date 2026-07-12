@@ -12,6 +12,7 @@ from sphinx.util.docutils import SphinxRole
 
 from . import compiled
 from ._compat import read_text
+from .config import SdConfig, get_sd_config
 from .shared import WARNING_TYPE, SdDirective
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,6 @@ def setup_icons(app: Sphinx) -> None:
         app.add_role(style, FontawesomeRole(style))
     for style in ["regular", "outlined", "round", "sharp", "twotone"]:
         app.add_role("material-" + style, MaterialRole(style))
-    app.add_config_value("sd_fontawesome_latex", False, "env")
     app.connect("config-inited", add_fontawesome_pkg)
     app.add_node(
         fontawesome,
@@ -206,13 +206,13 @@ def depart_fontawesome_html(self, node):
 
 
 def add_fontawesome_pkg(app, config):
-    if app.config.sd_fontawesome_latex:
+    if SdConfig.from_sphinx(config).fontawesome_latex:
         app.add_latex_package("fontawesome")
 
 
 def visit_fontawesome_latex(self, node):
     """Add latex fonteawesome icon, if configured, else warn."""
-    if self.config.sd_fontawesome_latex:
+    if get_sd_config(self.builder.env).fontawesome_latex:
         self.body.append(f"\\faicon{{{node['icon']}}}")
     else:
         logger.warning(

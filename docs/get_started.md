@@ -34,6 +34,15 @@ The MyST Markdown examples in this documentation assume that certain optional [M
 
 ## Configuration
 
+### Global options
+
+All global configuration options are prefixed with `sd_`, and can be set in your `conf.py`.
+Values are always simple, TOML-compatible, data types:
+
+{{ sd_config_options }}
+
+### Hiding the page title
+
 To hide the title header of a page, add to the top of the page:
 
 ::::{tab-set}
