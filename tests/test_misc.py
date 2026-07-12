@@ -6,7 +6,6 @@ from babel.messages.mofile import write_mo
 from docutils import nodes
 import pytest
 
-from sphinx_design._compat import findall
 from sphinx_design.config import SdConfig, get_sd_config
 from sphinx_design.icons import get_material_icon_data, get_octicon_data
 from sphinx_design.shared import is_component
@@ -151,7 +150,7 @@ def test_grid_with_comment(fmt, sphinx_builder):
         )
     builder.build()  # asserts no warnings
     doctree = builder.get_doctree("index")
-    grid_items = list(findall(doctree)(lambda node: is_component(node, "grid-item")))
+    grid_items = list(doctree.findall(lambda node: is_component(node, "grid-item")))
     assert len(grid_items) == 2
 
 
@@ -209,7 +208,7 @@ def test_card_carousel_with_comment(fmt, sphinx_builder):
         )
     builder.build()  # asserts no warnings
     doctree = builder.get_doctree("index")
-    cards = list(findall(doctree)(lambda node: is_component(node, "card")))
+    cards = list(doctree.findall(lambda node: is_component(node, "card")))
     assert len(cards) == 2
 
 
@@ -268,7 +267,7 @@ def test_tab_set_with_comment(fmt, sphinx_builder):
     builder.build()  # asserts no warnings
     # both tabs should still render in the HTML output
     doctree = builder.get_doctree("index", post_transforms=True)
-    inputs = list(findall(doctree)(sd_tab_input))
+    inputs = list(doctree.findall(sd_tab_input))
     assert len(inputs) == 2
     assert inputs[0]["checked"] is True
 
@@ -326,16 +325,16 @@ def test_tab_set_with_target(fmt, sphinx_builder):
     doctree = builder.get_doctree("index", post_transforms=True)
     # the target survives both the directive and HTML transform rebuilds,
     # placed at the front of the tab-set
-    targets = list(findall(doctree)(nodes.target))
+    targets = list(doctree.findall(nodes.target))
     assert len(targets) == 1
     assert is_component(targets[0].parent, "tab-set")
     assert targets[0].parent.children[0] is targets[0]
     # the tab still renders and is selected by default
-    inputs = list(findall(doctree)(sd_tab_input))
+    inputs = list(doctree.findall(sd_tab_input))
     assert len(inputs) == 1
     assert inputs[0]["checked"] is True
     # the reference resolves to the target
-    references = list(findall(doctree)(nodes.reference))
+    references = list(doctree.findall(nodes.reference))
     assert len(references) == 1
     # crucially, some rendered node must still CARRY the id
     # (docutils PropagateTargets moves it onto the tab-item container,
@@ -343,7 +342,7 @@ def test_tab_set_with_target(fmt, sphinx_builder):
     refid = references[0]["refid"]
     carriers = [
         node
-        for node in findall(doctree)()
+        for node in doctree.findall()
         if isinstance(node, nodes.Element)
         and not isinstance(node, nodes.target)
         and refid in node.get("ids", [])
@@ -401,7 +400,7 @@ def test_tab_set_code_with_target(sphinx_builder):
     )
     builder.build()  # asserts no warnings
     doctree = builder.get_doctree("index", post_transforms=True)
-    references = [ref for ref in findall(doctree)(nodes.reference) if ref.get("refid")]
+    references = [ref for ref in doctree.findall(nodes.reference) if ref.get("refid")]
     assert len(references) == 1
     refid = references[0]["refid"]
     html = (builder.out_path / "index.html").read_text(encoding="utf8")

@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- ♻️ IMPROVE: Static assets (CSS/JS) are now served via Sphinx's standard
+  `html_static_path` mechanism, rather than being written directly into the
+  build output; non-HTML builds no longer gain a spurious
+  `_sphinx_design_static` directory ({pr}`276`, {issue}`200`, {issue}`235`).
+  A stale `_sphinx_design_static` directory left in an existing HTML build
+  directory by previous versions is unused and can safely be deleted.
+- ⬆️ UPGRADE: Sphinx `>=7.2` is now required ({pr}`276`)
+- 🗑️ REMOVE: The private `sphinx_design._compat.findall` helper has been
+  removed (docutils `Element.findall` is guaranteed by the Sphinx floor);
+  any code importing it should call `node.findall(...)` directly ({pr}`276`)
 - 🐛 FIX: buttons are no longer destroyed by gettext translation:
   translated `button-link`/`button-ref` keep their styling and links
   (gettext now targets only the button text), thanks to {user}`sneakers-the-rat`

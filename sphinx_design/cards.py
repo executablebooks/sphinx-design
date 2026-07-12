@@ -9,7 +9,6 @@ from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
-from ._compat import findall
 from .shared import (
     WARNING_TYPE,
     PassthroughTextElement,
@@ -247,9 +246,9 @@ class CardDirective(SdDirective):
     @staticmethod
     def add_card_child_classes(node):
         """Add classes to specific child nodes."""
-        for para in findall(node)(nodes.paragraph):
+        for para in node.findall(nodes.paragraph):
             para["classes"] = [*para.get("classes", []), "sd-card-text"]
-        # for title in findall(node)(nodes.title):
+        # for title in node.findall(nodes.title):
         #     title["classes"] = ([] if "classes" not in title else title["classes"]) + [
         #         "sd-card-title"
         #     ]
