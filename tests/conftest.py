@@ -6,18 +6,9 @@ from typing import Any
 from docutils import __version_info__ as docutils_version_info
 from docutils import nodes
 import pytest
-from sphinx import version_info
 from sphinx.testing.util import SphinxTestApp
 
-from sphinx_design._compat import findall
-
 pytest_plugins = "sphinx.testing.fixtures"
-
-if version_info >= (7, 2):
-    # see https://github.com/sphinx-doc/sphinx/pull/11526
-    from pathlib import Path as sphinx_path  # noqa: N813
-else:
-    from sphinx.testing.path import path as sphinx_path  # type: ignore[no-redef]
 
 
 class SphinxBuilder:
@@ -54,7 +45,7 @@ class SphinxBuilder:
         if post_transforms:
             self.app.env.apply_post_transforms(doctree, docname)
         # make source path consistent for test comparisons
-        for node in findall(doctree)(include_self=True):
+        for node in doctree.findall(include_self=True):
             if not (hasattr(node, "get") and node.get("source")):
                 continue
             node["source"] = Path(node["source"]).relative_to(self.src_path).as_posix()
@@ -86,7 +77,7 @@ def sphinx_builder(
         )
         src_path.joinpath("conf.py").write_text(content, encoding="utf8")
         app = make_app(
-            srcdir=sphinx_path(os.path.abspath(str(src_path))),  # noqa: PTH100
+            srcdir=Path(os.path.abspath(str(src_path))),  # noqa: PTH100
             buildername=buildername,
         )
         return SphinxBuilder(app, src_path)
