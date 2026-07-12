@@ -38,13 +38,13 @@ code-style = ["pre-commit>=3,<5"]
 rtd = ["myst-parser>=4,<6"]
 testing = [
     "myst-parser>=4,<6",
-    "pytest~=8.3",
+    "pytest>=8.3,<10.0",
     "pytest-cov",
     "pytest-regressions",
     "defusedxml",
 ]
 testing-no-myst = [
-    "pytest~=8.3",
+    "pytest>=8.3,<10.0",
     "pytest-cov",
     "pytest-regressions",
     "defusedxml",
@@ -58,8 +58,8 @@ theme-im = ["sphinx-immaterial~=0.13.9"]
 
 [dependency-groups]
 # keep in sync with the mirrors-mypy / ruff-pre-commit revs in .pre-commit-config.yaml
-mypy = ["mypy==2.1.0"]
-ruff = ["ruff==0.15.20"]
+mypy = ["mypy==2.2.0"]
+ruff = ["ruff==0.15.21"]
 
 [tool.flit.sdist]
 exclude = [
