@@ -1,6 +1,9 @@
 """Configuration file for the Sphinx documentation builder."""
 
+import dataclasses as dc
 import os
+
+from sphinx_design.config import SdConfig
 
 project = "Sphinx Design"
 copyright = "2021, Executable Book Project"
@@ -118,7 +121,31 @@ myst_enable_extensions = [
     "html_image",
 ]
 
+
+def _sd_config_options_table() -> str:
+    """Generate a Markdown table of all sphinx-design configuration options,
+    from the ``SdConfig`` dataclass fields.
+    """
+    rows = [
+        "| Name | Type | Default | Description |",
+        "| ---- | ---- | ------- | ----------- |",
+    ]
+    for field in dc.fields(SdConfig):
+        default = (
+            field.default_factory()
+            if field.default_factory is not dc.MISSING
+            else field.default
+        )
+        type_str = field.metadata.get("doc_type", field.type)
+        rows.append(
+            f"| `sd_{field.name}` | `{type_str}` | `{default!r}` "
+            f"| {field.metadata.get('help', '')} |"
+        )
+    return "\n".join(rows)
+
+
 myst_substitutions = {
+    "sd_config_options": _sd_config_options_table(),
     "loremipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
     "Sed iaculis arcu vitae odio gravida congue. Donec porttitor ac risus et condimentum. "
     "Phasellus bibendum ac risus a sollicitudin. "
@@ -129,5 +156,5 @@ myst_substitutions = {
     "Aliquam sed lectus ac nisl sollicitudin ultricies id at neque. "
     "Aliquam fringilla odio vitae lorem ornare, sit amet scelerisque orci fringilla. "
     "Nam sed arcu dignissim, ultrices quam sit amet, commodo ipsum. "
-    "Etiam quis nunc at ligula tincidunt eleifend."
+    "Etiam quis nunc at ligula tincidunt eleifend.",
 }

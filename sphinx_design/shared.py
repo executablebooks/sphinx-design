@@ -12,9 +12,25 @@ from sphinx.config import Config
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
+from .config import WARNING_TYPE, SdConfig, get_sd_config
+
 LOGGER = getLogger(__name__)
 
-WARNING_TYPE = "design"
+__all__ = (
+    "SEMANTIC_COLORS",
+    "SKIP_CHILD_TYPES",
+    "WARNING_TYPE",
+    "PassthroughTextElement",
+    "SdDirective",
+    "create_component",
+    "is_component",
+    "is_ignorable_child",
+    "make_choice",
+    "margin_option",
+    "padding_option",
+    "setup_custom_directives",
+    "text_align",
+)
 
 SEMANTIC_COLORS = (
     "primary",
@@ -34,45 +50,26 @@ SEMANTIC_COLORS = (
 def setup_custom_directives(
     app: Sphinx, config: Config, directive_map: dict[str, SdDirective]
 ) -> None:
-    conf_value = config.sd_custom_directives
+    """Register the custom directives declared in ``sd_custom_directives``.
 
-    def _warn(msg):
+    The shape of each entry has already been validated on ``config-inited``
+    (see ``sphinx_design.config``);
+    here we additionally check the values against the known directives.
+    """
+
+    def _warn(msg: str) -> None:
         LOGGER.warning(
             f"sd_custom_directives: {msg}", type=WARNING_TYPE, subtype="config"
         )
 
-    if not isinstance(conf_value, dict):
-        _warn("must be a dictionary")
-        config.sd_custom_directives = {}
-        return
-    for name, data in conf_value.items():
-        if not isinstance(name, str):
-            _warn(f"key must be a string: {name!r}")
-            continue
-        if not isinstance(data, dict):
-            _warn(f"{name!r} value must be a dictionary")
-            continue
-        if "inherit" not in data:
-            _warn(f"{name!r} value must have an 'inherit' key")
-            continue
+    for name, data in SdConfig.from_sphinx(config).custom_directives.items():
         if data["inherit"] not in directive_map:
             _warn(f"'{name}.inherit' is an unknown directive key: {data['inherit']}")
             continue
         directive_cls = directive_map[data["inherit"]]
-        if "options" in data:
-            if not isinstance(data["options"], dict):
-                _warn(f"'{name}.options' value must be a dictionary")
-                continue
-            if "argument" in data and not isinstance(data["argument"], str):
-                _warn(f"'{name}.argument' value must be a string")
-                continue
-            for key, value in data["options"].items():
-                if key not in directive_cls.option_spec:
-                    _warn(f"'{name}.options' unknown key {key!r}")
-                    continue
-                if not isinstance(value, str):
-                    _warn(f"'{name}.options.{key}' value must be a string")
-                    continue
+        for key in data.get("options", {}):
+            if key not in directive_cls.option_spec:
+                _warn(f"'{name}.options' unknown key {key!r}")
         app.add_directive(name, directive_cls, override=True)
 
 
@@ -95,7 +92,7 @@ class SdDirective(SphinxDirective):
 
         This method should not be overridden, instead override `run_with_defaults`.
         """
-        if data := self.config.sd_custom_directives.get(self.name):
+        if data := get_sd_config(self.env).custom_directives.get(self.name):
             if (not self.arguments) and (argument := data.get("argument")):  # type: ignore[has-type]
                 self.arguments = [str(argument)]
             for key, value in data.get("options", {}).items():

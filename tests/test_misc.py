@@ -1,12 +1,28 @@
+import dataclasses as dc
+import tomllib
+
 from babel.messages.catalog import Catalog
 from babel.messages.mofile import write_mo
 from docutils import nodes
 import pytest
 
 from sphinx_design._compat import findall
+from sphinx_design.config import SdConfig, get_sd_config
 from sphinx_design.icons import get_material_icon_data, get_octicon_data
 from sphinx_design.shared import is_component
 from sphinx_design.tabs import sd_tab_input
+
+try:
+    import myst_parser  # noqa: F401
+
+    MYST_INSTALLED = True
+except ImportError:
+    MYST_INSTALLED = False
+
+MYST_PARAM = pytest.param(
+    "myst",
+    marks=pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed"),
+)
 
 
 def test_octicons(file_regression):
@@ -117,7 +133,7 @@ B
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_grid_with_comment(fmt, sphinx_builder):
     """A comment between grid-items should not trigger a warning.
 
@@ -175,7 +191,7 @@ content B
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_card_carousel_with_comment(fmt, sphinx_builder):
     """A comment between cards should not trigger a warning.
 
@@ -233,7 +249,7 @@ B content
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_tab_set_with_comment(fmt, sphinx_builder):
     """A comment between tab-items should not trigger a warning.
 
@@ -289,7 +305,7 @@ See {ref}`target link <my-target>`.
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_tab_set_with_target(fmt, sphinx_builder):
     """A hyperlink target before a tab-item should be preserved,
     so that references to it still resolve, and should not trigger a warning.
@@ -442,3 +458,132 @@ def test_button_i18n_translated(sphinx_builder):
     ]
     assert len(badges) == 1
     assert badges[0].astext() == "stable"
+
+
+INVALID_CONFIG_VALUES = {
+    "custom_directives": (["not", "a", "dict"], "must be a dictionary"),
+    "fontawesome_latex": ("not-a-bool", "must be of type"),
+}
+"""An invalidly typed value (and expected warning) for every ``SdConfig`` field."""
+
+
+def _write_index_rst(builder) -> None:
+    builder.src_path.joinpath("index.rst").write_text(
+        "Test\n====\n\ncontent\n", encoding="utf8"
+    )
+
+
+def test_config_invalid_values_cover_all_fields():
+    """Ensure ``INVALID_CONFIG_VALUES`` stays in sync with the ``SdConfig`` fields."""
+    assert set(INVALID_CONFIG_VALUES) == {f.name for f in dc.fields(SdConfig)}
+
+
+@pytest.mark.parametrize("field", dc.fields(SdConfig), ids=lambda field: field.name)
+def test_config_invalid_type(field, sphinx_builder):
+    """An invalidly typed config value should emit a ``design.config`` warning,
+    and fall back to the field default.
+    """
+    value, expected_warning = INVALID_CONFIG_VALUES[field.name]
+    builder = sphinx_builder(
+        conf_kwargs={"extensions": ["sphinx_design"], f"sd_{field.name}": value}
+    )
+    _write_index_rst(builder)
+    builder.build(assert_pass=False)
+    assert f"sd_{field.name}: " in builder.warnings
+    assert expected_warning in builder.warnings
+    default = (
+        field.default_factory()
+        if field.default_factory is not dc.MISSING
+        else field.default
+    )
+    assert getattr(get_sd_config(builder.app.env), field.name) == default
+
+
+def test_config_custom_directives_invalid_entry(sphinx_builder):
+    """An invalid ``sd_custom_directives`` entry should emit a ``design.config``
+    warning and be discarded, without affecting valid entries.
+    """
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "sd_custom_directives": {
+                "dropdown-syntax": {"inherit": "dropdown", "argument": "Syntax"},
+                "bad-directive": {"argument": "Other"},
+            },
+        }
+    )
+    _write_index_rst(builder)
+    builder.build(assert_pass=False)
+    assert "'bad-directive' value must have an 'inherit' key" in builder.warnings
+    assert list(get_sd_config(builder.app.env).custom_directives) == ["dropdown-syntax"]
+
+
+def test_config_custom_directives_unknown_inherit(sphinx_builder):
+    """An unknown ``inherit`` directive should emit a ``design.config`` warning."""
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "sd_custom_directives": {"foo": {"inherit": "unknown"}},
+        }
+    )
+    _write_index_rst(builder)
+    builder.build(assert_pass=False)
+    assert "'foo.inherit' is an unknown directive key: unknown" in builder.warnings
+
+
+def test_config_warnings_suppressible(sphinx_builder):
+    """Config warnings are emitted with the ``design.config`` type/subtype,
+    so they can be suppressed via ``suppress_warnings``.
+    """
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "suppress_warnings": ["design.config"],
+            # note, entry-level invalidity is used here, since top-level type
+            # mismatches also emit (non-suppressible) sphinx core warnings
+            "sd_custom_directives": {"foo": {"inherit": "unknown", "argument": 1}},
+        }
+    )
+    _write_index_rst(builder)
+    builder.build()
+    assert builder.warnings == ""
+
+
+def test_config_strict_validation():
+    """Directly instantiating ``SdConfig`` with invalid values should raise."""
+    with pytest.raises(TypeError, match="'fontawesome_latex' must be of type"):
+        SdConfig(fontawesome_latex="not-a-bool")
+    with pytest.raises(TypeError, match="'custom_directives' must be a dictionary"):
+        SdConfig(custom_directives="not-a-dict")
+    with pytest.raises(ValueError, match="must have an 'inherit' key"):
+        SdConfig(custom_directives={"foo": {}})
+
+
+def test_config_toml_round_trip():
+    """All configuration values are TOML-representable:
+    a TOML document containing every field should load and validate.
+    """
+    toml_str = """\
+    fontawesome_latex = true
+
+    [custom_directives.dropdown-syntax]
+    inherit = "dropdown"
+    argument = "Syntax"
+
+    [custom_directives.dropdown-syntax.options]
+    color = "primary"
+    icon = "code"
+    """
+    data = tomllib.loads(toml_str)
+    assert set(data) == {f.name for f in dc.fields(SdConfig)}, (
+        "the TOML sample should contain every SdConfig field"
+    )
+    config = SdConfig(**data)
+    assert config.fontawesome_latex is True
+    assert config.custom_directives == {
+        "dropdown-syntax": {
+            "inherit": "dropdown",
+            "argument": "Syntax",
+            "options": {"color": "primary", "icon": "code"},
+        }
+    }

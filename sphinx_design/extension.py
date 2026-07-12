@@ -15,6 +15,7 @@ from ._compat import findall, read_text
 from .article_info import setup_article_info
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
+from .config import setup_sd_config
 from .dropdown import setup_dropdown
 from .grids import setup_grids
 from .icons import setup_icons
@@ -29,6 +30,7 @@ from .tabs import setup_tabs
 
 def setup_extension(app: Sphinx) -> None:
     """Set up the sphinx extension."""
+    setup_sd_config(app)
     app.connect("builder-inited", update_css_js)
     app.connect("env-updated", update_css_links)
     # we override container html visitors, to stop the default behaviour
@@ -55,7 +57,6 @@ def setup_extension(app: Sphinx) -> None:
         setup_tabs(app)
         setup_article_info(app)
 
-    app.add_config_value("sd_custom_directives", {}, "env")
     app.connect(
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)
     )
