@@ -1,0 +1,15 @@
+#: ../../index.rst:2
+msgid "Heading"
+msgstr ""
+
+#: ../../index.rst:7
+msgid "Target Section"
+msgstr ""
+
+#: ../../index.rst:19
+msgid "Click me now"
+msgstr ""
+
+#: ../../index.rst:18
+msgid "See the :bdg-primary:`stable` badge."
+msgstr ""

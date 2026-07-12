@@ -1,5 +1,12 @@
 # Change Log
 
+## Unreleased
+
+- 🐛 FIX: buttons are no longer destroyed by gettext translation:
+  translated `button-link`/`button-ref` keep their styling and links
+  (gettext now targets only the button text), thanks to {user}`sneakers-the-rat`
+  in {pr}`264` ({issue}`96`, {issue}`44`, {issue}`263`)
+
 ## 0.7.0 - 2025-01-19
 
 ### Dependencies

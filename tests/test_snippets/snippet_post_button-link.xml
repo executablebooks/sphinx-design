@@ -8,10 +8,12 @@
                     https://example.com
         <paragraph translatable="0">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap" refuri="https://example.com">
-                Button text
+                <inline>
+                    Button text
         <paragraph translatable="0">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary" refuri="https://example.com">
-                Button text with options
+                <inline>
+                    Button text with options
         <paragraph translatable="0">
             <reference classes="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary sd-shadow-sm" refuri="https://example.com">
                 <inline>

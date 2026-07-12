@@ -178,13 +178,16 @@ class _ButtonDirective(SdDirective):
             textnodes, _ = self.state.inline_text(
                 "\n".join(self.content), self.lineno + self.content_offset
             )
-            content = nodes.inline("", "", translatable=True)
-            content.extend(textnodes)
-
             # make link text translatable -
             # target gettext to the content lines, not the outer directive
-            self.set_source_info(content)
-            content.line += self.content_offset
+            translatable = nodes.inline("", "", *textnodes, translatable=True)
+            self.set_source_info(translatable)
+            translatable.line += self.content_offset
+            # the translatable inline is a placeholder that sphinx unwraps
+            # after translation (RemoveTranslatableInline); keep a plain outer
+            # inline so the reference always retains an element child
+            # (an unresolved xref otherwise crashes on replacement)
+            content = nodes.inline("", "", translatable)
         else:
             content = nodes.inline(target, target)
         node.append(content)

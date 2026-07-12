@@ -6,6 +6,11 @@
 
 .. button-link:: https://example.com
     :color: primary
+
+    Button text with options
+
+.. button-link:: https://example.com
+    :color: primary
     :shadow:
 
 .. button-link:: https://example.com
