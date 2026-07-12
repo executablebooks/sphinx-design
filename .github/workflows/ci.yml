@@ -7,6 +7,10 @@ on:
       - 'v*'
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
   pre-commit:
@@ -14,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: "3.11"
     - uses: pre-commit/action@v3.0.1
@@ -49,9 +53,9 @@ jobs:
     name: Tests (py${{ matrix.python-version }}, Sphinx${{ matrix.sphinx-version }}, on ${{ matrix.os }})
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         cache: pip
@@ -63,13 +67,13 @@ jobs:
       run: |
         pytest --cov=sphinx_design --cov-report=xml --cov-report=term-missing
     - name: Upload to Codecov
-      if: github.event.pull_request.head.repo.full_name == github.repository && matrix.python-version == '3.9' && matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
+      if: (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && matrix.python-version == '3.13' && matrix.sphinx-version == '~=8.0' && matrix.os == 'ubuntu-latest'
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         name: pytests
         flags: pytests
-        file: ./coverage.xml
+        files: ./coverage.xml
         fail_ci_if_error: true
 
   docs-build-format:
@@ -80,9 +84,9 @@ jobs:
         format: [html, latex, man]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: "3.11"
         cache: pip
@@ -119,9 +123,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: "3.11"
     - name: install flit
