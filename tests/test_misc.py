@@ -12,6 +12,18 @@ from sphinx_design.icons import get_material_icon_data, get_octicon_data
 from sphinx_design.shared import is_component
 from sphinx_design.tabs import sd_tab_input
 
+try:
+    import myst_parser  # noqa: F401
+
+    MYST_INSTALLED = True
+except ImportError:
+    MYST_INSTALLED = False
+
+MYST_PARAM = pytest.param(
+    "myst",
+    marks=pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed"),
+)
+
 
 def test_octicons(file_regression):
     """Test the available octicon names.
@@ -121,7 +133,7 @@ B
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_grid_with_comment(fmt, sphinx_builder):
     """A comment between grid-items should not trigger a warning.
 
@@ -179,7 +191,7 @@ content B
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_card_carousel_with_comment(fmt, sphinx_builder):
     """A comment between cards should not trigger a warning.
 
@@ -237,7 +249,7 @@ B content
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_tab_set_with_comment(fmt, sphinx_builder):
     """A comment between tab-items should not trigger a warning.
 
@@ -293,7 +305,7 @@ See {ref}`target link <my-target>`.
 }
 
 
-@pytest.mark.parametrize("fmt", ["rst", "myst"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
 def test_tab_set_with_target(fmt, sphinx_builder):
     """A hyperlink target before a tab-item should be preserved,
     so that references to it still resolve, and should not trigger a warning.
