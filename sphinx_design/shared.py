@@ -143,6 +143,15 @@ def is_component(node: nodes.Node, name: str):
         return False
 
 
+#: Node types that are structurally inert inside component containers.
+SKIP_CHILD_TYPES = (nodes.comment, nodes.target, nodes.system_message)
+
+
+def is_ignorable_child(node: nodes.Node) -> bool:
+    """Check if a node can be silently ignored when validating component children."""
+    return isinstance(node, SKIP_CHILD_TYPES)
+
+
 def make_choice(choices: Sequence[str]):
     """Create a choice validator."""
     return lambda argument: directives.choice(argument, choices)

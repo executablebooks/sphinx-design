@@ -16,6 +16,7 @@ from .shared import (
     SdDirective,
     create_component,
     is_component,
+    is_ignorable_child,
     make_choice,
     margin_option,
     text_align,
@@ -284,6 +285,8 @@ class CardCarouselDirective(SdDirective):
         self.set_source_info(container)
         self.state.nested_parse(self.content, self.content_offset, container)
         for item in container.children:
+            if is_ignorable_child(item):
+                continue
             if not is_component(item, "card"):
                 LOGGER.warning(
                     "All children of a 'card-carousel' "

@@ -9,6 +9,7 @@ from .shared import (
     SdDirective,
     create_component,
     is_component,
+    is_ignorable_child,
     make_choice,
     margin_option,
     padding_option,
@@ -142,6 +143,8 @@ class GridDirective(SdDirective):
         self.state.nested_parse(self.content, self.content_offset, row)
         # each item in a row should be a column
         for item in row.children:
+            if is_ignorable_child(item):
+                continue
             if not is_component(item, "grid-item"):
                 LOGGER.warning(
                     f"All children of a 'grid-row' "
