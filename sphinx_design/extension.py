@@ -71,15 +71,15 @@ def capture_directives(app: Sphinx):
         directive_map[name] = directive
         add_directive(name, directive, **kwargs)
 
-    app.add_directive = _add_directive
+    app.add_directive = _add_directive  # type: ignore[assignment,method-assign]
     yield directive_map
-    app.add_directive = add_directive
+    app.add_directive = add_directive  # type: ignore[method-assign]
 
 
 def update_css_js(app: Sphinx):
     """Copy the CSS to the build directory."""
     # reset changed identifier
-    app.env.sphinx_design_css_changed = False
+    app.env.sphinx_design_css_changed = False  # type: ignore[attr-defined]
     # setup up new static path in output dir
     static_path = (Path(app.outdir) / "_sphinx_design_static").absolute()
     static_existed = static_path.exists()
@@ -105,7 +105,7 @@ def update_css_js(app: Sphinx):
     if css_path.exists():
         return
     if static_existed:
-        app.env.sphinx_design_css_changed = True
+        app.env.sphinx_design_css_changed = True  # type: ignore[attr-defined]
     for path in static_path.glob("*.css"):
         path.unlink()
     css_path.write_text(content, encoding="utf8")
@@ -113,7 +113,7 @@ def update_css_js(app: Sphinx):
 
 def update_css_links(app: Sphinx, env: BuildEnvironment):
     """If CSS has changed, all files must be re-written, to include the correct stylesheets."""
-    if env.sphinx_design_css_changed:
+    if env.sphinx_design_css_changed:  # type: ignore[attr-defined]
         return list(env.all_docs.keys())
 
 

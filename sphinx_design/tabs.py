@@ -1,3 +1,5 @@
+from typing import Any
+
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
@@ -215,7 +217,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
     default_priority = 200
     formats = ("html",)
 
-    def run(self) -> None:
+    def run(self, **kwargs: Any) -> None:
         """Run the transform."""
 
         # setup id generators
