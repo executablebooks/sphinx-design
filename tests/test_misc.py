@@ -337,6 +337,20 @@ def test_tab_set_with_target(fmt, sphinx_builder):
     # the reference resolves to the target
     references = list(findall(doctree)(nodes.reference))
     assert len(references) == 1
+    # crucially, some rendered node must still CARRY the id
+    # (docutils PropagateTargets moves it onto the tab-item container,
+    # which the HTML transform destroys), or the anchor breaks
+    refid = references[0]["refid"]
+    carriers = [
+        node
+        for node in findall(doctree)()
+        if isinstance(node, nodes.Element)
+        and not isinstance(node, nodes.target)
+        and refid in node.get("ids", [])
+    ]
+    assert carriers, f"no rendered node carries id {refid!r}"
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert f'id="{refid}"' in html
     assert references[0]["refid"] == "my-target"
 
 
@@ -361,6 +375,37 @@ Test
     builder.build(assert_pass=False)
     assert "All children of a 'tab-set' should be 'tab-item'" in builder.warnings
     assert "[design.tab]" in builder.warnings
+
+
+TAB_SET_CODE_WITH_TARGET = """
+Test
+====
+
+:ref:`my code <code-target>`
+
+.. tab-set-code::
+
+    .. _code-target:
+
+    .. code-block:: python
+
+        a = 1
+"""
+
+
+def test_tab_set_code_with_target(sphinx_builder):
+    """A hyperlink target inside a tab-set-code must keep a working anchor."""
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        TAB_SET_CODE_WITH_TARGET, encoding="utf8"
+    )
+    builder.build()  # asserts no warnings
+    doctree = builder.get_doctree("index", post_transforms=True)
+    references = [ref for ref in findall(doctree)(nodes.reference) if ref.get("refid")]
+    assert len(references) == 1
+    refid = references[0]["refid"]
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert f'id="{refid}"' in html
 
 
 I18N_INDEX_RST = """\
