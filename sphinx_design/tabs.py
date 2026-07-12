@@ -7,7 +7,13 @@ from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.logging import getLogger
 
 from ._compat import findall
-from .shared import WARNING_TYPE, SdDirective, create_component, is_component
+from .shared import (
+    WARNING_TYPE,
+    SdDirective,
+    create_component,
+    is_component,
+    is_ignorable_child,
+)
 
 LOGGER = getLogger(__name__)
 
@@ -39,6 +45,13 @@ class TabSetDirective(SdDirective):
         self.state.nested_parse(self.content, self.content_offset, tab_set)
         valid_children = []
         for item in tab_set.children:
+            if is_ignorable_child(item):
+                # comments and system messages can be safely dropped,
+                # but hyperlink targets must be kept,
+                # so that references to them still resolve
+                if isinstance(item, nodes.target):
+                    valid_children.append(item)
+                continue
             if not is_component(item, "tab-item"):
                 LOGGER.warning(
                     f"All children of a 'tab-set' "
@@ -145,6 +158,8 @@ class TabSetCodeDirective(SdDirective):
         self.state.nested_parse(self.content, self.content_offset, tab_set)
         new_children = []
         for item in tab_set.children:
+            if is_ignorable_child(item):
+                continue
             if not isinstance(item, nodes.literal_block):
                 LOGGER.warning(
                     f"All children of a 'tab-code-set' "
@@ -230,9 +245,19 @@ class TabSetHtmlTransform(SphinxPostTransform):
         ):
             tab_set_identity = tab_set_id_base + str(tab_set_id_num)
             children = []
+            # keep non tab-item children (e.g. hyperlink targets),
+            # placing them at the front of the rebuilt tab-set
+            preserved = [
+                child
+                for child in tab_set.children
+                if not is_component(child, "tab-item")
+            ]
+            tab_items = [
+                child for child in tab_set.children if is_component(child, "tab-item")
+            ]
             # get the first selected node
             selected_idx = None
-            for idx, tab_item in enumerate(tab_set.children):
+            for idx, tab_item in enumerate(tab_items):
                 if tab_item.get("selected", False):
                     if selected_idx is None:
                         selected_idx = idx
@@ -245,9 +270,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
                         )
             selected_idx = 0 if selected_idx is None else selected_idx
 
-            for idx, tab_item in enumerate(tab_set.children):
-                if not is_component(tab_item, "tab-item"):
-                    continue  # Skip non tab-item children
+            for idx, tab_item in enumerate(tab_items):
                 if len(tab_item.children) != 2:
                     LOGGER.warning(
                         f"Malformed 'tab-item' directive [{WARNING_TYPE}.tab]",
@@ -290,4 +313,4 @@ class TabSetHtmlTransform(SphinxPostTransform):
                 # add content
                 children.append(tab_content)
 
-            tab_set.children = children
+            tab_set.children = preserved + children
