@@ -1,62 +1,17 @@
+from collections.abc import Callable
 import os
 from pathlib import Path
-import re
 from typing import Any
 
-from docutils import __version_info__ as docutils_version_info
-from docutils import nodes
 import pytest
-from sphinx.testing.util import SphinxTestApp
+
+from sphinx_design.testing import SphinxBuilder
+from sphinx_design.testing import normalize_doctree_xml as _normalize_doctree_xml
+
+# re-exported for tests that do ``from .conftest import SphinxBuilder``
+__all__ = ["SphinxBuilder"]
 
 pytest_plugins = "sphinx.testing.fixtures"
-
-
-class SphinxBuilder:
-    def __init__(self, app: SphinxTestApp, src_path: Path):
-        self.app = app
-        self._src_path = src_path
-
-    @property
-    def src_path(self) -> Path:
-        return self._src_path
-
-    @property
-    def out_path(self) -> Path:
-        return Path(self.app.outdir)
-
-    def build(self, assert_pass=True):
-        self.app.build()
-        if assert_pass:
-            assert self.warnings == "", self.status
-        return self
-
-    @property
-    def status(self):
-        return self.app._status.getvalue()
-
-    @property
-    def warnings(self):
-        return self.app._warning.getvalue()
-
-    def get_doctree(
-        self, docname: str, post_transforms: bool = False
-    ) -> nodes.document:
-        doctree = self.app.env.get_doctree(docname)
-        if post_transforms:
-            self.app.env.apply_post_transforms(doctree, docname)
-        # make source path consistent for test comparisons
-        for node in doctree.findall(include_self=True):
-            if not (hasattr(node, "get") and node.get("source")):
-                continue
-            node["source"] = Path(node["source"]).relative_to(self.src_path).as_posix()
-            if node["source"].endswith(".rst"):
-                node["source"] = node["source"][:-4]
-            elif node["source"].endswith(".md"):
-                node["source"] = node["source"][:-3]
-        # remove mathjax classes added by myst parser
-        if doctree.children and isinstance(doctree.children[0], nodes.section):
-            doctree.children[0]["classes"] = []
-        return doctree
 
 
 @pytest.fixture(params=[pytest.param("html", id="html")])
@@ -85,39 +40,11 @@ def sphinx_builder(
     yield _create_project
 
 
-DOCUTILS_0_22_PLUS = docutils_version_info >= (0, 22)
-
-
 @pytest.fixture
-def normalize_doctree_xml():
-    """Normalize docutils XML output for cross-version compatibility.
+def normalize_doctree_xml() -> Callable[..., str]:
+    """Return the public doctree-XML normalizer.
 
-    In docutils 0.22+, boolean attributes are serialized as "1"/"0"
-    instead of "True"/"False". This function normalizes to the old format
-    for consistent test fixtures.
+    Thin wrapper around :func:`sphinx_design.testing.normalize_doctree_xml`,
+    kept so existing tests keep working; see that module for details.
     """
-
-    def _normalize(text: str) -> str:
-        if DOCUTILS_0_22_PLUS:
-            # Normalize new format (1/0) to old format (1/0)
-            # Only replace when it's clearly a boolean attribute value
-            # Pattern: attribute="1" or attribute="0"
-            attrs = [
-                "checked",
-                "force",
-                "has_title",
-                "internal",
-                "is_div",
-                "linenos",
-                "opened",
-                "refexplicit",
-                "refwarn",
-                "selected",
-                "translatable",
-                "translated",
-            ]
-            text = re.sub(rf' ({"|".join(attrs)})="1"', r' \1="True"', text)
-            text = re.sub(rf' ({"|".join(attrs)})="0"', r' \1="False"', text)
-        return text
-
-    return _normalize
+    return _normalize_doctree_xml

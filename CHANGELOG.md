@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- ✨ NEW: `sphinx_design.testing` module with the `normalize_doctree_xml` helper, for downstream extensions' doctree regression tests ({pr}`277`, {issue}`260`)
 - ♻️ IMPROVE: Static assets (CSS/JS) are now served via Sphinx's standard
   `html_static_path` mechanism, rather than being written directly into the
   build output; non-HTML builds no longer gain a spurious
