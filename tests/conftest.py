@@ -68,10 +68,12 @@ class SphinxBuilder:
         return doctree
 
 
-@pytest.fixture()
-def sphinx_builder(tmp_path: Path, make_app, monkeypatch):
+@pytest.fixture(params=[pytest.param("html", id="html")])
+def sphinx_builder(
+    tmp_path: Path, make_app, monkeypatch, request: pytest.FixtureRequest
+):
     def _create_project(
-        buildername: str = "html", conf_kwargs: dict[str, Any] | None = None
+        buildername: str = request.param, conf_kwargs: dict[str, Any] | None = None
     ):
         src_path = tmp_path / "srcdir"
         src_path.mkdir()
@@ -120,6 +122,8 @@ def normalize_doctree_xml():
                 "refexplicit",
                 "refwarn",
                 "selected",
+                "translatable",
+                "translated",
             ]
             text = re.sub(rf' ({"|".join(attrs)})="1"', r' \1="True"', text)
             text = re.sub(rf' ({"|".join(attrs)})="0"', r' \1="False"', text)

@@ -1,0 +1,7 @@
+#: ../../index.md:4
+msgid "Button text"
+msgstr ""
+
+#: ../../index.md:10
+msgid "Button text with options"
+msgstr ""

@@ -1,3 +1,5 @@
+from babel.messages.catalog import Catalog
+from babel.messages.mofile import write_mo
 from docutils import nodes
 import pytest
 
@@ -73,6 +75,7 @@ Tab Test document
     doctree.attributes.pop("translation_progress", None)
     file_regression.check(
         normalize_doctree_xml(doctree.pformat()),
+        basename="test_tab_set_with_invalid_children",
         extension=".xml",
         encoding="utf8",
     )
@@ -342,3 +345,100 @@ Test
     builder.build(assert_pass=False)
     assert "All children of a 'tab-set' should be 'tab-item'" in builder.warnings
     assert "[design.tab]" in builder.warnings
+
+
+I18N_INDEX_RST = """\
+Heading
+=======
+
+.. _target-section:
+
+Target Section
+==============
+
+.. button-link:: https://example.com
+
+    Click me now
+
+.. button-ref:: target-section
+    :ref-type: ref
+
+    Go to target
+
+See the :bdg-primary:`stable` badge.
+"""
+
+
+def test_button_i18n_gettext(sphinx_builder, file_regression):
+    """Gettext extraction should target only the button text, not the directive.
+
+    See https://github.com/executablebooks/sphinx-design/issues/96
+
+    Known gap (visible in the regression file): ``button-ref`` text is absent
+    from the ``.pot`` because the gettext builder extracts from the resolved
+    doctree, and std-domain xref resolution flattens explicit-title content,
+    discarding the translatable marker. Translation itself still works for
+    both button types (see ``test_button_i18n_translated``), since the Locale
+    transform runs before resolution.
+    """
+    builder = sphinx_builder("gettext", conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(I18N_INDEX_RST, encoding="utf8")
+    builder.build()
+    out = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    # strip the metadata header (contains a varying timestamp)
+    out = out[out.find("#: ") :]
+    file_regression.check(
+        out, basename="test_button_i18n_gettext", extension=".pot", encoding="utf8"
+    )
+
+
+def test_button_i18n_translated(sphinx_builder):
+    """Translated buttons must keep their classes, link and resolve refs.
+
+    See https://github.com/executablebooks/sphinx-design/issues/44
+    and https://github.com/executablebooks/sphinx-design/issues/263
+    """
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "language": "de",
+            "locale_dirs": ["locales"],
+        }
+    )
+    builder.src_path.joinpath("index.rst").write_text(I18N_INDEX_RST, encoding="utf8")
+    catalog = Catalog(locale="de", domain="index")
+    catalog.add("Click me now", "Klick mich jetzt")
+    catalog.add("Go to target", "Zum Ziel")
+    mo_dir = builder.src_path / "locales" / "de" / "LC_MESSAGES"
+    mo_dir.mkdir(parents=True)
+    with (mo_dir / "index.mo").open("wb") as handle:
+        write_mo(handle, catalog)
+
+    builder.build()
+    doctree = builder.get_doctree("index", post_transforms=True)
+    references = list(doctree.findall(nodes.reference))
+
+    external = [
+        ref
+        for ref in references
+        if "sd-btn" in ref["classes"]
+        and ref.get("refuri", "").startswith("https://example.com")
+    ]
+    assert len(external) == 1, [r.pformat() for r in references]
+    assert external[0].astext() == "Klick mich jetzt"
+
+    internal = [
+        ref
+        for ref in references
+        if "sd-btn" in ref["classes"] and not ref.get("refuri", "").startswith("http")
+    ]
+    assert len(internal) == 1, [r.pformat() for r in references]
+    assert internal[0].astext() == "Zum Ziel"
+
+    badges = [
+        node
+        for node in doctree.findall(nodes.inline)
+        if "sd-badge" in node.get("classes", [])
+    ]
+    assert len(badges) == 1
+    assert badges[0].astext() == "stable"

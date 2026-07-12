@@ -23,6 +23,10 @@ sd_custom_directives = {
 
 extlinks = {
     "pr": ("https://github.com/executablebooks/sphinx-design/pull/%s", "PR #%s"),
+    "issue": (
+        "https://github.com/executablebooks/sphinx-design/issues/%s",
+        "#%s",
+    ),
     "user": ("https://github.com/%s", "@%s"),
 }
 
