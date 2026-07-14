@@ -10,3 +10,7 @@
 .sd-sphinx-override p {
   margin-top: 0;
 }
+
+.sd-sphinx-override:focus-visible {
+  outline-offset: 0.25rem;
+}

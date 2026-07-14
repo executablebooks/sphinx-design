@@ -58,11 +58,17 @@ $semantic-colors: (
     &.sd-bg-#{$color}:hover {
       background-color: var(--sd-color-#{$color}-highlight) !important;
     }
+    &.sd-bg-#{$color}:focus-visible {
+      outline-color: var(--sd-color-#{$color}-highlight) !important;
+    }
   }
   a {
     &.sd-bg-#{$color}:focus,
     &.sd-bg-#{$color}:hover {
       background-color: var(--sd-color-#{$color}-highlight) !important;
+    }
+    &.sd-bg-#{$color}:focus-visible {
+      outline-color: var(--sd-color-#{$color}-highlight) !important;
     }
   }
 }
@@ -89,6 +95,9 @@ $semantic-colors: (
     &.sd-outline-#{$color}:focus,
     &.sd-outline-#{$color}:hover {
       border-color: var(--sd-color-#{$color}-highlight) !important;
+    }
+    &.sd-outline-#{$color}:focus-visible {
+      outline-color: var(--sd-color-#{$color}-highlight) !important;
     }
   }
 }
