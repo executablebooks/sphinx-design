@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- 🐛 FIX: `button-ref` no longer strips whitespace from reference targets, so
+  multi-word labels (e.g. from `autosectionlabel`) resolve correctly
+  ({pr}`281`, {issue}`110`)
+- 🐛 FIX: `button-ref` now renders rich/nested inline content (emphasis, icons,
+  etc.) identically to `button-link`, instead of flattening it to plain text
+  during cross-reference resolution ({pr}`281`, {issue}`228`)
 - 🐛 FIX: Inline icon roles no longer leak SVG markup into toctree labels and the search index ({pr}`279`, {issue}`99`)
 - 🐛 FIX: `article-info` octicons regain their `sd-pr-2` spacing class (previously silently dropped by the HTML writer) ({pr}`279`)
 - 🐛 FIX: Paragraphs inside dropdowns no longer have user classes overwritten by `sd-card-text`, and card/dropdown body styling is applied only to direct child paragraphs, not nested content ({pr}`278`, {issue}`40`)

@@ -105,8 +105,8 @@ Reference Button text
 ````
 `````
 
-Note that by default sphinx converts the content of references to raw text.
-For example `**Bold text**` with `ref-type` set to `ref` will be rendered without bold:
+The content of a `button-ref` supports rich inline formatting (such as emphasis
+and icons), which is rendered in the button, just as it is for `button-link`:
 
 ```{button-ref} buttons
 :ref-type: ref
@@ -115,14 +115,11 @@ For example `**Bold text**` with `ref-type` set to `ref` will be rendered withou
 **Bold text**
 ```
 
-However, if using [myst-parser](https://myst-parser.readthedocs.io/), you can set the `ref-type` to `myst`, and the content will be properly rendered:
+Reference targets may also contain spaces, for example the labels that
+`sphinx.ext.autosectionlabel` generates from section titles.
 
-```{button-ref} buttons
-:ref-type: myst
-:color: primary
-
-**Bold text**
-```
+When using [myst-parser](https://myst-parser.readthedocs.io/), you can also set
+`ref-type` to `myst` to resolve Markdown-style references.
 
 Use the `click-parent` option to make the button's parent container also clickable.
 
