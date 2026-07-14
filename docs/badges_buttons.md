@@ -240,48 +240,120 @@ Not all icons are available for each flavor, but most are. Instead of displaying
 
 ### FontAwesome Icons
 
-FontAwesome icons are added via the Fontawesome CSS classes.
-If the theme you are using does not already include the FontAwesome CSS, it should be loaded in your configuration from a [font-awesome CDN](https://cdnjs.com/libraries/font-awesome), with the [html_css_files](https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_css_files) option, e.g.:
+FontAwesome icons are added via the FontAwesome CSS classes, with the
+`fa-solid`, `fa-brands` and `fa-regular` roles (the FontAwesome v6 style names):
+
+- A solid icon {fa-solid}`rocket;sd-text-primary`, some more text.
+- A brand icon {fa-brands}`github`, some more text.
+- A regular icon {fa-regular}`bell;sd-text-warning`, some more text.
+
+Each role emits exactly the classes it is named after: the `fa-solid` role
+applied to `rocket` produces `<span class="fa-solid fa-rocket">`.
+
+#### Loading the FontAwesome CSS
+
+sphinx-design does **not** bundle the FontAwesome CSS.
+By default (`sd_fontawesome_source = "none"`) you, or your theme, are
+responsible for making it available (many themes already include it).
+
+To have sphinx-design load it for you from a
+[FontAwesome CDN](https://cdnjs.com/libraries/font-awesome),
+so you no longer have to hand-edit
+[`html_css_files`](https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_css_files),
+set:
 
 ```python
-html_css_files = [
-    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-]
+sd_fontawesome_source = "cdn"
 ```
 
-Use either `fa` (deprecated in font-awesome v5), `fas`, `fab` or `far` for the role name.
-Note that not all regular style icons are free, `far` role only works with free ones.
+This adds `sd_fontawesome_cdn_url` (a FontAwesome v6 `all.min.css` by default)
+to the HTML output. Override `sd_fontawesome_cdn_url` to pin a different
+version or a self-hosted copy.
 
 ````{warning}
-Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a height/size to the `fa*` roles is not supported.
+Since the FontAwesome icons are fetched directly from their distributed CSS, specifying a height/size to the icon roles is not supported.
 However, you can always add your custom CSS class that controls the `font-size` property.
 
-If a height/size is supplied to a `fa*` role, then it will be interpreted as a CSS class.
-There can only be a maximum of 1 `;` in the `fa*` roles' arguments
+If a height/size is supplied to an icon role, then it will be interpreted as a CSS class.
+There can only be a maximum of 1 `;` in the roles' arguments
 ````
 
 ````{tab-set-code}
 ```markdown
-- An icon {fas}`spinner;sd-text-primary`, some more text.
-- An icon {fab}`github`, some more text.
-- An icon {fab}`gitkraken;sd-text-success fa-xl`, some more text.
-- An icon {fas}`skull;sd-text-danger`, some more text.
+- An icon {fa-solid}`spinner;sd-text-primary`, some more text.
+- An icon {fa-brands}`github`, some more text.
+- An icon {fa-brands}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fa-solid}`skull;sd-text-danger`, some more text.
 ```
 ```rst
-- An icon :fas:`spinner;sd-text-primary`, some more text.
-- An icon :fab:`github`, some more text.
-- An icon :fab:`gitkraken;sd-text-success fa-xl`, some more text.
-- An icon :fas:`skull;sd-text-danger`, some more text.
+- An icon :fa-solid:`spinner;sd-text-primary`, some more text.
+- An icon :fa-brands:`github`, some more text.
+- An icon :fa-brands:`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon :fa-solid:`skull;sd-text-danger`, some more text.
 ```
 ````
 
+- An icon {fa-solid}`spinner;sd-text-primary`, some more text.
+- An icon {fa-brands}`github`, some more text.
+- An icon {fa-brands}`gitkraken;sd-text-success fa-xl`, some more text.
+- An icon {fa-solid}`skull;sd-text-danger`, some more text.
+
+#### Using FontAwesome Pro kits
+
+If you use a [FontAwesome Pro kit](https://fontawesome.com/kits), keep
+`sd_fontawesome_source = "none"` (do **not** also load the free CDN, whose
+own font-face would fight your kit), load the kit as usual, and use the v6
+role names above (`fa-solid`/`fa-brands`/`fa-regular`), which emit exactly the
+classes a Pro kit expects.
+
+#### Concise role names
+
+The `fas`, `fab` and `far` roles (and `fa`, which FontAwesome itself
+deprecated in v5) are equally supported, with no plans to remove them. Each
+role name is emitted verbatim as the leading CSS class, so these produce the
+v4/v5 class scheme (`fas fa-...`):
+
 - An icon {fas}`spinner;sd-text-primary`, some more text.
 - An icon {fab}`github`, some more text.
-- An icon {fab}`gitkraken;sd-text-success fa-xl`, some more text.
-- An icon {fas}`skull;sd-text-danger`, some more text.
+- An icon {far}`bell`, some more text.
 
-By default, icons will only be output in HTML formats. But if you want FontAwesome icons to be output on LaTeX, using the [fontawesome package](https://ctan.org/pkg/fontawesome), you can add to your configuration:
+Pick whichever spelling matches the FontAwesome CSS you load: the free CDN
+builds define both class schemes, so the concise names work fine there. The
+`fa-solid`/`fa-brands`/`fa-regular` names are only *required* for FontAwesome
+v6+ setups that drop the compatibility aliases — most notably Pro kits — and
+have the side benefit of matching what fontawesome.com shows for each icon.
+Note that not all regular style icons are free; `far`/`fa-regular` only work
+with the free ones.
+
+#### FontAwesome in LaTeX output
+
+By default, icons are only rendered for HTML builders.
+To also render them in LaTeX output, set `sd_fontawesome_latex` to the LaTeX
+package you want to use:
+
+| `sd_fontawesome_latex` | LaTeX package | Rendering |
+| ---------------------- | ------------- | --------- |
+| `False` / `"none"` (default) | – | icons skipped (one warning per build) |
+| `True` / `"fontawesome"` | [`fontawesome`](https://ctan.org/pkg/fontawesome) | `\faicon{name}` |
+| `"fontawesome5"` | [`fontawesome5`](https://ctan.org/pkg/fontawesome5) | `\faIcon{name}` (see below) |
 
 ```python
-sd_fontawesome_latex = True
+sd_fontawesome_latex = "fontawesome5"
+```
+
+With `"fontawesome5"`, the icon style is mapped to that package's conventions:
+brand icons resolve by name (`\faIcon{github}`), regular-style icons use the
+optional style argument (`\faIcon[regular]{name}`), and solid icons use the
+default (`\faIcon{name}`).
+
+If your theme (or another extension) already loads the `fontawesome5` package,
+set `sd_fontawesome_latex = "fontawesome5"` so both agree, avoiding the LaTeX
+error that comes from mixing the `fontawesome` and `fontawesome5` packages.
+
+```{note}
+The LaTeX packages predate FontAwesome 6 and resolve icons by their **v5**
+(or v4, for `fontawesome`) names. Icons that were renamed in v6 (for example
+`arrow-up-right-from-square`, formerly `external-link-alt`) render in HTML
+but will raise an "icon not found" error when building PDF output — use the
+older name if you need LaTeX support for such an icon.
 ```

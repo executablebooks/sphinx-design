@@ -506,7 +506,9 @@ def test_button_i18n_translated(sphinx_builder):
 
 INVALID_CONFIG_VALUES = {
     "custom_directives": (["not", "a", "dict"], "must be a dictionary"),
-    "fontawesome_latex": ("not-a-bool", "must be of type"),
+    "fontawesome_source": ("invalid", "must be one of"),
+    "fontawesome_cdn_url": (123, "must be of type"),
+    "fontawesome_latex": ("bad-mode", "must be a bool or one of"),
     "tabs_storage_prefix": (123, "must be of type"),
 }
 """An invalidly typed value (and expected warning) for every ``SdConfig`` field."""
@@ -596,8 +598,12 @@ def test_config_warnings_suppressible(sphinx_builder):
 
 def test_config_strict_validation():
     """Directly instantiating ``SdConfig`` with invalid values should raise."""
-    with pytest.raises(TypeError, match="'fontawesome_latex' must be of type"):
-        SdConfig(fontawesome_latex="not-a-bool")
+    with pytest.raises(
+        ValueError, match="'fontawesome_latex' must be a bool or one of"
+    ):
+        SdConfig(fontawesome_latex="bad-mode")
+    with pytest.raises(TypeError, match="'fontawesome_latex' must be a bool or str"):
+        SdConfig(fontawesome_latex=123)
     with pytest.raises(TypeError, match="'custom_directives' must be a dictionary"):
         SdConfig(custom_directives="not-a-dict")
     with pytest.raises(ValueError, match="must have an 'inherit' key"):
@@ -609,6 +615,8 @@ def test_config_toml_round_trip():
     a TOML document containing every field should load and validate.
     """
     toml_str = """\
+    fontawesome_source = "cdn"
+    fontawesome_cdn_url = "https://example.com/fa.css"
     fontawesome_latex = true
     tabs_storage_prefix = "sphinx-design-tab-id-"
 
@@ -625,8 +633,11 @@ def test_config_toml_round_trip():
         "the TOML sample should contain every SdConfig field"
     )
     config = SdConfig(**data)
+    assert config.fontawesome_source == "cdn"
+    assert config.fontawesome_cdn_url == "https://example.com/fa.css"
     assert config.fontawesome_latex is True
     assert config.tabs_storage_prefix == "sphinx-design-tab-id-"
+    assert config.fontawesome_latex_mode == "fontawesome"
     assert config.custom_directives == {
         "dropdown-syntax": {
             "inherit": "dropdown",
