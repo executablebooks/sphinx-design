@@ -28,6 +28,14 @@ def setup_icons(app: Sphinx) -> None:
         app.add_role("material-" + style, MaterialRole(style))
     app.connect("config-inited", add_fontawesome_pkg)
     app.add_node(
+        sd_icon,
+        html=(visit_sd_icon_html, None),
+        latex=(visit_sd_icon_skip, None),
+        text=(visit_sd_icon_skip, None),
+        man=(visit_sd_icon_skip, None),
+        texinfo=(visit_sd_icon_skip, None),
+    )
+    app.add_node(
         fontawesome,
         html=(visit_fontawesome_html, depart_fontawesome_html),
         latex=(visit_fontawesome_latex, None),
@@ -35,6 +43,39 @@ def setup_icons(app: Sphinx) -> None:
         text=(visit_fontawesome_warning, None),
         texinfo=(visit_fontawesome_warning, None),
     )
+
+
+class sd_icon(nodes.inline, nodes.General):  # noqa: N801
+    """Inline node for an SVG icon (octicon or material design).
+
+    The rendered ``<svg>`` markup is carried in the ``svg`` attribute.
+
+    The node deliberately has **no** ``Text`` children, so that ``astext()``
+    returns an empty string. This keeps the SVG markup out of plain-text
+    contexts derived via ``clean_astext`` (toctree labels, the search index,
+    HTML page titles, ...), which would otherwise be polluted by the raw SVG
+    when an icon role starts a section title.
+    """
+
+
+def create_icon_node(svg: str) -> sd_icon:
+    """Create an inline icon node carrying the given SVG markup.
+
+    :param svg: The rendered ``<svg>`` markup for the icon.
+    :return: An :class:`sd_icon` node with no text children.
+    """
+    return sd_icon("", svg=svg)
+
+
+def visit_sd_icon_html(self, node: nodes.Element) -> None:
+    """Write the icon SVG markup directly into the HTML output."""
+    self.body.append(node["svg"])
+    raise nodes.SkipNode
+
+
+def visit_sd_icon_skip(self, node: nodes.Element) -> None:
+    """Skip the (decorative) icon for non-HTML builders."""
+    raise nodes.SkipNode
 
 
 @lru_cache(1)
@@ -128,7 +169,7 @@ class OcticonRole(SphinxRole):
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
             return [prb], [msg]
-        node = nodes.raw("", nodes.Text(svg), format="html")
+        node = create_icon_node(svg)
         self.set_source_info(node)
         return [node], []
 
@@ -164,11 +205,7 @@ class AllOcticons(SdDirective):
             cell += nodes.literal(icon, icon)
             cell = nodes.entry()
             row += cell
-            cell += nodes.raw(
-                "",
-                get_octicon(icon, classes=classes),
-                format="html",
-            )
+            cell += create_icon_node(get_octicon(icon, classes=classes))
         return [table]
 
 
@@ -327,6 +364,6 @@ class MaterialRole(SphinxRole):
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
             return [prb], [msg]
-        node = nodes.raw("", nodes.Text(svg), format="html")
+        node = create_icon_node(svg)
         self.set_source_info(node)
         return [node], []
