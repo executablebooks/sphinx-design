@@ -53,6 +53,49 @@ The syntax is the same as for the `ref` role.
 ````
 `````
 
+### Badge tooltips
+
+Any badge can be given a tooltip (shown on hover, via the HTML `title`
+attribute) by appending a `; tooltip` suffix to its text.
+This works for every badge family:
+
+{bdg-primary}`stable ; A released, supported version`
+{bdg-link-info}`docs <https://example.com> ; Opens the documentation`
+{bdg-ref-primary}`badges <badges> ; Jump to the badges section`
+
+````{tab-set-code}
+```markdown
+{bdg-primary}`stable ; A released, supported version`
+{bdg-link-info}`docs <https://example.com> ; Opens the documentation`
+{bdg-ref-primary}`badges <badges> ; Jump to the badges section`
+```
+```rst
+:bdg-primary:`stable ; A released, supported version`
+:bdg-link-info:`docs <https://example.com> ; Opens the documentation`
+:bdg-ref-primary:`badges <badges> ; Jump to the badges section`
+```
+````
+
+The tooltip is the text after the **last** unescaped semicolon; both the badge
+text and the tooltip are stripped of surrounding whitespace.
+To include a literal semicolon in the badge text, escape it as `\;`
+(for example `` {bdg}`step 1\; step 2` ``); a trailing bare `;` (with nothing
+after it) is not treated as a tooltip and is kept in the badge text.
+
+Because semicolons are valid in URLs and reference targets, the link and
+reference badges (`bdg-link-*`, `bdg-ref-*`) only recognise the tooltip suffix
+after the explicit `text <target>` form -- a bare target such as
+`` {bdg-link-primary}`https://example.com/a;b` `` is never split. To add a
+tooltip to a link/ref badge, use the explicit form:
+`` {bdg-link-primary}`docs <https://example.com> ; Opens the docs` ``.
+A `bdg-ref` tooltip overrides the reference's automatic title.
+
+```{warning}
+`title` tooltips are **not** accessible to keyboard or touch users, and are
+not surfaced by all screen readers. Do not put essential information in a
+tooltip alone -- keep it in the visible badge text (or nearby prose) as well.
+```
+
 See [Bootstrap badges](https://getbootstrap.com/docs/5.0/components/badge/) for more information, and related [Material Design chips](https://material.io/components/chip).
 
 (buttons)=

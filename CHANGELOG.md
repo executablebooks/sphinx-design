@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- ✨ NEW: Badge roles accept a trailing `` ; tooltip `` suffix, rendered as a
+  native HTML `title` tooltip on all `bdg-*` families; for the link/ref badges
+  the suffix applies only after the explicit `text <target>` form (semicolons
+  are valid in URLs and reference targets), and a literal `;` in badge text is
+  escaped as `` \; `` ({pr}`286`, {issue}`81`)
 - ✨ NEW: FontAwesome v6 roles (`fa-solid`/`fa-brands`/`fa-regular`) and
   declarative CSS loading via the new `sd_fontawesome_source` /
   `sd_fontawesome_cdn_url` options (the supported path for FontAwesome Pro
