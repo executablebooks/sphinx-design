@@ -53,6 +53,7 @@ All file/line references are against commit `bbaf94a` (post v0.7.0).
 | 22 | [testing-module](22-testing-module.md) | feature | #260 | — |
 | 23 | [js-testing](23-js-testing.md) | infra | — | 11 helpful |
 | 24 | [packaging-1.0](24-packaging-1-0.md) | release | — | most others |
+| 25 | [drop-sass](25-drop-sass.md) | refactor/infra | stale browser-support docs; sass toolchain | 10, 20 |
 
 ## Execution plan
 
@@ -80,6 +81,13 @@ share files and must land serially, in the order given.
 - Track D: 22 testing-module
 - Track E (tabs): 10 a11y-focus-and-aria (CSS + transform) ∥ 11
   tabs-js-improvements (JS only) — different files, safe in parallel
+
+**Phase 2.5 — CSS toolchain** *(after the Phase 2 style PRs 10/20; before any
+Phase 3 style work)*
+- 25 drop-sass — plain CSS + Python utility generator, Baseline support
+  policy, prefix purge. Lands alone in a quiet stylesheet window so its
+  rule-set equivalence check stays provable. Phase 3 briefs then author
+  styles in the new system (plain CSS + generator data), not SCSS.
 
 **Phase 3 — components & redesign** *(after 09, since 16 reworks the same
 card code)*
@@ -110,11 +118,12 @@ card code)*
 
 ### The compiled-CSS rule (important for parallel agents)
 
-Briefs 10, 14, 17, 18, 19 all change SCSS, and the committed minified
-artifact (`sphinx_design/compiled/style.min.css`, moved by brief 04) will
+Briefs 10, 14, 17, 18, 19 all change styles, and the committed minified
+artifact (`sphinx_design/static/sphinx-design.min.css` since brief 04) will
 conflict on **every** cross-merge. Never hand-merge it: after any rebase,
-rerun `npm run css` (or `pre-commit run --all css`) and commit the freshly
-regenerated file. Treat the SCSS sources as the merge surface, the compiled
+regenerate it (before brief 25: `npm run css` / `pre-commit run --all css`;
+after brief 25: the Python generator hook) and commit the freshly
+regenerated file. Treat the style sources as the merge surface, the compiled
 file as derived output.
 
 ## Consciously not briefed (backlog — tracked in the roadmap issue)
