@@ -10,7 +10,7 @@ from sphinx.transforms import SphinxTransform
 from .article_info import setup_article_info
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
-from .config import setup_sd_config
+from .config import get_sd_config, setup_sd_config
 from .dropdown import setup_dropdown
 from .grids import setup_grids
 from .icons import setup_icons
@@ -79,7 +79,16 @@ def add_static_assets(app: Sphinx) -> None:
         return
     app.config.html_static_path.append(str(STATIC_DIR))
     app.add_css_file("sphinx-design.min.css")
-    app.add_js_file("design-tabs.js")
+    # deliver the (configurable) tab-storage key prefix declaratively,
+    # as a data attribute on the script tag (read by design-tabs.js at startup)
+    sd_config = get_sd_config(app.env)
+    js_attributes: dict[str, str] = {
+        "data-sd-tabs-storage-prefix": sd_config.tabs_storage_prefix
+    }
+    # the ignore is because mypy checks the unpacked values against the
+    # explicit ``priority: int`` parameter, but they only ever land in
+    # ``**kwargs`` (the HTML attributes)
+    app.add_js_file("design-tabs.js", **js_attributes)  # type: ignore[arg-type]
 
 
 def visit_container(self, node: nodes.Node):

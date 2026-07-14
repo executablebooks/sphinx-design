@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- 🐛 FIX: Synced tabs stay in sync when activated by click-and-drag or keyboard,
+  by syncing on the radio input's `change` event rather than a label click
+  ({pr}`284`, {issue}`46`)
+- ✨ NEW: A URL fragment that targets a tab (e.g. `page.html#tab-name`), or an
+  element inside a tab panel, now opens that tab (both on load and on
+  `hashchange`) ({pr}`284`, {issue}`239`)
+- 👌 IMPROVE: Tab selections now persist across browsing sessions, via
+  `localStorage` instead of `sessionStorage` (a behaviour change), and the
+  storage key prefix is configurable with the new `sd_tabs_storage_prefix`
+  option (set it to an empty string to disable persistence) ({pr}`284`,
+  {issue}`103`)
 - 👌 IMPROVE: Restore keyboard focus rings on tab labels, dropdown summaries,
   buttons and stretched-link cards, using `:focus-visible` so they are visible
   for keyboard users but not shown on mouse click, thanks to {user}`gabalafou`

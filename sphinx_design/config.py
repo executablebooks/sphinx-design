@@ -172,6 +172,16 @@ class SdConfig:
             "help": "Render fontawesome icons in LaTeX output",
         },
     )
+    tabs_storage_prefix: str = dc.field(
+        default="sphinx-design-tab-id-",
+        metadata={
+            "validator": instance_of(str),
+            "help": (
+                "localStorage key prefix for persisting synced tab selections "
+                "(an empty string disables persistence)"
+            ),
+        },
+    )
 
     def __post_init__(self) -> None:
         validate_fields(self)

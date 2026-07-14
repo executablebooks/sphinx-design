@@ -507,6 +507,7 @@ def test_button_i18n_translated(sphinx_builder):
 INVALID_CONFIG_VALUES = {
     "custom_directives": (["not", "a", "dict"], "must be a dictionary"),
     "fontawesome_latex": ("not-a-bool", "must be of type"),
+    "tabs_storage_prefix": (123, "must be of type"),
 }
 """An invalidly typed value (and expected warning) for every ``SdConfig`` field."""
 
@@ -609,6 +610,7 @@ def test_config_toml_round_trip():
     """
     toml_str = """\
     fontawesome_latex = true
+    tabs_storage_prefix = "sphinx-design-tab-id-"
 
     [custom_directives.dropdown-syntax]
     inherit = "dropdown"
@@ -624,6 +626,7 @@ def test_config_toml_round_trip():
     )
     config = SdConfig(**data)
     assert config.fontawesome_latex is True
+    assert config.tabs_storage_prefix == "sphinx-design-tab-id-"
     assert config.custom_directives == {
         "dropdown-syntax": {
             "inherit": "dropdown",
