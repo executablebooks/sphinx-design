@@ -220,6 +220,9 @@ def depart_tab_input(self, node):
 
 def visit_tab_label(self, node):
     attributes = {"for": node["input_id"]}
+    if "aria_controls" in node:
+        # programmatically associate the label with the content panel it toggles
+        attributes["aria-controls"] = node["aria_controls"]
     if "sync_id" in node and "sync_group" in node:
         attributes["data-sync-id"] = node["sync_id"]
         attributes["data-sync-group"] = node["sync_group"]
@@ -318,6 +321,13 @@ class TabSetHtmlTransform(SphinxPostTransform):
                     label_node["sync_id"] = tab_label["sync_id"]
                 label_node.source, label_node.line = tab_item.source, tab_item.line
                 children.append(label_node)
+
+                # give the content panel a stable id and point the label at it
+                # via aria-controls; prepend so any existing ids (e.g. anchors
+                # propagated from a preceding hyperlink target) still resolve
+                tab_content_identity = f"{tab_item_identity}-content"
+                tab_content["ids"].insert(0, tab_content_identity)
+                label_node["aria_controls"] = tab_content_identity
 
                 # add content
                 children.append(tab_content)

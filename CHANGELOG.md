@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- 👌 IMPROVE: Restore keyboard focus rings on tab labels, dropdown summaries,
+  buttons and stretched-link cards, using `:focus-visible` so they are visible
+  for keyboard users but not shown on mouse click, thanks to {user}`gabalafou`
+  in {pr}`230` (carried in {pr}`283`)
+- 👌 IMPROVE: Each tab label now carries an `aria-controls` attribute
+  referencing its content panel's id, establishing the programmatic
+  relationship in the accessibility tree (note: this is not a full WAI-ARIA
+  tabs pattern; assistive-technology support for `aria-controls` varies)
+  ({pr}`283`, {issue}`30`)
 - 🐛 FIX: `card`/`grid-item-card` `:link:` no longer strips whitespace from reference targets (and lowercases them for `link-type: ref`, matching the `:ref:` role), completing the fix for {issue}`110` ({pr}`282`)
 - 🐛 FIX: `button-ref` no longer strips whitespace from reference targets, so
   multi-word labels (e.g. from `autosectionlabel`) resolve correctly
