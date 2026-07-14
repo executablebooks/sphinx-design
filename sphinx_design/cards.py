@@ -6,6 +6,7 @@ from docutils.parsers.rst import directives
 from docutils.statemachine import StringList
 from sphinx import addnodes
 from sphinx.application import Sphinx
+from sphinx.util import ws_re
 from sphinx.util.docutils import SphinxDirective
 from sphinx.util.logging import getLogger
 
@@ -61,7 +62,7 @@ class CardDirective(SdDirective):
         "img-bottom": directives.uri,
         "img-background": directives.uri,
         "img-alt": directives.unchanged,
-        "link": directives.uri,
+        "link": directives.unchanged_required,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
         "shadow": make_choice(["none", "sm", "md", "lg"]),
@@ -171,34 +172,70 @@ class CardDirective(SdDirective):
         if "link" in options:
             link_container = PassthroughTextElement()
             _classes = ["sd-stretched-link", "sd-hide-link-text"]
-            _rawtext = options.get("link-alt") or options["link"]
-            if options.get("link-type", "url") == "url":
+            link_type = options.get("link-type", "url")
+            # the raw (un-normalised) target, kept for user-visible fallback text
+            link_raw = options["link"]
+            link_target = cls.get_link_target(link_raw, link_type)
+            _rawtext = options.get("link-alt") or link_raw
+            if link_type == "url":
                 link = nodes.reference(
                     _rawtext,
                     "",
                     nodes.inline(_rawtext, _rawtext),
-                    refuri=options["link"],
+                    refuri=link_target,
                     classes=_classes,
                 )
             else:
-                options = {
+                ref_options = {
                     # TODO the presence of classes raises an error if the link cannot be found
                     "classes": _classes,
-                    "reftarget": options["link"],
+                    "reftarget": link_target,
                     "refdoc": inst.env.docname,
-                    "refdomain": "" if options["link-type"] == "any" else "std",
-                    "reftype": options["link-type"],
+                    "refdomain": "" if link_type == "any" else "std",
+                    "reftype": link_type,
                     "refexplicit": "link-alt" in options,
                     "refwarn": True,
                 }
                 link = addnodes.pending_xref(
-                    _rawtext, nodes.inline(_rawtext, _rawtext), **options
+                    _rawtext, nodes.inline(_rawtext, _rawtext), **ref_options
                 )
             inst.set_source_info(link)
             link_container += link
             container.append(link_container)
 
         return card
+
+    @staticmethod
+    def get_link_target(target: str, link_type: str) -> str:
+        """Normalise a ``link`` option value into a reference target.
+
+        The ``link`` option is captured verbatim (``unchanged_required``) so
+        that whitespace in reference targets is preserved; how it is normalised
+        then depends on ``link-type``:
+
+        - ``url`` (the default): all whitespace is removed, exactly as
+          :func:`docutils.parsers.rst.directives.uri` did before -- URLs cannot
+          contain unescaped whitespace.
+        - ``ref``: internal whitespace runs are collapsed to single spaces and
+          the target is lowercased, mirroring Sphinx's ``:ref:`` role
+          (``XRefRole(lowercase=True)``); std-domain labels are stored
+          lowercased, so a multi-word, Title-Case heading (e.g. one generated
+          by ``sphinx.ext.autosectionlabel``) can be pasted verbatim.
+        - ``doc`` / ``any``: internal whitespace runs are collapsed, but case is
+          preserved (docnames are case-sensitive; the ``any`` resolver
+          lowercases internally where needed).
+
+        :param target: The raw ``link`` option value.
+        :param link_type: The ``link-type`` option
+            (``url``/``ref``/``doc``/``any``).
+        :return: The normalised reference target.
+        """
+        if link_type == "url":
+            return directives.uri(target)
+        target = ws_re.sub(" ", target).strip()
+        if link_type == "ref":
+            return target.lower()
+        return target
 
     @staticmethod
     def split_content(content: StringList, offset: int) -> CardContent:

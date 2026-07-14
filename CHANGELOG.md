@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 🐛 FIX: `card`/`grid-item-card` `:link:` no longer strips whitespace from reference targets (and lowercases them for `link-type: ref`, matching the `:ref:` role), completing the fix for {issue}`110` ({pr}`282`)
 - 🐛 FIX: `button-ref` no longer strips whitespace from reference targets, so
   multi-word labels (e.g. from `autosectionlabel`) resolve correctly
   ({pr}`281`, {issue}`110`)
