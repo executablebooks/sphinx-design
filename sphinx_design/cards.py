@@ -246,8 +246,11 @@ class CardDirective(SdDirective):
     @staticmethod
     def add_card_child_classes(node):
         """Add classes to specific child nodes."""
-        for para in node.findall(nodes.paragraph):
-            para["classes"] = [*para.get("classes", []), "sd-card-text"]
+        # only stamp direct child paragraphs of the component (see #40),
+        # not paragraphs nested inside admonitions, lists, nested cards, etc.
+        for para in node.children:
+            if isinstance(para, nodes.paragraph):
+                para["classes"] = [*para.get("classes", []), "sd-card-text"]
         # for title in node.findall(nodes.title):
         #     title["classes"] = ([] if "classes" not in title else title["classes"]) + [
         #         "sd-card-title"

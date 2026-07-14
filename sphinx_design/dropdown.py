@@ -229,10 +229,11 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=body_children,
             )
             if use_card:
-                for para in body_node.findall(nodes.paragraph):
-                    para["classes"] = ([] if "classes" in para else para["classes"]) + [
-                        "sd-card-text"
-                    ]
+                # only stamp direct child paragraphs of the body (see #40),
+                # and append the class rather than replacing existing classes
+                for para in body_node.children:
+                    if isinstance(para, nodes.paragraph):
+                        para["classes"] = [*para.get("classes", []), "sd-card-text"]
             newnode += body_node
             # newnode += open_marker
             node.replace_self(newnode)
