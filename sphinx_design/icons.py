@@ -325,7 +325,8 @@ def visit_fontawesome_latex(self, node):
     else:
         logger.warning(
             "Fontawesome icons not included in LaTeX output, "
-            f"consider 'sd_fontawesome_latex=True' [{WARNING_TYPE}.fa-build]",
+            "consider 'sd_fontawesome_latex=\"fontawesome5\"' "
+            f"[{WARNING_TYPE}.fa-build]",
             location=node,
             type=WARNING_TYPE,
             subtype="fa-build",

@@ -9,10 +9,28 @@ project = "Sphinx Design"
 copyright = "2021, Executable Book Project"
 author = "Executable Book Project"
 
-extensions = ["myst_parser", "sphinx_design", "sphinx.ext.extlinks"]
+extensions = [
+    "myst_parser",
+    "sphinx_design",
+    "sphinx.ext.extlinks",
+    # SVG images must be converted for the LaTeX/PDF build
+    "sphinx.ext.imgconverter",
+]
 
+# suppresses the warning for builders with no fontawesome support (e.g. man)
 suppress_warnings = ["design.fa-build"]
-sd_fontawesome_latex = True
+sd_fontawesome_latex = "fontawesome5"
+# pdflatex errors on emoji (e.g. in the changelog); xelatex only warns for
+# missing glyphs. makeindex replaces xindy, which CI TeX images lack.
+latex_engine = "xelatex"
+latex_use_xindy = False
+latex_elements = {
+    # Sphinx >=9 auto-selects the newest FontAwesome LaTeX package installed
+    # for its admonition icons (fontawesome7 on full TeX Live 2025+), which
+    # hard-clashes with the fontawesome5 package sd_fontawesome_latex loads.
+    # Pin Sphinx's icons to the same package so there is a single FA load.
+    "sphinxsetup": "iconpackage=fontawesome5",
+}
 sd_custom_directives = {
     "dropdown-syntax": {
         "inherit": "dropdown",
