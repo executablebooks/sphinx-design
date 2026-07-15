@@ -120,13 +120,16 @@ card code)*
 
 ### The compiled-CSS rule (important for parallel agents)
 
-Briefs 10, 14, 17, 18, 19 all change styles, and the committed minified
+Briefs 14, 17, 18, 19 all change styles, and the committed minified
 artifact (`sphinx_design/static/sphinx-design.min.css` since brief 04) will
 conflict on **every** cross-merge. Never hand-merge it: after any rebase,
-regenerate it (before brief 25: `npm run css` / `pre-commit run --all css`;
-after brief 25: the Python generator hook) and commit the freshly
-regenerated file. Treat the style sources as the merge surface, the compiled
-file as derived output.
+regenerate it — `python tools/generate_css.py` (equivalently
+`pre-commit run --all-files css`; brief 25 replaced the npm/sass pipeline) —
+and commit the freshly regenerated file. Treat `style/*.css` +
+`style/design.toml` as the merge surface, the compiled file as derived
+output. When two branches both add styles, hand CSS merges normally and
+generated-utility additions merge in `design.toml`/`tools/generate_css.py`;
+the artifact is always rebuilt, never merged.
 
 ## Consciously not briefed (backlog — tracked in the roadmap issue)
 
