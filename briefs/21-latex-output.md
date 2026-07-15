@@ -73,6 +73,23 @@ PR #264) supports `latex`:
   extend it to run `latexmk`? NO — keep CI TeX-free; the format build
   already catches writer errors).
 
+
+## Test strategy (two tiers — decided 2026-07)
+
+1. **PDF-compile smoke in CI** (landing separately, before this brief): a
+   `doc-builds-pdf` job compiling the latex docs build via
+   `xu-cheng/latex-action` (myst-parser's pattern; consider
+   `latex_use_xindy = False` to avoid its xindy workaround). This catches
+   compile-time breakage (package clashes like #242, undefined icons) that
+   `-b latex` output checks cannot. The docs dogfood `sd_fontawesome_latex`,
+   so the FA LaTeX path is exercised on every PR.
+2. **Systematic per-component `.tex` regressions land WITH this brief, not
+   before**: broad `.tex` fixtures written today would lock in the known-bad
+   degradation (dropdowns → `\subsubsection*`, etc.) as golden output. When
+   this brief's LaTeX pass reworks the rendering, per-component `.tex`
+   regression fixtures become its acceptance harness (following the
+   `\usepackage{fontawesome5}`/`\faIcon` assertions started in #285).
+
 ## Acceptance criteria
 
 - #107: dropdown renders as a titled box, not a heading; PDF bookmarks/toc
