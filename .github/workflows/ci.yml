@@ -94,6 +94,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[rtd]
+    - name: Install SVG conversion tools (for sphinx.ext.imgconverter)
+      if: matrix.format == 'latex'
+      run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends imagemagick librsvg2-bin
     - name: Build documentation
       run: sphinx-build -nW --keep-going -b ${{ matrix.format }} docs/ docs/_build/${{ matrix.format }}
 
@@ -119,7 +122,7 @@ jobs:
     - name: Build LaTeX sources
       run: sphinx-build -nW --keep-going -b latex docs/ docs/_build/latex
     - name: Compile PDF
-      uses: xu-cheng/latex-action@v2
+      uses: xu-cheng/latex-action@v4
       with:
         working_directory: docs/_build/latex
         root_file: sphinxdesign.tex
