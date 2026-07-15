@@ -11,11 +11,11 @@
   `-highlight` shade instead of the shade being frozen at build time. Also
   purges ~150 dead vendor prefixes (IE `-ms-flex*`, and `-moz-`/`-webkit-`
   animation, box-sizing and user-select duplicates) that no supported browser
-  needs ({pr}`PRNUM`)
+  needs ({pr}`290`)
 - 📚 DOCS: Document the browser support policy as
   [Baseline Widely Available](https://web.dev/baseline) (evergreen
   Chrome/Edge/Firefox/Safari, no Internet Explorer), replacing the stale 2021
-  Bootstrap browserslist mirror ({pr}`PRNUM`)
+  Bootstrap browserslist mirror ({pr}`290`)
 - 🔧 MAINTAIN: CI now compiles the documentation's LaTeX output to PDF
   (exercising the `sd_fontawesome_latex="fontawesome5"` icon path, which the
   docs now use), and the fa-build hint recommends `"fontawesome5"` over the
