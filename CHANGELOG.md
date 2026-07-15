@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- ✨ NEW: `sd_fontawesome_version` makes icon role names version-agnostic:
+  any spelling (`fas`, `fa-solid`, ...) can emit the FontAwesome `"4"`, `"5"`
+  or `"6"` class scheme, so upgrading FontAwesome is a one-line `conf.py`
+  change; the default `"as-named"` keeps emitting the role name verbatim
+  ({pr}`288`, {issue}`174`)
 - ✨ NEW: Badge roles accept a trailing `` ; tooltip `` suffix, rendered as a
   native HTML `title` tooltip on all `bdg-*` families; for the link/ref badges
   the suffix applies only after the explicit `text <target>` form (semicolons

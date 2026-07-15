@@ -9,7 +9,11 @@ Covers:
 - ``sd_fontawesome_latex`` selects the LaTeX package, including the new
   ``"fontawesome5"`` mode (``\\faIcon``) and byte-compatible legacy ``True``
   behaviour (``fontawesome`` package, ``\\faicon``) (#242);
-- the "icons not in LaTeX output" warning is throttled to once per build.
+- the "icons not in LaTeX output" warning is throttled to once per build;
+- ``sd_fontawesome_version`` translates every role spelling to the configured
+  FontAwesome class scheme (``"4"``/``"5"``/``"6"``), with the default
+  ``"as-named"`` emitting the role name verbatim (parity with previous
+  releases), and without affecting LaTeX output.
 
 Written to also run under ``py311-no-myst``: the core assertions use
 reStructuredText, and MyST variants are guarded by ``MYST_PARAM``.
@@ -244,3 +248,143 @@ def test_latex_disabled_warns_once(value, sphinx_builder):
     tex = _latex_tex(builder)
     assert "\\faicon{" not in tex
     assert "\\faIcon{" not in tex
+
+
+#: One icon per role spelling (distinct names, so doctree lookups don't clash).
+ALL_FA_ROLES = {
+    "fa": "star",
+    "fas": "rocket",
+    "fab": "github",
+    "far": "bell",
+    "fa-solid": "fire",
+    "fa-brands": "gitkraken",
+    "fa-regular": "clock",
+}
+
+#: Expected leading class per role spelling, for every version scheme.
+VERSION_LEADING_CLASS = {
+    "as-named": {role: role for role in ALL_FA_ROLES},
+    "4": dict.fromkeys(ALL_FA_ROLES, "fa"),
+    "5": {
+        "fa": "fas",
+        "fas": "fas",
+        "fa-solid": "fas",
+        "fab": "fab",
+        "fa-brands": "fab",
+        "far": "far",
+        "fa-regular": "far",
+    },
+    "6": {
+        "fa": "fa-solid",
+        "fas": "fa-solid",
+        "fa-solid": "fa-solid",
+        "fab": "fa-brands",
+        "fa-brands": "fa-brands",
+        "far": "fa-regular",
+        "fa-regular": "fa-regular",
+    },
+}
+
+
+def _build_all_role_spellings(sphinx_builder, fmt, conf_extra=None):
+    """Build a one-page project using every fontawesome role spelling."""
+    conf = {"extensions": ["sphinx_design"], **(conf_extra or {})}
+    if fmt == "rst":
+        builder = sphinx_builder(conf_kwargs=conf)
+        body = ", ".join(f":{name}:`{icon}`" for name, icon in ALL_FA_ROLES.items())
+        builder.src_path.joinpath("index.rst").write_text(
+            f"Title\n=====\n\nIcons {body}.\n", encoding="utf8"
+        )
+    else:
+        conf = {
+            "extensions": ["myst_parser", "sphinx_design"],
+            "myst_enable_extensions": ["colon_fence"],
+            **(conf_extra or {}),
+        }
+        builder = sphinx_builder(conf_kwargs=conf)
+        body = ", ".join(f"{{{name}}}`{icon}`" for name, icon in ALL_FA_ROLES.items())
+        builder.src_path.joinpath("index.md").write_text(
+            f"# Title\n\nIcons {body}.\n", encoding="utf8"
+        )
+    return builder
+
+
+@pytest.mark.parametrize("version", ["as-named", "4", "5", "6"])
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_version_class_mapping(
+    fmt, version, sphinx_builder: Callable[..., SphinxBuilder]
+):
+    """Each role spelling emits the exact class list for the configured version."""
+    builder = _build_all_role_spellings(
+        sphinx_builder, fmt, {"sd_fontawesome_version": version}
+    )
+    builder.build()
+    by_icon = _fa_by_icon(builder.get_doctree("index"))
+    for role, icon in ALL_FA_ROLES.items():
+        expected = [VERSION_LEADING_CLASS[version][role], f"fa-{icon}"]
+        assert by_icon[icon] == expected, f"role {role!r} with version {version!r}"
+
+
+@pytest.mark.parametrize("explicit", [False, True], ids=["default", "explicit"])
+def test_version_as_named_parity(
+    explicit, sphinx_builder: Callable[..., SphinxBuilder]
+):
+    """The default (and explicit) ``"as-named"`` emits the role name verbatim.
+
+    The asserted spans are byte-identical to those produced by sphinx-design
+    before ``sd_fontawesome_version`` existed (verified against a build from
+    ``main``), for every one of the seven role spellings.
+    """
+    conf = {"sd_fontawesome_version": "as-named"} if explicit else None
+    builder = _build_all_role_spellings(sphinx_builder, "rst", conf)
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    for role, icon in ALL_FA_ROLES.items():
+        assert f'<span class="{role} fa-{icon}"' in html
+    # the doctree carries exactly the same (verbatim) classes
+    by_icon = _fa_by_icon(builder.get_doctree("index"))
+    for role, icon in ALL_FA_ROLES.items():
+        assert by_icon[icon] == [role, f"fa-{icon}"]
+
+
+def test_version_invalid_falls_back(sphinx_builder: Callable[..., SphinxBuilder]):
+    """An invalid ``sd_fontawesome_version`` warns and falls back to as-named."""
+    builder = _build_all_role_spellings(
+        sphinx_builder, "rst", {"sd_fontawesome_version": "7"}
+    )
+    builder.build(assert_pass=False)
+    assert "sd_fontawesome_version: " in builder.warnings
+    assert "must be one of" in builder.warnings
+    by_icon = _fa_by_icon(builder.get_doctree("index"))
+    for role, icon in ALL_FA_ROLES.items():
+        assert by_icon[icon] == [role, f"fa-{icon}"]
+
+
+@pytest.mark.parametrize("version", ["as-named", "4", "5", "6"])
+def test_version_latex_unaffected(version, sphinx_builder):
+    """``sd_fontawesome_version`` does not change LaTeX output — for ANY value.
+
+    The semantic style travels on the node (``icon_style``), so the
+    ``fontawesome5`` LaTeX rendering is identical regardless of the HTML
+    class scheme — including ``"4"``, whose HTML classes collapse all styles
+    to ``fa``.
+    """
+    builder = sphinx_builder(
+        buildername="latex",
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "sd_fontawesome_latex": "fontawesome5",
+            "sd_fontawesome_version": version,
+        },
+    )
+    builder.src_path.joinpath("index.rst").write_text(
+        "Title\n=====\n\nIcons :fas:`rocket`, :fab:`github`, :far:`bell`.\n",
+        encoding="utf8",
+    )
+    builder.build(assert_pass=False)
+    tex = _latex_tex(builder)
+    assert "\\usepackage{fontawesome5}" in tex
+    assert "\\faIcon{rocket}" in tex
+    assert "\\faIcon{github}" in tex
+    assert "\\faIcon[regular]{bell}" in tex
+    assert "not included in LaTeX output" not in builder.warnings

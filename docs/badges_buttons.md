@@ -283,15 +283,51 @@ Not all icons are available for each flavor, but most are. Instead of displaying
 
 ### FontAwesome Icons
 
-FontAwesome icons are added via the FontAwesome CSS classes, with the
-`fa-solid`, `fa-brands` and `fa-regular` roles (the FontAwesome v6 style names):
+FontAwesome icons are added via the FontAwesome CSS classes.
+The role name selects the icon *style* — solid (`fa-solid`/`fas`/`fa`),
+brands (`fa-brands`/`fab`) or regular (`fa-regular`/`far`) — and you can pick
+any spelling:
 
 - A solid icon {fa-solid}`rocket;sd-text-primary`, some more text.
 - A brand icon {fa-brands}`github`, some more text.
 - A regular icon {fa-regular}`bell;sd-text-warning`, some more text.
 
-Each role emits exactly the classes it is named after: the `fa-solid` role
-applied to `rocket` produces `<span class="fa-solid fa-rocket">`.
+By default each role emits exactly the classes it is named after: the
+`fa-solid` role applied to `rocket` produces
+`<span class="fa-solid fa-rocket">`, while the `fas` role produces
+`<span class="fas fa-rocket">`.
+
+#### Matching your FontAwesome version
+
+Set `sd_fontawesome_version` to the major version of the FontAwesome CSS you
+load, and every role spelling is translated to that version's class scheme —
+so the role names are version-agnostic: write whichever spelling you prefer,
+and upgrading (or downgrading) FontAwesome is a one-line `conf.py` change:
+
+```python
+sd_fontawesome_version = "6"
+```
+
+| Roles | Style | `"4"` | `"5"` | `"6"` |
+| ----- | ----- | ----- | ----- | ----- |
+| `fa`, `fas`, `fa-solid` | solid | `fa` | `fas` | `fa-solid` |
+| `fab`, `fa-brands` | brands | `fa` | `fab` | `fa-brands` |
+| `far`, `fa-regular` | regular | `fa` | `far` | `fa-regular` |
+
+The default, `"as-named"`, emits the role name verbatim as the leading class
+(the behaviour shown above, and of previous sphinx-design versions).
+
+```{note}
+The bare `fa` role maps to *solid* under `"5"`/`"6"` (FontAwesome 4's single
+style became solid in v5). Conversely, `"4"` collapses all style distinctions
+to `fa` in the HTML classes, since FontAwesome 4 had no style prefixes —
+LaTeX output is unaffected (it always uses the role's own style).
+
+Only the leading *style* class is translated — icon **names** that FontAwesome
+renamed between versions (e.g. v4 `external-link` vs v6
+`arrow-up-right-from-square`) are emitted as written, just like in the LaTeX
+note below.
+```
 
 #### Loading the FontAwesome CSS
 
@@ -345,26 +381,29 @@ There can only be a maximum of 1 `;` in the roles' arguments
 
 If you use a [FontAwesome Pro kit](https://fontawesome.com/kits), keep
 `sd_fontawesome_source = "none"` (do **not** also load the free CDN, whose
-own font-face would fight your kit), load the kit as usual, and use the v6
-role names above (`fa-solid`/`fa-brands`/`fa-regular`), which emit exactly the
-classes a Pro kit expects.
+own font-face would fight your kit), load the kit as usual, and either use the
+v6 role names (`fa-solid`/`fa-brands`/`fa-regular`) directly, or set
+`sd_fontawesome_version = "6"`, which makes every spelling — including the
+concise `fas`/`fab`/`far` — emit exactly the classes a Pro kit expects.
 
 #### Concise role names
 
 The `fas`, `fab` and `far` roles (and `fa`, which FontAwesome itself
-deprecated in v5) are equally supported, with no plans to remove them. Each
-role name is emitted verbatim as the leading CSS class, so these produce the
-v4/v5 class scheme (`fas fa-...`):
+deprecated in v5) are equally supported, with no plans to remove them. By
+default (`sd_fontawesome_version = "as-named"`) each role name is emitted
+verbatim as the leading CSS class, so these produce the v4/v5 class scheme
+(`fas fa-...`):
 
 - An icon {fas}`spinner;sd-text-primary`, some more text.
 - An icon {fab}`github`, some more text.
 - An icon {far}`bell`, some more text.
 
-Pick whichever spelling matches the FontAwesome CSS you load: the free CDN
-builds define both class schemes, so the concise names work fine there. The
-`fa-solid`/`fa-brands`/`fa-regular` names are only *required* for FontAwesome
-v6+ setups that drop the compatibility aliases — most notably Pro kits — and
-have the side benefit of matching what fontawesome.com shows for each icon.
+The free CDN builds define both class schemes, so the concise names work fine
+there as-is. And combined with `sd_fontawesome_version`, the concise names are
+future-proof for *any* setup: keep writing `fas`/`fab`/`far` and set the
+version knob to match the CSS you load — no source churn when FontAwesome (or
+your theme's bundled copy) moves on. The `fa-solid`/`fa-brands`/`fa-regular`
+spellings remain handy for matching what fontawesome.com shows for each icon.
 Note that not all regular style icons are free; `far`/`fa-regular` only work
 with the free ones.
 
@@ -387,7 +426,9 @@ sd_fontawesome_latex = "fontawesome5"
 With `"fontawesome5"`, the icon style is mapped to that package's conventions:
 brand icons resolve by name (`\faIcon{github}`), regular-style icons use the
 optional style argument (`\faIcon[regular]{name}`), and solid icons use the
-default (`\faIcon{name}`).
+default (`\faIcon{name}`). Note that `sd_fontawesome_version` only selects the
+*HTML* class scheme; LaTeX rendering is driven by the role's style and
+`sd_fontawesome_latex` alone.
 
 If your theme (or another extension) already loads the `fontawesome5` package,
 set `sd_fontawesome_latex = "fontawesome5"` so both agree, avoiding the LaTeX

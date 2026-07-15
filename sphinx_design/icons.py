@@ -219,10 +219,13 @@ class fontawesome(nodes.Element, nodes.General):  # noqa: N801
     """Node for rendering fontawesome icon."""
 
 
-#: Map a fontawesome role name (the node's leading CSS class) to the semantic
-#: style used for the ``fontawesome5`` LaTeX package. ``fa`` (v4) and ``fas``
-#: are solid, ``fab`` brands, ``far`` regular; the v6 role names are explicit.
-FA_LATEX_STYLES = {
+#: Map a fontawesome role name (also the node's leading CSS class, under the
+#: default ``as-named`` scheme) to the semantic icon style. ``fa`` (v4) and
+#: ``fas`` are solid, ``fab`` brands, ``far`` regular; the v6 role names are
+#: explicit. Used both to translate role names between FontAwesome class
+#: schemes (``sd_fontawesome_version``) and for the ``fontawesome5`` LaTeX
+#: package's style conventions.
+FA_ROLE_STYLES = {
     "fa": "solid",
     "fas": "solid",
     "fab": "brands",
@@ -230,6 +233,16 @@ FA_LATEX_STYLES = {
     "fa-solid": "solid",
     "fa-brands": "brands",
     "fa-regular": "regular",
+}
+
+#: Map a semantic icon style to the leading CSS class emitted for each
+#: FontAwesome version (``sd_fontawesome_version``). v4 has no style prefixes
+#: (all distinctions collapse to ``fa``), v5 uses ``fas``/``fab``/``far``,
+#: v6 uses ``fa-solid``/``fa-brands``/``fa-regular``.
+FA_VERSION_CLASSES = {
+    "solid": {"4": "fa", "5": "fas", "6": "fa-solid"},
+    "brands": {"4": "fa", "5": "fab", "6": "fa-brands"},
+    "regular": {"4": "fa", "5": "far", "6": "fa-regular"},
 }
 
 
@@ -247,8 +260,20 @@ class FontawesomeRole(SphinxRole):
         """Run the role."""
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
+        # the role name selects the icon style; the emitted leading class is
+        # the role name itself ("as-named", backward-compatible default), or
+        # its translation into the configured FontAwesome version's scheme
+        version = get_sd_config(self.env).fontawesome_version
+        if version == "as-named":
+            leading_class = self.style
+        else:
+            leading_class = FA_VERSION_CLASSES[FA_ROLE_STYLES[self.style]][version]
         node = fontawesome(
-            icon=icon, classes=[self.style, f"fa-{icon}", *classes.split()]
+            icon=icon,
+            # the semantic style travels on the node, so non-HTML renderers
+            # (LaTeX) stay independent of the configured HTML class scheme
+            icon_style=FA_ROLE_STYLES[self.style],
+            classes=[leading_class, f"fa-{icon}", *classes.split()],
         )
         self.set_source_info(node)
         return [node], []
@@ -286,7 +311,11 @@ def visit_fontawesome_latex(self, node):
     if mode == "fontawesome5":
         # the fontawesome5 package resolves brand icons by name, and takes the
         # style as an optional argument (default solid); see its manual
-        style = FA_LATEX_STYLES.get(node["classes"][0], "solid")
+        # prefer the semantic style stored on the node; fall back to deriving
+        # it from the leading class (doctrees pickled before it existed)
+        style = node.get("icon_style") or FA_ROLE_STYLES.get(
+            node["classes"][0], "solid"
+        )
         if style == "regular":
             self.body.append(f"\\faIcon[regular]{{{node['icon']}}}")
         else:

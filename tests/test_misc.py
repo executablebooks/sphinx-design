@@ -508,6 +508,7 @@ INVALID_CONFIG_VALUES = {
     "custom_directives": (["not", "a", "dict"], "must be a dictionary"),
     "fontawesome_source": ("invalid", "must be one of"),
     "fontawesome_cdn_url": (123, "must be of type"),
+    "fontawesome_version": ("7", "must be one of"),
     "fontawesome_latex": ("bad-mode", "must be a bool or one of"),
     "tabs_storage_prefix": (123, "must be of type"),
 }
@@ -617,6 +618,7 @@ def test_config_toml_round_trip():
     toml_str = """\
     fontawesome_source = "cdn"
     fontawesome_cdn_url = "https://example.com/fa.css"
+    fontawesome_version = "6"
     fontawesome_latex = true
     tabs_storage_prefix = "sphinx-design-tab-id-"
 
@@ -635,6 +637,7 @@ def test_config_toml_round_trip():
     config = SdConfig(**data)
     assert config.fontawesome_source == "cdn"
     assert config.fontawesome_cdn_url == "https://example.com/fa.css"
+    assert config.fontawesome_version == "6"
     assert config.fontawesome_latex is True
     assert config.tabs_storage_prefix == "sphinx-design-tab-id-"
     assert config.fontawesome_latex_mode == "fontawesome"
