@@ -76,13 +76,37 @@ PR #264) supports `latex`:
 
 ## Test strategy (two tiers — decided 2026-07)
 
-1. **PDF-compile smoke in CI** (landing separately, before this brief): a
-   `doc-builds-pdf` job compiling the latex docs build via
-   `xu-cheng/latex-action` (myst-parser's pattern; consider
-   `latex_use_xindy = False` to avoid its xindy workaround). This catches
+1. **PDF-compile smoke in CI** (✅ landed in #289): the `docs-build-pdf` job
+   compiles the latex docs build via `xu-cheng/latex-action` (myst-parser's
+   pattern, minus its xindy workaround — the docs use
+   `latex_engine = "xelatex"` + `latex_use_xindy = False`). This catches
    compile-time breakage (package clashes like #242, undefined icons) that
-   `-b latex` output checks cannot. The docs dogfood `sd_fontawesome_latex`,
-   so the FA LaTeX path is exercised on every PR.
+   `-b latex` output checks cannot. The docs dogfood
+   `sd_fontawesome_latex = "fontawesome5"`, so the FA LaTeX path is
+   exercised on every PR.
+
+### Field notes from landing the PDF job (#289) — fold into this brief
+
+- **Sphinx ≥9 `iconpackage` clash (affects real users)**: `sphinx.sty` v9
+  auto-selects the NEWEST FontAwesome LaTeX package installed on the TeX
+  system for its admonition icons (fontawesome7 on full TeX Live 2025+).
+  `fontawesome7.sty`'s version guard hard-errors if another FA major is
+  already loaded — i.e. any user combining `sd_fontawesome_latex` with
+  Sphinx ≥9 on a full TeX install gets a broken PDF build. The docs work
+  around it with `latex_elements = {"sphinxsetup": "iconpackage=fontawesome5"}`.
+  This brief should add **library-level coordination**: when
+  `add_fontawesome_pkg` loads a FA package on Sphinx ≥9, also default
+  Sphinx's `iconpackage` to the same package (inject into
+  `latex_elements`/`sphinxsetup` at `config-inited` unless the user set it
+  themselves), and document the interaction.
+- **TeX Live 2026 vs Sphinx <9.1.1 tables**: TL2026's colortbl v1.0l
+  unifies its row hooks with the kernel's `\everycr`, sending Sphinx's
+  `colorrows` table style into infinite expansion
+  (sphinx-doc/sphinx#14465; fixed upstream, ships in 9.1.1). The CI job
+  pins `texlive_version: "2025"` — DROP the pin once the docs build on
+  sphinx ≥9.1.1, and prefer keeping the compile job on a pinned TeX Live
+  going forward (two independent latest-TeX breakages surfaced in a single
+  week while landing #289).
 2. **Systematic per-component `.tex` regressions land WITH this brief, not
    before**: broad `.tex` fixtures written today would lock in the known-bad
    degradation (dropdowns → `\subsubsection*`, etc.) as golden output. When
