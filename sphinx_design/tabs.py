@@ -6,7 +6,6 @@ from sphinx.application import Sphinx
 from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util.logging import getLogger
 
-from ._compat import findall
 from .shared import (
     WARNING_TYPE,
     SdDirective,
@@ -159,6 +158,11 @@ class TabSetCodeDirective(SdDirective):
         new_children = []
         for item in tab_set.children:
             if is_ignorable_child(item):
+                # comments and system messages can be safely dropped,
+                # but hyperlink targets must be kept,
+                # so that references to them still resolve
+                if isinstance(item, nodes.target):
+                    new_children.append(item)
                 continue
             if not isinstance(item, nodes.literal_block):
                 LOGGER.warning(
@@ -216,6 +220,9 @@ def depart_tab_input(self, node):
 
 def visit_tab_label(self, node):
     attributes = {"for": node["input_id"]}
+    if "aria_controls" in node:
+        # programmatically associate the label with the content panel it toggles
+        attributes["aria-controls"] = node["aria_controls"]
     if "sync_id" in node and "sync_group" in node:
         attributes["data-sync-id"] = node["sync_id"]
         attributes["data-sync-group"] = node["sync_group"]
@@ -241,7 +248,7 @@ class TabSetHtmlTransform(SphinxPostTransform):
         tab_item_id_num = 0
 
         for tab_set_id_num, tab_set in enumerate(
-            findall(self.document)(lambda node: is_component(node, "tab-set"))
+            self.document.findall(lambda node: is_component(node, "tab-set"))
         ):
             tab_set_identity = tab_set_id_base + str(tab_set_id_num)
             children = []
@@ -304,11 +311,23 @@ class TabSetHtmlTransform(SphinxPostTransform):
                 )
                 if tab_label.get("ids"):
                     label_node["ids"] += tab_label["ids"]
+                if tab_item.get("ids"):
+                    # ids propagated onto the container (e.g. from a preceding
+                    # hyperlink target, via docutils PropagateTargets) must
+                    # survive the container's removal, or anchors break
+                    label_node["ids"] += tab_item["ids"]
                 if "sync_group" in tab_label and "sync_id" in tab_label:
                     label_node["sync_group"] = tab_label["sync_group"]
                     label_node["sync_id"] = tab_label["sync_id"]
                 label_node.source, label_node.line = tab_item.source, tab_item.line
                 children.append(label_node)
+
+                # give the content panel a stable id and point the label at it
+                # via aria-controls; prepend so any existing ids (e.g. anchors
+                # propagated from a preceding hyperlink target) still resolve
+                tab_content_identity = f"{tab_item_identity}-content"
+                tab_content["ids"].insert(0, tab_content_identity)
+                label_node["aria_controls"] = tab_content_identity
 
                 # add content
                 children.append(tab_content)

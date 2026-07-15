@@ -24,7 +24,24 @@ extensions = ["myst_parser", "sphinx_design"]
 myst_enable_extensions = ["colon_fence"]
 ```
 
+:::{note}
+The MyST Markdown examples in this documentation assume that certain optional [MyST syntax extensions](https://myst-parser.readthedocs.io/en/latest/syntax/optional.html) are enabled — extend the `myst_enable_extensions` list shown above with them as needed:
+
+- `colon_fence`: used by all examples, to write directives delimited by `:::` fences
+- `html_image`: only for examples using raw HTML `<img>` tags, such as the avatar images in [CSS Classes](./css_classes.md)
+- `attrs_inline`: only for examples adding attributes to inline elements, such as the links to synchronised [Tabs](./tabs.md)
+:::
+
 ## Configuration
+
+### Global options
+
+All global configuration options are prefixed with `sd_`, and can be set in your `conf.py`.
+Values are always simple, TOML-compatible, data types:
+
+{{ sd_config_options }}
+
+### Hiding the page title
 
 To hide the title header of a page, add to the top of the page:
 

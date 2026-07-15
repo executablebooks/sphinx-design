@@ -93,13 +93,13 @@ For more information, see [this guide to flexbox](https://css-tricks.com/snippet
 
 ## Sizing
 
-Size objects width/height by percentage:
+Size objects (`w`)idth/(`h`)eight by percentage:
 
-- `sd-width-25`, `sd-height-25`
-- `sd-width-50`, `sd-height-50`
-- `sd-width-75`, `sd-height-75`
-- `sd-width-100`, `sd-height-100`
-- `sd-width-auto`, `sd-height-auto`
+- `sd-w-25`, `sd-h-25`
+- `sd-w-50`, `sd-h-50`
+- `sd-w-75`, `sd-h-75`
+- `sd-w-100`, `sd-h-100`
+- `sd-w-auto`, `sd-h-auto`
 
 ## Spacing
 

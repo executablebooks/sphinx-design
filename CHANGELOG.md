@@ -1,5 +1,71 @@
 # Change Log
 
+## Unreleased
+
+- ✨ NEW: `sd_fontawesome_version` makes icon role names version-agnostic:
+  any spelling (`fas`, `fa-solid`, ...) can emit the FontAwesome `"4"`, `"5"`
+  or `"6"` class scheme, so upgrading FontAwesome is a one-line `conf.py`
+  change; the default `"as-named"` keeps emitting the role name verbatim
+  ({pr}`288`, {issue}`174`)
+- ✨ NEW: Badge roles accept a trailing `` ; tooltip `` suffix, rendered as a
+  native HTML `title` tooltip on all `bdg-*` families; for the link/ref badges
+  the suffix applies only after the explicit `text <target>` form (semicolons
+  are valid in URLs and reference targets), and a literal `;` in badge text is
+  escaped as `` \; `` ({pr}`286`, {issue}`81`)
+- ✨ NEW: FontAwesome v6 roles (`fa-solid`/`fa-brands`/`fa-regular`) and
+  declarative CSS loading via the new `sd_fontawesome_source` /
+  `sd_fontawesome_cdn_url` options (the supported path for FontAwesome Pro
+  kits) ({pr}`285`, {issue}`174`)
+- 👌 IMPROVE: `sd_fontawesome_latex` now also accepts `"fontawesome5"` (adding
+  `fontawesome5.sty` and emitting `\faIcon{...}`), resolving package clashes
+  with themes that load `fontawesome5`; `True`/`False` keep working unchanged
+  ({pr}`285`, {issue}`242`)
+- 🐛 FIX: Synced tabs stay in sync when activated by click-and-drag or keyboard,
+  by syncing on the radio input's `change` event rather than a label click
+  ({pr}`284`, {issue}`46`)
+- ✨ NEW: A URL fragment that targets a tab (e.g. `page.html#tab-name`), or an
+  element inside a tab panel, now opens that tab (both on load and on
+  `hashchange`) ({pr}`284`, {issue}`239`)
+- 👌 IMPROVE: Tab selections now persist across browsing sessions, via
+  `localStorage` instead of `sessionStorage` (a behaviour change), and the
+  storage key prefix is configurable with the new `sd_tabs_storage_prefix`
+  option (set it to an empty string to disable persistence) ({pr}`284`,
+  {issue}`103`)
+- 👌 IMPROVE: Restore keyboard focus rings on tab labels, dropdown summaries,
+  buttons and stretched-link cards, using `:focus-visible` so they are visible
+  for keyboard users but not shown on mouse click, thanks to {user}`gabalafou`
+  in {pr}`230` (carried in {pr}`283`)
+- 👌 IMPROVE: Each tab label now carries an `aria-controls` attribute
+  referencing its content panel's id, establishing the programmatic
+  relationship in the accessibility tree (note: this is not a full WAI-ARIA
+  tabs pattern; assistive-technology support for `aria-controls` varies)
+  ({pr}`283`, {issue}`30`)
+- 🐛 FIX: `card`/`grid-item-card` `:link:` no longer strips whitespace from reference targets (and lowercases them for `link-type: ref`, matching the `:ref:` role), completing the fix for {issue}`110` ({pr}`282`)
+- 🐛 FIX: `button-ref` no longer strips whitespace from reference targets, so
+  multi-word labels (e.g. from `autosectionlabel`) resolve correctly
+  ({pr}`281`, {issue}`110`)
+- 🐛 FIX: `button-ref` now renders rich/nested inline content (emphasis, icons,
+  etc.) identically to `button-link`, instead of flattening it to plain text
+  during cross-reference resolution ({pr}`281`, {issue}`228`)
+- 🐛 FIX: Inline icon roles no longer leak SVG markup into toctree labels and the search index ({pr}`279`, {issue}`99`)
+- 🐛 FIX: `article-info` octicons regain their `sd-pr-2` spacing class (previously silently dropped by the HTML writer) ({pr}`279`)
+- 🐛 FIX: Paragraphs inside dropdowns no longer have user classes overwritten by `sd-card-text`, and card/dropdown body styling is applied only to direct child paragraphs, not nested content ({pr}`278`, {issue}`40`)
+- ✨ NEW: `sphinx_design.testing` module with the `normalize_doctree_xml` helper, for downstream extensions' doctree regression tests ({pr}`277`, {issue}`260`)
+- ♻️ IMPROVE: Static assets (CSS/JS) are now served via Sphinx's standard
+  `html_static_path` mechanism, rather than being written directly into the
+  build output; non-HTML builds no longer gain a spurious
+  `_sphinx_design_static` directory ({pr}`276`, {issue}`200`, {issue}`235`).
+  A stale `_sphinx_design_static` directory left in an existing HTML build
+  directory by previous versions is unused and can safely be deleted.
+- ⬆️ UPGRADE: Sphinx `>=7.2` is now required ({pr}`276`)
+- 🗑️ REMOVE: The private `sphinx_design._compat.findall` helper has been
+  removed (docutils `Element.findall` is guaranteed by the Sphinx floor);
+  any code importing it should call `node.findall(...)` directly ({pr}`276`)
+- 🐛 FIX: buttons are no longer destroyed by gettext translation:
+  translated `button-link`/`button-ref` keep their styling and links
+  (gettext now targets only the button text), thanks to {user}`sneakers-the-rat`
+  in {pr}`264` ({issue}`96`, {issue}`44`, {issue}`263`)
+
 ## 0.7.0 - 2025-01-19
 
 ### Dependencies

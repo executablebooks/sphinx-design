@@ -12,6 +12,7 @@ from sphinx.util.docutils import SphinxRole
 
 from . import compiled
 from ._compat import read_text
+from .config import SdConfig, get_sd_config
 from .shared import WARNING_TYPE, SdDirective
 
 logger = logging.getLogger(__name__)
@@ -20,13 +21,26 @@ logger = logging.getLogger(__name__)
 def setup_icons(app: Sphinx) -> None:
     app.add_role("octicon", OcticonRole())
     app.add_directive("_all-octicon", AllOcticons)
+    # legacy v4/v5 class scheme (kept for backwards compatibility);
+    # note: fa is deprecated in v5, fas is the default and fab is the other free option
     for style in ["fa", "fas", "fab", "far"]:
-        # note: fa is deprecated in v5, fas is the default and fab is the other free option
+        app.add_role(style, FontawesomeRole(style))
+    # v6 canonical class scheme (required by FA6+ setups without compatibility
+    # aliases, e.g. Pro kits; the concise fas/fab/far roles remain supported)
+    for style in ["fa-solid", "fa-brands", "fa-regular"]:
         app.add_role(style, FontawesomeRole(style))
     for style in ["regular", "outlined", "round", "sharp", "twotone"]:
         app.add_role("material-" + style, MaterialRole(style))
-    app.add_config_value("sd_fontawesome_latex", False, "env")
     app.connect("config-inited", add_fontawesome_pkg)
+    app.connect("builder-inited", add_fontawesome_css)
+    app.add_node(
+        sd_icon,
+        html=(visit_sd_icon_html, None),
+        latex=(visit_sd_icon_skip, None),
+        text=(visit_sd_icon_skip, None),
+        man=(visit_sd_icon_skip, None),
+        texinfo=(visit_sd_icon_skip, None),
+    )
     app.add_node(
         fontawesome,
         html=(visit_fontawesome_html, depart_fontawesome_html),
@@ -35,6 +49,39 @@ def setup_icons(app: Sphinx) -> None:
         text=(visit_fontawesome_warning, None),
         texinfo=(visit_fontawesome_warning, None),
     )
+
+
+class sd_icon(nodes.inline, nodes.General):  # noqa: N801
+    """Inline node for an SVG icon (octicon or material design).
+
+    The rendered ``<svg>`` markup is carried in the ``svg`` attribute.
+
+    The node deliberately has **no** ``Text`` children, so that ``astext()``
+    returns an empty string. This keeps the SVG markup out of plain-text
+    contexts derived via ``clean_astext`` (toctree labels, the search index,
+    HTML page titles, ...), which would otherwise be polluted by the raw SVG
+    when an icon role starts a section title.
+    """
+
+
+def create_icon_node(svg: str) -> sd_icon:
+    """Create an inline icon node carrying the given SVG markup.
+
+    :param svg: The rendered ``<svg>`` markup for the icon.
+    :return: An :class:`sd_icon` node with no text children.
+    """
+    return sd_icon("", svg=svg)
+
+
+def visit_sd_icon_html(self, node: nodes.Element) -> None:
+    """Write the icon SVG markup directly into the HTML output."""
+    self.body.append(node["svg"])
+    raise nodes.SkipNode
+
+
+def visit_sd_icon_skip(self, node: nodes.Element) -> None:
+    """Skip the (decorative) icon for non-HTML builders."""
+    raise nodes.SkipNode
 
 
 @lru_cache(1)
@@ -128,7 +175,7 @@ class OcticonRole(SphinxRole):
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
             return [prb], [msg]
-        node = nodes.raw("", nodes.Text(svg), format="html")
+        node = create_icon_node(svg)
         self.set_source_info(node)
         return [node], []
 
@@ -164,16 +211,39 @@ class AllOcticons(SdDirective):
             cell += nodes.literal(icon, icon)
             cell = nodes.entry()
             row += cell
-            cell += nodes.raw(
-                "",
-                get_octicon(icon, classes=classes),
-                format="html",
-            )
+            cell += create_icon_node(get_octicon(icon, classes=classes))
         return [table]
 
 
 class fontawesome(nodes.Element, nodes.General):  # noqa: N801
     """Node for rendering fontawesome icon."""
+
+
+#: Map a fontawesome role name (also the node's leading CSS class, under the
+#: default ``as-named`` scheme) to the semantic icon style. ``fa`` (v4) and
+#: ``fas`` are solid, ``fab`` brands, ``far`` regular; the v6 role names are
+#: explicit. Used both to translate role names between FontAwesome class
+#: schemes (``sd_fontawesome_version``) and for the ``fontawesome5`` LaTeX
+#: package's style conventions.
+FA_ROLE_STYLES = {
+    "fa": "solid",
+    "fas": "solid",
+    "fab": "brands",
+    "far": "regular",
+    "fa-solid": "solid",
+    "fa-brands": "brands",
+    "fa-regular": "regular",
+}
+
+#: Map a semantic icon style to the leading CSS class emitted for each
+#: FontAwesome version (``sd_fontawesome_version``). v4 has no style prefixes
+#: (all distinctions collapse to ``fa``), v5 uses ``fas``/``fab``/``far``,
+#: v6 uses ``fa-solid``/``fa-brands``/``fa-regular``.
+FA_VERSION_CLASSES = {
+    "solid": {"4": "fa", "5": "fas", "6": "fa-solid"},
+    "brands": {"4": "fa", "5": "fab", "6": "fa-brands"},
+    "regular": {"4": "fa", "5": "far", "6": "fa-regular"},
+}
 
 
 class FontawesomeRole(SphinxRole):
@@ -190,8 +260,20 @@ class FontawesomeRole(SphinxRole):
         """Run the role."""
         icon, classes = self.text.split(";", 1) if ";" in self.text else [self.text, ""]
         icon = icon.strip()
+        # the role name selects the icon style; the emitted leading class is
+        # the role name itself ("as-named", backward-compatible default), or
+        # its translation into the configured FontAwesome version's scheme
+        version = get_sd_config(self.env).fontawesome_version
+        if version == "as-named":
+            leading_class = self.style
+        else:
+            leading_class = FA_VERSION_CLASSES[FA_ROLE_STYLES[self.style]][version]
         node = fontawesome(
-            icon=icon, classes=[self.style, f"fa-{icon}", *classes.split()]
+            icon=icon,
+            # the semantic style travels on the node, so non-HTML renderers
+            # (LaTeX) stay independent of the configured HTML class scheme
+            icon_style=FA_ROLE_STYLES[self.style],
+            classes=[leading_class, f"fa-{icon}", *classes.split()],
         )
         self.set_source_info(node)
         return [node], []
@@ -205,14 +287,40 @@ def depart_fontawesome_html(self, node):
     self.body.append("</span>")
 
 
+def add_fontawesome_css(app: Sphinx) -> None:
+    """Add the FontAwesome CDN CSS to HTML builds, if so configured."""
+    if app.builder.format != "html":
+        return
+    config = get_sd_config(app.env)
+    if config.fontawesome_source == "cdn":
+        app.add_css_file(config.fontawesome_cdn_url)
+
+
 def add_fontawesome_pkg(app, config):
-    if app.config.sd_fontawesome_latex:
+    """Load the LaTeX fontawesome package matching ``sd_fontawesome_latex``."""
+    mode = SdConfig.from_sphinx(config).fontawesome_latex_mode
+    if mode == "fontawesome":
         app.add_latex_package("fontawesome")
+    elif mode == "fontawesome5":
+        app.add_latex_package("fontawesome5")
 
 
 def visit_fontawesome_latex(self, node):
-    """Add latex fonteawesome icon, if configured, else warn."""
-    if self.config.sd_fontawesome_latex:
+    """Add latex fontawesome icon, if configured, else warn."""
+    mode = get_sd_config(self.builder.env).fontawesome_latex_mode
+    if mode == "fontawesome5":
+        # the fontawesome5 package resolves brand icons by name, and takes the
+        # style as an optional argument (default solid); see its manual
+        # prefer the semantic style stored on the node; fall back to deriving
+        # it from the leading class (doctrees pickled before it existed)
+        style = node.get("icon_style") or FA_ROLE_STYLES.get(
+            node["classes"][0], "solid"
+        )
+        if style == "regular":
+            self.body.append(f"\\faIcon[regular]{{{node['icon']}}}")
+        else:
+            self.body.append(f"\\faIcon{{{node['icon']}}}")
+    elif mode == "fontawesome":
         self.body.append(f"\\faicon{{{node['icon']}}}")
     else:
         logger.warning(
@@ -221,6 +329,7 @@ def visit_fontawesome_latex(self, node):
             location=node,
             type=WARNING_TYPE,
             subtype="fa-build",
+            once=True,
         )
     raise nodes.SkipNode
 
@@ -233,6 +342,7 @@ def visit_fontawesome_warning(self, node: nodes.Element) -> None:
         location=node,
         type=WARNING_TYPE,
         subtype="fa-build",
+        once=True,
     )
     raise nodes.SkipNode
 
@@ -327,6 +437,6 @@ class MaterialRole(SphinxRole):
             )
             prb = self.inliner.problematic(self.rawtext, self.rawtext, msg)
             return [prb], [msg]
-        node = nodes.raw("", nodes.Text(svg), format="html")
+        node = create_icon_node(svg)
         self.set_source_info(node)
         return [node], []

@@ -16,7 +16,6 @@ from sphinx_design.shared import (
     margin_option,
 )
 
-from ._compat import findall
 from .icons import get_octicon, list_octicons
 
 
@@ -153,7 +152,7 @@ class DropdownHtmlTransform(SphinxPostTransform):
     def run(self, **kwargs: Any) -> None:
         """Run the transform"""
         document: nodes.document = self.document
-        for node in findall(document)(lambda node: is_component(node, "dropdown")):
+        for node in document.findall(lambda node: is_component(node, "dropdown")):
             # TODO option to not have card css (but requires more formatting)
             use_card = True
 
@@ -230,10 +229,11 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 children=body_children,
             )
             if use_card:
-                for para in findall(body_node)(nodes.paragraph):
-                    para["classes"] = ([] if "classes" in para else para["classes"]) + [
-                        "sd-card-text"
-                    ]
+                # only stamp direct child paragraphs of the body (see #40),
+                # and append the class rather than replacing existing classes
+                for para in body_node.children:
+                    if isinstance(para, nodes.paragraph):
+                        para["classes"] = [*para.get("classes", []), "sd-card-text"]
             newnode += body_node
             # newnode += open_marker
             node.replace_self(newnode)

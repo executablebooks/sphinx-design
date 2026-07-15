@@ -4,14 +4,14 @@
             Heading
         <container classes="sd-tab-set" design_component="tab-set" is_div="True">
             <sd_tab_input checked="True" id="sd-tab-item-0" set_id="sd-tab-set-0" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-0">
+            <sd_tab_label aria_controls="sd-tab-item-0-content" classes="sd-tab-label" input_id="sd-tab-item-0">
                 Label1
-            <container classes="sd-tab-content" design_component="tab-content" is_div="True">
+            <container classes="sd-tab-content" design_component="tab-content" ids="sd-tab-item-0-content" is_div="True">
                 <paragraph>
                     Content 1
             <sd_tab_input checked="False" id="sd-tab-item-1" set_id="sd-tab-set-0" type="radio">
-            <sd_tab_label classes="sd-tab-label" input_id="sd-tab-item-1">
+            <sd_tab_label aria_controls="sd-tab-item-1-content" classes="sd-tab-label" input_id="sd-tab-item-1">
                 Label2
-            <container classes="sd-tab-content" design_component="tab-content" is_div="True">
+            <container classes="sd-tab-content" design_component="tab-content" ids="sd-tab-item-1-content" is_div="True">
                 <paragraph>
                     Content 2

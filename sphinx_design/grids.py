@@ -223,7 +223,9 @@ class GridItemCardDirective(SdDirective):
         "img-top": directives.uri,
         "img-bottom": directives.uri,
         "img-alt": directives.unchanged,
-        "link": directives.uri,
+        # captured verbatim; ``CardDirective.create_card`` normalises it
+        # per ``link-type`` (whitespace is significant for reference targets)
+        "link": directives.unchanged_required,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
         "shadow": make_choice(["none", "sm", "md", "lg"]),

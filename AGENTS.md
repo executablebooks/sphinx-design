@@ -294,7 +294,7 @@ The extension uses SASS for styling:
 
 1. SASS source files are in `style/`
 2. Compiled using `npm run css` (requires Node.js)
-3. Output goes to `sphinx_design/compiled/style.min.css`
+3. Output goes to `sphinx_design/static/sphinx-design.min.css`
 4. CSS is automatically copied to build output during Sphinx builds
 
 ## Key Files
@@ -339,7 +339,7 @@ The extension uses SASS for styling:
 
 1. Edit SASS files in `style/`
 2. Run `npm run css` to compile (or `pre-commit run --all css`)
-3. Compiled output goes to `sphinx_design/compiled/style.min.css`
+3. Compiled output goes to `sphinx_design/static/sphinx-design.min.css`
 4. Test with different themes to ensure compatibility
 
 ## Reference Documentation

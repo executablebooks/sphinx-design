@@ -97,6 +97,33 @@ Content 2
 ````
 `````
 
+### Linking to synchronised tabs
+
+To author a link that pre-selects a tab, append the query string (and optionally a page anchor) to the URL of the **built** HTML page.
+Sphinx referencing roles, such as `ref` and `doc`, cannot output URLs containing query strings,
+so instead write the URL directly:
+
+- In MyST Markdown, add an `external` class to the link (using the [`attrs_inline` extension](https://myst-parser.readthedocs.io/en/latest/syntax/optional.html)), so that the URL is output as-is, rather than being resolved as a cross-reference.
+- In reStructuredText, use a standard (external) hyperlink.
+
+````{tab-set-code}
+```{code-block} markdown
+[Open with key2 selected](tabs.html?category=key2#synchronised-tabs){.external}
+```
+```{code-block} rst
+`Open with key2 selected <tabs.html?category=key2#synchronised-tabs>`_
+```
+````
+
+For example: [open the tabs above with `key2` selected](tabs.html?category=key2#synchronised-tabs){.external}
+
+:::{warning}
+Such URLs are relative to the location of the current page in the built HTML output, not to the source files
+(for example, a page in a sub-folder would require `../tabs.html?...`).
+They are not checked by Sphinx, so they will break silently if the target page is moved,
+and they do not apply to other output formats.
+:::
+
 ## Tabbed code examples
 
 The `tab-set-code` directive provides a shorthand for synced code examples.
