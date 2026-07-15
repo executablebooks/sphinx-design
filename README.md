@@ -45,7 +45,7 @@ It is recommended to use [tox](https://tox.readthedocs.io/en/latest/) to run the
 Run `tox -va` to see all the available tox environments.
 
 To run linting, formatting and CSS generation, use [pre-commit](https://pre-commit.com/).
-`pre-commit run --all css` regenerates the compiled stylesheet
+`pre-commit run --all-files css` regenerates the compiled stylesheet
 (`sphinx_design/static/sphinx-design.min.css`) from `style/design.toml` and the
 hand-authored `style/*.css`; you can also run it directly with
 `python tools/generate_css.py`.

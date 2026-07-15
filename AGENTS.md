@@ -30,7 +30,8 @@ sphinx_design/          # Main source code
 ├── tabs.py             # Tab directives
 ├── icons.py            # Icon roles (Material, FontAwesome, Octicons)
 ├── article_info.py     # Article info directive
-└── compiled/           # Compiled static assets (CSS, JS)
+├── compiled/           # Bundled icon data (JSON)
+└── static/             # Served static assets (compiled CSS, JS)
 
 style/                  # CSS sources (compiled by tools/generate_css.py)
 ├── design.toml         # Declarative tokens for the generated utility families
@@ -128,7 +129,7 @@ pre-commit run --all-files
 # Regenerate the compiled CSS artifact
 python tools/generate_css.py
 # or via pre-commit
-pre-commit run --all css
+pre-commit run --all-files css
 ```
 
 ## Code Style Guidelines
@@ -355,7 +356,7 @@ degrades gracefully (document the exception).
 
 1. Edit the sources in `style/` (`*.css` for hand-authored rules,
    `design.toml` for the generated utility families)
-2. Run `python tools/generate_css.py` to rebuild (or `pre-commit run --all css`)
+2. Run `python tools/generate_css.py` to rebuild (or `pre-commit run --all-files css`)
 3. Compiled output goes to `sphinx_design/static/sphinx-design.min.css`
 4. Test with different themes to ensure compatibility
 

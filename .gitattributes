@@ -1,0 +1,4 @@
+# the generated stylesheet and its sources must stay byte-identical across
+# platforms (the pre-commit hook and staleness test compare exact bytes)
+sphinx_design/static/sphinx-design.min.css text eol=lf
+style/** text eol=lf
