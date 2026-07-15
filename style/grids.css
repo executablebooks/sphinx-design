@@ -49,10 +49,8 @@
   width: auto;
 }
 
-.sd-col-auto {
-  flex: 0 0 auto;
-  width: auto;
-}
+/* .sd-col-auto is emitted by tools/generate_css.py, positioned after the
+   row-cols families so its width:auto keeps winning the cascade (see _grids.scss). */
 
 .sd-flex-row-reverse {
   flex-direction: row-reverse !important;

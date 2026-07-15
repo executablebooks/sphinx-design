@@ -309,6 +309,11 @@ def gen_grids(data: dict) -> str:
         )
         lines.append(f"@media (min-width: {bp['min']}) {{{''.join(inner)}}}")
 
+    # base col-auto -- emitted here (after the row-cols families) to match the
+    # cascade position in the old _grids.scss: its width:auto must win over the
+    # equal-specificity .sd-row-cols-<n>>* width, so it has to come *after* them.
+    lines.append(".sd-col-auto {flex:0 0 auto;width:auto}")
+
     # base col-<n>
     lines.extend(
         f".sd-col-{i} {{flex:0 0 auto;width:{fmt_percent(100 * i, columns)}}}"
@@ -388,20 +393,38 @@ GENERATORS = {
 def _strip_combinator_spaces(css: str) -> str:
     """Remove spaces around ``>``/``~``/``+`` selector combinators only.
 
-    Combinators are stripped at parenthesis-depth 0 (selector context); spaces
-    inside ``(...)`` -- notably the ``+``/``-`` operators of ``calc()`` -- are
-    left untouched so values stay valid.
+    Combinators are stripped only in selector context: at parenthesis-depth 0,
+    outside ``[...]`` attribute selectors and outside quoted strings. Spaces
+    inside ``(...)`` -- notably the ``+``/``-`` operators of ``calc()`` -- inside
+    ``[attr="a > b"]`` and inside any ``"..."``/``'...'`` string are left intact,
+    so both values and attribute selectors stay valid.
     """
     out: list[str] = []
-    depth = 0
+    depth = 0  # () nesting: calc(), color-mix(), :not(), ...
+    bracket = 0  # [] nesting: attribute selectors
+    quote = ""  # active string delimiter while inside a quoted string
     for i, char in enumerate(css):
-        if char == "(":
+        if quote:
+            out.append(char)
+            if char == quote:
+                quote = ""
+            continue
+        if char in "\"'":
+            quote = char
+            out.append(char)
+        elif char == "(":
             depth += 1
             out.append(char)
         elif char == ")":
             depth -= 1
             out.append(char)
-        elif char == " " and depth == 0:
+        elif char == "[":
+            bracket += 1
+            out.append(char)
+        elif char == "]":
+            bracket -= 1
+            out.append(char)
+        elif char == " " and depth == 0 and bracket == 0:
             prev = out[-1] if out else ""
             nxt = css[i + 1] if i + 1 < len(css) else ""
             if prev in ">~+" or nxt in ">~+":

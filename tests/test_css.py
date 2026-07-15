@@ -50,11 +50,45 @@ def test_highlight_uses_runtime_color_mix():
     the old build-time ``mix()``). Assert both declarations are present.
     """
     css = ARTIFACT.read_text(encoding="utf8")
-    assert "--sd-color-primary-highlight:#0060a0" in css  # static fallback
-    assert (
+    fallback = "--sd-color-primary-highlight:#0060a0"  # static fallback
+    color_mix = (
         "--sd-color-primary-highlight:color-mix(in srgb,black 15%,"
-        "var(--sd-color-primary))" in css
+        "var(--sd-color-primary))"
     )
+    assert fallback in css
+    assert color_mix in css
+    # the fallback must precede color-mix(): browsers without color-mix()
+    # ignore the second declaration and keep the static shade
+    assert css.index(fallback) < css.index(color_mix)
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        # ordinary combinators are tightened in selector context
+        (".a > .b {color:red}", ".a>.b{color:red}"),
+        (".a ~ .b + .c {color:red}", ".a~.b+.c{color:red}"),
+        # calc() operators (parenthesis depth > 0) are preserved
+        (".x {width:calc(1px + 2px)}", ".x{width:calc(1px + 2px)}"),
+        # combinators inside a quoted attribute-selector value must survive
+        ('[title="a > b"] {color:red}', '[title="a > b"]{color:red}'),
+        # tighten around the real combinators but keep the ones inside [...]
+        (
+            'a > [data-x="p + q"] ~ b {color:red}',
+            'a>[data-x="p + q"]~b{color:red}',
+        ),
+        # a bare quoted string value with a combinator character is left intact
+        ('.x {content:"a > b"}', '.x{content:"a > b"}'),
+    ],
+)
+def test_minify_preserves_combinators_in_brackets_and_strings(source, expected):
+    """The minifier tightens selector combinators but not ``[...]``/string text.
+
+    Regression guard for ``_strip_combinator_spaces``: it must track ``[]`` and
+    quote context, not only ``()`` depth, so ``[title="a > b"]`` is not mangled
+    into ``[title="a>b"]``.
+    """
+    assert generate_css.minify(source) == expected
 
 
 @pytest.mark.skipif(
