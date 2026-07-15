@@ -19,10 +19,14 @@ match is necessary but *not sufficient*: it is blind to source order, and the
 CSS cascade is order-sensitive. So a second, order-aware pass also runs and
 fails on:
 
-* **source-order inversions** -- any pair of rules whose relative order flips
-  between base and new while they share a declared property, have intersecting
-  selector specificity and sit in the same ``@media`` context (an equal-
-  specificity, same-property, same-context flip changes which rule wins);
+* **source-order inversions** -- any pair of rules whose relative order in the
+  flattened *global* source order flips between base and new while they share a
+  declared property (exact name, at the same importance level) and have
+  intersecting selector specificity. Pairs are compared across ``@media``
+  contexts too: in this stylesheet every pair of contexts can co-apply (the
+  ``min-width`` breakpoints nest and ``prefers-reduced-motion`` is independent
+  of viewport width), so a cross-context flip changes which rule wins just as a
+  same-context one does;
 * **duplicate keys** -- a ``(context, selector)`` that occurs more than once in
   either artifact (the multiset pass silently merges these, so they are reported
   here instead of hidden); and
@@ -30,6 +34,21 @@ fails on:
   rule whose surviving declaration order differs, allowing only the enumerated
   color-mix() fallback (which must stay *after* its static fallback) and the
   dropped ``-ms`` flexbox ``display`` value.
+
+Known limitations (documented, deliberately not implemented):
+
+* **shorthand/longhand interactions** are compared by exact property name only:
+  a ``margin`` rule reordered against a ``margin-top`` rule is not flagged,
+  although the shorthand resets the longhand when it wins. The stylesheet's
+  shorthand/longhand overlaps all live inside single rules, where declaration
+  order is covered by the intra-rule pass.
+* the generator's **minifier** tightens combinators string- and
+  bracket-aware, but its earlier regex passes (whitespace collapse, space
+  stripping around ``{};,:``) are not string-aware; the repo sources only
+  contain empty ``content: ""`` strings, so nothing is affected.
+* **escaped quotes** (``\\"``) inside attribute-selector strings would end the
+  minifier's quote context early; the failure mode is under-minification
+  (a kept space), never a corrupted value. The sources contain none.
 
 This is a verification tool, not a permanent CI gate: it is meant to be run
 against the pre-migration commit while the stylesheet is otherwise quiet.
@@ -143,6 +162,7 @@ _CLASS_RE = re.compile(r"\.[-\w]+")
 _PSEUDO_EL_RE = re.compile(r"::[-\w]+|:(?:before|after|first-line|first-letter)\b")
 _PSEUDO_CLASS_RE = re.compile(r":[-\w]+(?:\([^)]*\))?")
 _TYPE_RE = re.compile(r"[a-zA-Z][-\w]*")
+_FUNC_PSEUDO_RE = re.compile(r":(not|is|where)\(", re.IGNORECASE)
 
 
 def _specificity_of_simple(selector: str) -> tuple[int, int, int]:
@@ -151,12 +171,39 @@ def _specificity_of_simple(selector: str) -> tuple[int, int, int]:
     A deliberately small implementation: enough for the utility/component
     selectors in this stylesheet (classes, type names, ``:hover``/``:focus``
     pseudo-classes, ``::after`` pseudo-elements, ``*``). ``*`` contributes 0.
+
+    Functional pseudo-classes follow the spec: ``:not()`` and ``:is()``
+    contribute only the specificity of their most specific argument (no extra
+    pseudo-class count for the wrapper itself), ``:where()`` contributes zero.
+    E.g. ``details.sd-dropdown:not([open]).sd-card`` is (0, 3, 1).
     """
-    a = len(_ID_RE.findall(selector))
+    a = b = c = 0
+    # resolve :not() / :is() / :where() before flat counting
+    match = _FUNC_PSEUDO_RE.search(selector)
+    while match:
+        depth = 1
+        j = match.end()
+        while j < len(selector) and depth:
+            if selector[j] == "(":
+                depth += 1
+            elif selector[j] == ")":
+                depth -= 1
+            j += 1
+        args = selector[match.end() : j - 1]
+        if match.group(1).lower() != "where":  # :where() is always zero
+            best = max(
+                (_specificity_of_simple(p) for p in _split_selector_group(args)),
+                default=(0, 0, 0),
+            )
+            a, b, c = a + best[0], b + best[1], c + best[2]
+        selector = selector[: match.start()] + " " + selector[j:]
+        match = _FUNC_PSEUDO_RE.search(selector)
+
+    a += len(_ID_RE.findall(selector))
     selector = _ID_RE.sub(" ", selector)
-    c = len(_PSEUDO_EL_RE.findall(selector))  # pseudo-elements count as type-level
+    c += len(_PSEUDO_EL_RE.findall(selector))  # pseudo-elements count as type-level
     selector = _PSEUDO_EL_RE.sub(" ", selector)
-    b = len(_ATTR_RE.findall(selector))
+    b += len(_ATTR_RE.findall(selector))
     selector = _ATTR_RE.sub(" ", selector)
     b += len(_CLASS_RE.findall(selector))
     selector = _CLASS_RE.sub(" ", selector)
@@ -350,33 +397,65 @@ def _duplicate_keys(base: list[OrderedRule], new: list[OrderedRule]) -> list[str
 
 
 def _inversions(base: list[OrderedRule], new: list[OrderedRule]) -> list[str]:
-    """(a) order flips between rule pairs sharing a property + specificity + context."""
+    """(a) order flips between rule pairs sharing a property + specificity.
+
+    Positions are compared in the *flattened global* source order, across
+    ``@media`` contexts: in this stylesheet every pair of contexts can co-apply
+    (the ``min-width`` breakpoints nest, and ``prefers-reduced-motion`` is
+    independent of viewport width), so a cross-context pair is just as
+    order-sensitive as a same-context one. The ``(context, selector)`` key
+    identity is kept for reporting.
+
+    Property sharing is exact-name based (never prefix based -- ``flex`` does
+    not "share" with ``flex-direction``) and importance-matched: a property
+    counts as shared only if both rules declare it at the same importance
+    level. ``!important`` and normal declarations sit in different cascade
+    tiers, so their relative source order is irrelevant; two ``!important``
+    declarations of the same property *are* still order-sensitive and stay
+    paired.
+    """
     pos_base, pos_new = _first_positions(base), _first_positions(new)
-    props: dict[Key, set[str]] = {}
+    common = set(pos_base) & set(pos_new)
+
+    # per-key: declared (property, importance) pairs and selector specificity
+    sig: dict[Key, set[tuple[str, bool]]] = {}
     spec: dict[Key, frozenset[tuple[int, int, int]]] = {}
     for rule in (*base, *new):
         key = (rule.context, rule.selector)
-        props.setdefault(key, set()).update(p for p, _ in rule.decls)
+        if key not in common:
+            continue
+        sig.setdefault(key, set()).update(
+            (prop, value.endswith(" !important")) for prop, value in rule.decls
+        )
         spec[key] = specificity_set(rule.selector)
 
-    # group common keys by @media context so only same-context pairs are compared
-    by_context: dict[str, list[Key]] = {}
-    for key in set(pos_base) & set(pos_new):
-        by_context.setdefault(key[0], []).append(key)
+    # inverted index: (property, importance) -> keys declaring it, so only
+    # keys that can actually conflict are ever paired
+    by_prop: dict[tuple[str, bool], list[Key]] = {}
+    for key, pairs in sig.items():
+        for pair in pairs:
+            by_prop.setdefault(pair, []).append(key)
+
+    flipped_pairs: dict[tuple[Key, Key], set[str]] = {}
+    for (prop, important), group in by_prop.items():
+        keys = sorted(group, key=pos_base.__getitem__)
+        for i, k1 in enumerate(keys):  # k1 before k2 in base order
+            for k2 in keys[i + 1 :]:
+                if pos_new[k1] < pos_new[k2]:  # order preserved
+                    continue
+                if not (spec[k1] & spec[k2]):  # (ii) intersecting specificity
+                    continue
+                label = f"{prop} !important" if important else prop
+                flipped_pairs.setdefault((k1, k2), set()).add(label)
 
     out: list[str] = []
-    for context, keys in by_context.items():
-        for i, k1 in enumerate(keys):
-            for k2 in keys[i + 1 :]:
-                flipped = (pos_base[k1] < pos_base[k2]) != (pos_new[k1] < pos_new[k2])
-                shared = props[k1] & props[k2]  # (i) shared property
-                if not (flipped and shared and (spec[k1] & spec[k2])):  # (ii) spec
-                    continue
-                lo, hi = (k1, k2) if pos_base[k1] < pos_base[k2] else (k2, k1)
-                out.append(
-                    f"ctx={context!r}  base order [{lo[1]}] before [{hi[1]}], "
-                    f"new order flipped (shared: {', '.join(sorted(shared))})"
-                )
+    for (lo, hi), shared in sorted(flipped_pairs.items()):
+        lo_where = f"{lo[0]} {lo[1]}".strip()
+        hi_where = f"{hi[0]} {hi[1]}".strip()
+        out.append(
+            f"base order [{lo_where}] before [{hi_where}], "
+            f"new order flipped (shared: {', '.join(sorted(shared))})"
+        )
     return out
 
 
@@ -554,13 +633,14 @@ def render_report(
     if order.inversions:
         lines.append(
             "(e) SOURCE-ORDER INVERSIONS "
-            f"(shared-prop, equal-specificity, same @media) ({len(order.inversions)}):"
+            "(shared-prop, equal-specificity, global order across contexts) "
+            f"({len(order.inversions)}):"
         )
         lines.extend(f"    ! {item}" for item in order.inversions)
     else:
         lines.append(
             "(e) SOURCE-ORDER INVERSIONS "
-            "(shared-prop, equal-specificity, same @media): none"
+            "(shared-prop, equal-specificity, global order across contexts): none"
         )
     lines.append("")
 

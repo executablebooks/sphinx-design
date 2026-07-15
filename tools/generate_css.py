@@ -62,6 +62,8 @@ ASSEMBLY: list[str | tuple[str, str]] = [
     ("gen", "avatars"),
     "cards.css",
     ("gen", "card_cols"),
+    "containers.css",
+    ("gen", "container_media"),
     "grids.css",
     ("gen", "grids"),
     "dropdown.css",
@@ -272,15 +274,18 @@ def gen_card_cols(data: dict) -> str:
     )
 
 
-def gen_grids(data: dict) -> str:
-    """Responsive grid: containers, row-cols, cols and gutters."""
+def gen_container_media(data: dict) -> str:
+    """Responsive ``.sd-container-*`` max-width caps.
+
+    Emitted as its own family so the assembly can place it directly after the
+    hand-authored container rule and *before* ``grids.css`` -- matching the old
+    ``_grids.scss`` cascade, where these caps preceded ``.sd-row > *``
+    (max-width:100%) and therefore lost to it at equal specificity.
+    """
     breakpoints = data["breakpoints"]
-    columns = data["columns"]
-    spacings = data["spacings"]
     names = [bp["name"] for bp in breakpoints]
     lines: list[str] = []
-
-    # responsive container max-widths (each breakpoint also caps the smaller ones)
+    # each breakpoint also caps the smaller ones
     for k, bp in enumerate(breakpoints):
         parts = [f".sd-container-{names[j]}" for j in range(k, -1, -1)]
         parts.append(".sd-container")
@@ -289,6 +294,15 @@ def gen_grids(data: dict) -> str:
             f"@media (min-width: {bp['min']}) "
             f"{{{selector}{{max-width:{bp['container_max']}}}}}"
         )
+    return "\n".join(lines)
+
+
+def gen_grids(data: dict) -> str:
+    """Responsive grid: row-cols, cols and gutters."""
+    breakpoints = data["breakpoints"]
+    columns = data["columns"]
+    spacings = data["spacings"]
+    lines: list[str] = []
 
     # base row-cols-<n>
     lines.extend(
@@ -382,6 +396,7 @@ GENERATORS = {
     "buttons": gen_buttons,
     "avatars": gen_avatars,
     "card_cols": gen_card_cols,
+    "container_media": gen_container_media,
     "grids": gen_grids,
     "root_variables": gen_root_variables,
 }

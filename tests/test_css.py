@@ -91,6 +91,42 @@ def test_minify_preserves_combinators_in_brackets_and_strings(source, expected):
     assert generate_css.minify(source) == expected
 
 
+@pytest.mark.parametrize(
+    ("selector", "expected"),
+    [
+        # :not() contributes only its argument's specificity (reviewer example)
+        ("details.sd-dropdown:not([open]).sd-card", (0, 3, 1)),
+        (".sd-tab-set>input:not(:checked)+label", (0, 2, 2)),
+        # :where() is always zero; :is() takes its most specific argument
+        (":where(.a,.b#x) .c", (0, 1, 0)),
+        (":is(.a,#b) .c", (1, 1, 0)),
+        # other functional pseudo-classes still count as one pseudo-class
+        (".a:nth-child(2)", (0, 2, 0)),
+    ],
+)
+def test_checker_specificity_model(selector, expected):
+    """``:not()``/``:is()`` are argument-only, ``:where()`` zero (per spec)."""
+    pytest.importorskip("tinycss2")
+    import check_css_equivalence  # noqa: PLC0415
+
+    assert check_css_equivalence._specificity_of_simple(selector) == expected
+
+
+def test_checker_catches_cross_context_inversion():
+    """The order pass must flag flips across co-applying @media contexts."""
+    pytest.importorskip("tinycss2")
+    import check_css_equivalence  # noqa: PLC0415
+
+    base = "@media (min-width:1px){.a{color:blue}}\n.a{color:red}"
+    flipped = ".a{color:red}\n@media (min-width:1px){.a{color:blue}}"
+    ok, report = check_css_equivalence.check(base, flipped, "base", "new")
+    assert not ok
+    assert "SOURCE-ORDER INVERSIONS" in report
+    # and the unflipped pair passes
+    ok_same, _ = check_css_equivalence.check(base, base, "base", "new")
+    assert ok_same
+
+
 @pytest.mark.skipif(
     not os.environ.get("SD_CSS_EQUIV_BASE"),
     reason="set SD_CSS_EQUIV_BASE=<git-ref> to run the CSS rule-set equivalence check",
