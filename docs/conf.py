@@ -24,6 +24,13 @@ sd_fontawesome_latex = "fontawesome5"
 # missing glyphs. makeindex replaces xindy, which CI TeX images lack.
 latex_engine = "xelatex"
 latex_use_xindy = False
+latex_elements = {
+    # Sphinx >=9 auto-selects the newest FontAwesome LaTeX package installed
+    # for its admonition icons (fontawesome7 on full TeX Live 2025+), which
+    # hard-clashes with the fontawesome5 package sd_fontawesome_latex loads.
+    # Pin Sphinx's icons to the same package so there is a single FA load.
+    "sphinxsetup": "iconpackage=fontawesome5",
+}
 sd_custom_directives = {
     "dropdown-syntax": {
         "inherit": "dropdown",
