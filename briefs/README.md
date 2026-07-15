@@ -54,6 +54,7 @@ All file/line references are against commit `bbaf94a` (post v0.7.0).
 | 23 | [js-testing](23-js-testing.md) | infra | — | 11 helpful |
 | 24 | [packaging-1.0](24-packaging-1-0.md) | release | — | most others |
 | 25 | [drop-sass](25-drop-sass.md) | refactor/infra | stale browser-support docs; sass toolchain | 10, 20 |
+| 26 | [custom-roles](26-custom-roles.md) | feature | #81 follow-up (generalizes sd_custom_directives) | 02, 20 |
 
 ## Execution plan
 
@@ -93,6 +94,7 @@ Phase 3 style work)*
 card code)*
 - Track C continued: 16 card-pure-parse → 14 card-link-image-options
   (both rework `cards.py`; 14 last avoids three-way conflicts)
+- Track I: 26 custom-roles (badge family; small, independent)
 - Tracks F/G/H: 17 accordion, 18 steps, 19 aside — independent source
   files, but see the CSS-artifact rule below
 
