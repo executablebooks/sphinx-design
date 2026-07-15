@@ -124,6 +124,9 @@ jobs:
     - name: Compile PDF
       uses: xu-cheng/latex-action@v4
       with:
+        # TeX Live 2026's colortbl loops with Sphinx <9.1.1 table colorrows
+        # (sphinx-doc/sphinx#14465) — drop this pin once on sphinx >=9.1.1
+        texlive_version: "2025"
         working_directory: docs/_build/latex
         root_file: sphinxdesign.tex
     - name: Upload PDF
