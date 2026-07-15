@@ -1,3 +1,5 @@
+/* Entry animations for cards/grid items. */
+
 @keyframes sd-slide-from-left {
   0% {
     transform: translateX(-100%);
@@ -19,7 +21,7 @@
 @keyframes sd-grow100 {
   0% {
     transform: scale(0);
-    opacity: 0.5;
+    opacity: .5;
   }
   100% {
     transform: scale(1);
@@ -30,7 +32,7 @@
 @keyframes sd-grow50 {
   0% {
     transform: scale(0.5);
-    opacity: 0.5;
+    opacity: .5;
   }
   100% {
     transform: scale(1);
@@ -41,7 +43,7 @@
 @keyframes sd-grow50-rot20 {
   0% {
     transform: scale(0.5) rotateZ(-20deg);
-    opacity: 0.5;
+    opacity: .5;
   }
   75% {
     transform: scale(1) rotateZ(5deg);
@@ -57,8 +59,8 @@
   }
 }
 
-// animation is shorthand for 'animation-' properties:
-// duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name
+/* animation shorthand:
+   duration | easing | delay | iteration-count | direction | fill-mode | play-state | name */
 
 .sd-animate-slide-from-left {
   animation: 1s ease-out 0s 1 normal none running sd-slide-from-left;

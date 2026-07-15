@@ -1,9 +1,7 @@
-// Overrides for non-bootstrap themes (such as alabaster)
+/* Overrides for non-Bootstrap themes (such as alabaster). */
 
 .sd-sphinx-override,
 .sd-sphinx-override * {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -12,5 +10,5 @@
 }
 
 .sd-sphinx-override:focus-visible {
-  outline-offset: 0.25rem;
+  outline-offset: .25rem;
 }

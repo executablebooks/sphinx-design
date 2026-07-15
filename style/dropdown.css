@@ -1,0 +1,133 @@
+details.sd-dropdown {
+  position: relative;
+  font-size: var(--sd-fontsize-dropdown);
+}
+
+details.sd-dropdown:hover {
+  cursor: pointer;
+}
+
+details.sd-dropdown .sd-summary-content {
+  cursor: default;
+}
+
+details.sd-dropdown summary.sd-summary-title {
+  padding: .5em .6em .5em 1em;
+  font-size: var(--sd-fontsize-dropdown-title);
+  font-weight: var(--sd-fontweight-dropdown-title);
+  /* make the text un-selectable */
+  user-select: none;
+  /* hide the default triangle marker */
+  list-style: none;
+  /* the title has three parts: an optional left icon, the text (which grows to
+     fill the space), and the right-hand state marker */
+  display: inline-flex;
+  justify-content: space-between;
+  outline-offset: .25rem;
+}
+
+/* -webkit-details-marker: kept deliberately. Safari (WebKit) still paints its
+   own <summary> disclosure triangle via this pseudo-element and ignores
+   `list-style: none`, so this reset is required to hide it there. */
+details.sd-dropdown summary.sd-summary-title::-webkit-details-marker {
+  display: none;
+}
+
+details.sd-dropdown summary.sd-summary-title .sd-summary-icon {
+  margin-right: .6em;
+  /* align the icon vertically within its container */
+  display: inline-flex;
+  align-items: center;
+}
+
+details.sd-dropdown summary.sd-summary-title .sd-summary-icon svg {
+  opacity: .8;
+}
+
+details.sd-dropdown summary.sd-summary-title .sd-summary-text {
+  flex-grow: 1;
+  line-height: 1.5;
+  /* right padding on the text rather than a left margin on the state marker,
+     because rotating the marker moves what "left" means */
+  padding-right: .5rem;
+}
+
+details.sd-dropdown summary.sd-summary-title .sd-summary-state-marker {
+  pointer-events: none;
+  /* align the icon vertically within its container */
+  display: inline-flex;
+  align-self: center;
+}
+
+details.sd-dropdown summary.sd-summary-title .sd-summary-state-marker svg {
+  opacity: .6;
+}
+
+details.sd-dropdown summary.sd-summary-title:hover .sd-summary-state-marker svg {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* hide the octicon placeholder shown when no title is provided, but only when
+   the summary is open */
+details.sd-dropdown[open] summary .sd-octicon.no-title {
+  visibility: hidden;
+}
+
+/* how the state marker changes on open/close of the dropdown */
+details.sd-dropdown .sd-summary-chevron-right {
+  transition: .25s;
+}
+
+details.sd-dropdown[open] > .sd-summary-title .sd-summary-chevron-right {
+  transform: rotate(90deg);
+}
+
+details.sd-dropdown[open] > .sd-summary-title .sd-summary-chevron-down {
+  transform: rotate(180deg);
+}
+
+/* hide the card body border when not open */
+details.sd-dropdown:not([open]).sd-card {
+  border: none;
+}
+
+details.sd-dropdown:not([open]) > .sd-card-header {
+  border: 1px solid var(--sd-color-card-border);
+  border-radius: .25rem;
+}
+
+/* transition animation */
+details.sd-dropdown.sd-fade-in[open] summary ~ * {
+  animation: sd-fade-in .5s ease-in-out;
+}
+
+details.sd-dropdown.sd-fade-in-slide-down[open] summary ~ * {
+  animation: sd-fade-in .5s ease-in-out,sd-slide-down .5s ease-in-out;
+}
+
+.sd-col > .sd-dropdown {
+  width: 100%;
+}
+
+.sd-summary-content > .sd-tab-set:first-child {
+  margin-top: 0;
+}
+
+@keyframes sd-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes sd-slide-down {
+  0% {
+    transform: translate(0, -10px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}

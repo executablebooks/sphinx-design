@@ -1,0 +1,197 @@
+# Design tokens for sphinx-design's generated utility CSS.
+#
+# This declarative data file is the single source of truth for the mechanical
+# utility families (spacing, sizing, borders, colours, grid columns, ...) that
+# ``tools/generate_css.py`` expands into ``sphinx_design/static/sphinx-design.min.css``.
+# It replaces the ``@each``/``@for`` loops of the old Sass sources and is
+# deliberately implementation-agnostic (any generator, in any language, can
+# consume it). See AGENTS.md for the workflow.
+
+# Number of grid / card columns.
+columns = 12
+
+# Spacing scale, indexed 0..5 (``.sd-p-1``, ``.sd-m-2``, gutters, ...).
+# Values are kept in their expanded form here; padding/margin utilities strip a
+# leading ``0`` (``.25rem``) while gutter custom properties keep it (``0.25rem``).
+spacings = ["0", "0.25rem", "0.5rem", "1rem", "1.5rem", "3rem"]
+
+# Fixed :root custom properties, emitted verbatim after the colour-derived ones.
+# Order is preserved. These are not colour-scale-derived, so they stay as data.
+# (Declared here, before any table headers, so they stay top-level in TOML.)
+root_fixed = [
+  ["--sd-color-shadow", "rgba(0, 0, 0, 0.15)"],
+  ["--sd-color-card-border", "rgba(0, 0, 0, 0.125)"],
+  ["--sd-color-card-border-hover", "hsla(231, 99%, 66%, 1)"],
+  ["--sd-color-card-background", "transparent"],
+  ["--sd-color-card-text", "inherit"],
+  ["--sd-color-card-header", "transparent"],
+  ["--sd-color-card-footer", "transparent"],
+  ["--sd-color-tabs-label-active", "hsla(231, 99%, 66%, 1)"],
+  ["--sd-color-tabs-label-hover", "hsla(231, 99%, 66%, 1)"],
+  ["--sd-color-tabs-label-inactive", "hsl(0, 0%, 66%)"],
+  ["--sd-color-tabs-underline-active", "hsla(231, 99%, 66%, 1)"],
+  ["--sd-color-tabs-underline-hover", "rgba(178, 206, 245, 0.62)"],
+  ["--sd-color-tabs-underline-inactive", "transparent"],
+  ["--sd-color-tabs-overline", "rgb(222, 222, 222)"],
+  ["--sd-color-tabs-underline", "rgb(222, 222, 222)"],
+  ["--sd-fontsize-tabs-label", "1rem"],
+  ["--sd-fontsize-dropdown", "inherit"],
+  ["--sd-fontsize-dropdown-title", "1rem"],
+  ["--sd-fontweight-dropdown-title", "700"],
+]
+
+# Responsive breakpoints (min-width based) and their container max-widths.
+[[breakpoints]]
+name = "sm"
+min = "576px"
+container_max = "540px"
+
+[[breakpoints]]
+name = "md"
+min = "768px"
+container_max = "720px"
+
+[[breakpoints]]
+name = "lg"
+min = "992px"
+container_max = "960px"
+
+[[breakpoints]]
+name = "xl"
+min = "1200px"
+container_max = "1140px"
+
+# Width/height utilities (``.sd-w-25``, ``.sd-h-auto``, ...); order is preserved.
+[sizes]
+"25" = "25%"
+"50" = "50%"
+"75" = "75%"
+"100" = "100%"
+"auto" = "auto"
+
+# Border-width utilities (``.sd-border-1``, ``.sd-border-top-2``, ...).
+[borders]
+"0" = "0"
+"1" = "1px"
+"2" = "2px"
+"3" = "3px"
+"4" = "4px"
+"5" = "5px"
+
+# Border-radius utilities (``.sd-rounded-1``, ``.sd-rounded-pill``, ...).
+[rounded]
+"0" = "0"
+"1" = ".2rem"
+"2" = ".3rem"
+"3" = ".5rem"
+"pill" = "50rem"
+"circle" = "50%"
+
+# Responsive font-size utilities (``.sd-fs-1`` ... ``.sd-fs-6``).
+[font_sizes]
+"1" = "calc(1.375rem + 1.5vw)"
+"2" = "calc(1.325rem + 0.9vw)"
+"3" = "calc(1.3rem + 0.6vw)"
+"4" = "calc(1.275rem + 0.3vw)"
+"5" = "1.25rem"
+"6" = "1rem"
+
+# Avatar sizing utilities (``.sd-avatar-sm``, ...).
+[avatar_sizes]
+"xs" = "1rem"
+"sm" = "3rem"
+"md" = "5rem"
+"lg" = "7rem"
+"xl" = "10rem"
+"inherit" = "inherit"
+"initial" = "initial"
+
+# Semantic colour palette. For each colour the generator emits the runtime
+# custom properties (``--sd-color-<name>``, ``-highlight``, ``-bg``, ``-text``)
+# and the ``.sd-bg-*`` / ``.sd-text-*`` / ``.sd-outline-*`` / ``.sd-btn-*`` families.
+#
+# ``text``      pre-computed WCAG contrast colour (replaces the Sass
+#               ``text-color()`` picker: dark text when lightness > 70%).
+# ``highlight`` pre-computed hover/focus shade, byte-identical to the old baked
+#               ``mix(black, <value>, 15%)`` output. The generator ALSO emits a
+#               ``color-mix(in srgb, black 15%, var(--sd-color-<name>))`` line so
+#               that user overrides of ``--sd-color-<name>`` now propagate to the
+#               hover shade; this static value is the graceful-degradation
+#               fallback for engines without ``color-mix()``.
+# ``rgb``       used to build the translucent ``--sd-color-<name>-bg`` value.
+[[colors]]
+name = "primary"
+value = "#0071bc"
+rgb = [0, 113, 188]
+text = "#fff"
+highlight = "#0060a0"
+
+[[colors]]
+name = "secondary"
+value = "#6c757d"
+rgb = [108, 117, 125]
+text = "#fff"
+highlight = "#5c636a"
+
+[[colors]]
+name = "success"
+value = "#28a745"
+rgb = [40, 167, 69]
+text = "#fff"
+highlight = "#228e3b"
+
+[[colors]]
+name = "info"
+value = "#17a2b8"
+rgb = [23, 162, 184]
+text = "#fff"
+highlight = "#148a9c"
+
+[[colors]]
+name = "warning"
+value = "#f0b37e"
+rgb = [240, 179, 126]
+text = "#212529"
+highlight = "#cc986b"
+
+[[colors]]
+name = "danger"
+value = "#dc3545"
+rgb = [220, 53, 69]
+text = "#fff"
+highlight = "#bb2d3b"
+
+[[colors]]
+name = "light"
+value = "#f8f9fa"
+rgb = [248, 249, 250]
+text = "#212529"
+highlight = "#d3d4d5"
+
+[[colors]]
+name = "muted"
+value = "#6c757d"
+rgb = [108, 117, 125]
+text = "#fff"
+highlight = "#5c636a"
+
+[[colors]]
+name = "dark"
+value = "#212529"
+rgb = [33, 37, 41]
+text = "#fff"
+highlight = "#1c1f23"
+
+[[colors]]
+name = "black"
+value = "black"
+rgb = [0, 0, 0]
+text = "#fff"
+highlight = "black"
+
+[[colors]]
+name = "white"
+value = "white"
+rgb = [255, 255, 255]
+text = "#212529"
+highlight = "#d9d9d9"

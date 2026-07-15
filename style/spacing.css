@@ -1,0 +1,25 @@
+/* Auto-margin utilities (the numeric padding/margin scale is generated). */
+
+.sd-m-auto {
+  margin: auto !important;
+}
+
+.sd-mt-auto,
+.sd-my-auto {
+  margin-top: auto !important;
+}
+
+.sd-mr-auto,
+.sd-mx-auto {
+  margin-right: auto !important;
+}
+
+.sd-mb-auto,
+.sd-my-auto {
+  margin-bottom: auto !important;
+}
+
+.sd-ml-auto,
+.sd-mx-auto {
+  margin-left: auto !important;
+}

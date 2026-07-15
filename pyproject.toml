@@ -42,12 +42,16 @@ testing = [
     "pytest-cov",
     "pytest-regressions",
     "defusedxml",
+    # used only by the dev CSS tooling (tools/check_css_equivalence.py); the
+    # runtime package and tools/generate_css.py have no third-party dependency.
+    "tinycss2",
 ]
 testing-no-myst = [
     "pytest>=8.3,<10.0",
     "pytest-cov",
     "pytest-regressions",
     "defusedxml",
+    "tinycss2",
 ]
 
 theme-furo = ["furo~=2025.12"]
@@ -66,6 +70,7 @@ exclude = [
     "docs/",
     "style/",
     "tests/",
+    "tools/",
 ]
 
 [tool.ruff.lint]

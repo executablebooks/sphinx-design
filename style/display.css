@@ -1,4 +1,5 @@
-@use "spacing" as *;
+/* Base display utilities and flex alignment helpers.
+   The responsive .sd-d-<breakpoint>-* families are generated. */
 
 .sd-d-none {
   display: none !important;
@@ -21,57 +22,20 @@
 }
 
 .sd-d-flex-row {
-  display: -ms-flexbox !important;
   display: flex !important;
   flex-direction: row !important;
 }
 
 .sd-d-flex-column {
-  display: -ms-flexbox !important;
   display: flex !important;
   flex-direction: column !important;
 }
 
 .sd-d-inline-flex {
-  display: -ms-inline-flexbox !important;
   display: inline-flex !important;
 }
 
-@each $cat, $width in $media-widths {
-  @media (min-width: $width) {
-    .sd-d-#{$cat}-none {
-      display: none !important;
-    }
-
-    .sd-d-#{$cat}-inline {
-      display: inline !important;
-    }
-
-    .sd-d-#{$cat}-inline-block {
-      display: inline-block !important;
-    }
-
-    .sd-d-#{$cat}-block {
-      display: block !important;
-    }
-
-    .sd-d-#{$cat}-grid {
-      display: grid !important;
-    }
-
-    .sd-d-#{$cat}-flex {
-      display: -ms-flexbox !important;
-      display: flex !important;
-    }
-
-    .sd-d-#{$cat}-inline-flex {
-      display: -ms-inline-flexbox !important;
-      display: inline-flex !important;
-    }
-  }
-}
-
-// will align on major axis of flex
+/* align on the major (main) axis of a flex container */
 .sd-align-major-start {
   justify-content: flex-start !important;
 }
@@ -92,7 +56,7 @@
   justify-content: space-evenly !important;
 }
 
-// will align on minor axis of flex
+/* align on the minor (cross) axis of a flex container */
 .sd-align-minor-start {
   align-items: flex-start !important;
 }
@@ -105,7 +69,6 @@
   align-items: center !important;
 }
 
-// default
 .sd-align-minor-stretch {
   align-items: stretch !important;
 }
