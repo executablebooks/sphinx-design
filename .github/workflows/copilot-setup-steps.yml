@@ -33,12 +33,6 @@ jobs:
         python-version: "3.11"
         cache: pip
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: "20"
-        cache: npm
-
     - name: Install uv
       run: pip install uv
 
@@ -47,6 +41,3 @@ jobs:
 
     - name: Install tox and tox-uv
       run: pip install tox tox-uv
-
-    - name: Install Node.js dependencies
-      run: npm install

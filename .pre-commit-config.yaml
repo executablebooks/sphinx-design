@@ -37,15 +37,12 @@ repos:
     hooks:
     - id: css
       name: css
-      description: Compile the SCSS/SASS files to CSS inside the python package
-      files: \.(scss|sass)$
-      language: node
-      additional_dependencies: ['sass@1.35.2']
-      # entry: sass
-      entry: npm run css
+      description: Generate the compiled CSS from style/design.toml and style/*.css
+      files: ^style/.*\.(css|toml)$
+      language: python
+      entry: python tools/generate_css.py
       require_serial: true
       pass_filenames: false
-      # args: [--style=compressed, --no-source-map, style/index.scss, sphinx_design/static/sphinx-design.min.css]
 
     - id: tsc
       name: tsc (jsdoc)
