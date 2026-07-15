@@ -234,6 +234,14 @@ class SdConfig:
             "help": 'FontAwesome CSS URL to add when sd_fontawesome_source="cdn"',
         },
     )
+    fontawesome_version: str = dc.field(
+        default="as-named",
+        metadata={
+            "validator": one_of(("as-named", "4", "5", "6")),
+            "help": "FontAwesome class scheme emitted by the icon roles: "
+            '"as-named" (default, role name emitted verbatim), "4", "5" or "6"',
+        },
+    )
     fontawesome_latex: bool | str = dc.field(
         default=False,
         metadata={

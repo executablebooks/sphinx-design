@@ -4,5 +4,5 @@
             Heading
         <paragraph>
             An icon 
-            <fontawesome classes="fas fa-spinner sd-bg-primary sd-bg-text-primary" icon="spinner">
+            <fontawesome classes="fas fa-spinner sd-bg-primary sd-bg-text-primary" icon="spinner" icon_style="solid">
             , some more text.
