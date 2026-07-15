@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- ✨ NEW: FontAwesome v6 roles (`fa-solid`/`fa-brands`/`fa-regular`) and
+  declarative CSS loading via the new `sd_fontawesome_source` /
+  `sd_fontawesome_cdn_url` options (the supported path for FontAwesome Pro
+  kits) ({pr}`285`, {issue}`174`)
+- 👌 IMPROVE: `sd_fontawesome_latex` now also accepts `"fontawesome5"` (adding
+  `fontawesome5.sty` and emitting `\faIcon{...}`), resolving package clashes
+  with themes that load `fontawesome5`; `True`/`False` keep working unchanged
+  ({pr}`285`, {issue}`242`)
 - 🐛 FIX: Synced tabs stay in sync when activated by click-and-drag or keyboard,
   by syncing on the radio input's `change` event rather than a label click
   ({pr}`284`, {issue}`46`)

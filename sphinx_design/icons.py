@@ -21,12 +21,18 @@ logger = logging.getLogger(__name__)
 def setup_icons(app: Sphinx) -> None:
     app.add_role("octicon", OcticonRole())
     app.add_directive("_all-octicon", AllOcticons)
+    # legacy v4/v5 class scheme (kept for backwards compatibility);
+    # note: fa is deprecated in v5, fas is the default and fab is the other free option
     for style in ["fa", "fas", "fab", "far"]:
-        # note: fa is deprecated in v5, fas is the default and fab is the other free option
+        app.add_role(style, FontawesomeRole(style))
+    # v6 canonical class scheme (required by FA6+ setups without compatibility
+    # aliases, e.g. Pro kits; the concise fas/fab/far roles remain supported)
+    for style in ["fa-solid", "fa-brands", "fa-regular"]:
         app.add_role(style, FontawesomeRole(style))
     for style in ["regular", "outlined", "round", "sharp", "twotone"]:
         app.add_role("material-" + style, MaterialRole(style))
     app.connect("config-inited", add_fontawesome_pkg)
+    app.connect("builder-inited", add_fontawesome_css)
     app.add_node(
         sd_icon,
         html=(visit_sd_icon_html, None),
@@ -213,6 +219,20 @@ class fontawesome(nodes.Element, nodes.General):  # noqa: N801
     """Node for rendering fontawesome icon."""
 
 
+#: Map a fontawesome role name (the node's leading CSS class) to the semantic
+#: style used for the ``fontawesome5`` LaTeX package. ``fa`` (v4) and ``fas``
+#: are solid, ``fab`` brands, ``far`` regular; the v6 role names are explicit.
+FA_LATEX_STYLES = {
+    "fa": "solid",
+    "fas": "solid",
+    "fab": "brands",
+    "far": "regular",
+    "fa-solid": "solid",
+    "fa-brands": "brands",
+    "fa-regular": "regular",
+}
+
+
 class FontawesomeRole(SphinxRole):
     """Role to display a Fontawesome icon.
 
@@ -242,14 +262,36 @@ def depart_fontawesome_html(self, node):
     self.body.append("</span>")
 
 
+def add_fontawesome_css(app: Sphinx) -> None:
+    """Add the FontAwesome CDN CSS to HTML builds, if so configured."""
+    if app.builder.format != "html":
+        return
+    config = get_sd_config(app.env)
+    if config.fontawesome_source == "cdn":
+        app.add_css_file(config.fontawesome_cdn_url)
+
+
 def add_fontawesome_pkg(app, config):
-    if SdConfig.from_sphinx(config).fontawesome_latex:
+    """Load the LaTeX fontawesome package matching ``sd_fontawesome_latex``."""
+    mode = SdConfig.from_sphinx(config).fontawesome_latex_mode
+    if mode == "fontawesome":
         app.add_latex_package("fontawesome")
+    elif mode == "fontawesome5":
+        app.add_latex_package("fontawesome5")
 
 
 def visit_fontawesome_latex(self, node):
-    """Add latex fonteawesome icon, if configured, else warn."""
-    if get_sd_config(self.builder.env).fontawesome_latex:
+    """Add latex fontawesome icon, if configured, else warn."""
+    mode = get_sd_config(self.builder.env).fontawesome_latex_mode
+    if mode == "fontawesome5":
+        # the fontawesome5 package resolves brand icons by name, and takes the
+        # style as an optional argument (default solid); see its manual
+        style = FA_LATEX_STYLES.get(node["classes"][0], "solid")
+        if style == "regular":
+            self.body.append(f"\\faIcon[regular]{{{node['icon']}}}")
+        else:
+            self.body.append(f"\\faIcon{{{node['icon']}}}")
+    elif mode == "fontawesome":
         self.body.append(f"\\faicon{{{node['icon']}}}")
     else:
         logger.warning(
@@ -258,6 +300,7 @@ def visit_fontawesome_latex(self, node):
             location=node,
             type=WARNING_TYPE,
             subtype="fa-build",
+            once=True,
         )
     raise nodes.SkipNode
 
@@ -270,6 +313,7 @@ def visit_fontawesome_warning(self, node: nodes.Element) -> None:
         location=node,
         type=WARNING_TYPE,
         subtype="fa-build",
+        once=True,
     )
     raise nodes.SkipNode
 

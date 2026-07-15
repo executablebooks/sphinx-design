@@ -27,6 +27,8 @@ from typing import TYPE_CHECKING, Any, Protocol
 from sphinx.util.logging import getLogger
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from sphinx.application import Sphinx
     from sphinx.config import Config
     from sphinx.environment import BuildEnvironment
@@ -98,6 +100,58 @@ def instance_of(type_: type[Any] | tuple[type[Any], ...]) -> ValidatorType:
     return _validator
 
 
+def one_of(allowed: Sequence[Any]) -> ValidatorType:
+    """Create a validator that raises a ``ValueError``
+    if the value is not one of the allowed values.
+
+    :param allowed: The allowed values.
+    """
+    allowed = tuple(allowed)
+
+    def _validator(
+        inst: Any, field: dc.Field[Any], value: Any, suffix: str = ""
+    ) -> None:
+        if value not in allowed:
+            raise ValueError(
+                f"'{field.name}{suffix}' must be one of {allowed!r} (got {value!r})."
+            )
+
+    return _validator
+
+
+FONTAWESOME_LATEX_MODES = ("none", "fontawesome", "fontawesome5")
+"""Allowed string values for the ``fontawesome_latex`` configuration."""
+
+
+def validate_fontawesome_latex(
+    inst: Any, field: dc.Field[Any], value: Any, suffix: str = ""
+) -> None:
+    """Validate the ``fontawesome_latex`` value.
+
+    Accepts a ``bool`` (``True``/``False`` are kept for backwards
+    compatibility, and normalized by :attr:`SdConfig.fontawesome_latex_mode`),
+    or one of :data:`FONTAWESOME_LATEX_MODES`.
+
+    :param inst: The dataclass instance (or None if not yet created).
+    :param field: The dataclass field.
+    :param value: The value to validate.
+    :param suffix: Suffix to append to the field name in error messages.
+    :raises TypeError | ValueError: If the value is invalid.
+    """
+    if isinstance(value, bool):
+        return
+    if not isinstance(value, str):
+        raise TypeError(
+            f"'{field.name}{suffix}' must be a bool or str "
+            f"(got {value!r} that is a {value.__class__!r})."
+        )
+    if value not in FONTAWESOME_LATEX_MODES:
+        raise ValueError(
+            f"'{field.name}{suffix}' must be a bool or one of "
+            f"{FONTAWESOME_LATEX_MODES!r} (got {value!r})."
+        )
+
+
 def validate_custom_directive(field: dc.Field[Any], name: Any, data: Any) -> None:
     """Validate the shape of a single custom directive (name -> data) entry.
 
@@ -165,11 +219,29 @@ class SdConfig:
             "doc_type": "dict[str, dict]",
         },
     )
-    fontawesome_latex: bool = dc.field(
+    fontawesome_source: str = dc.field(
+        default="none",
+        metadata={
+            "validator": one_of(("none", "cdn")),
+            "help": "How sphinx-design loads the FontAwesome CSS: "
+            '"none" (default, provided by you/your theme) or "cdn"',
+        },
+    )
+    fontawesome_cdn_url: str = dc.field(
+        default="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css",
+        metadata={
+            "validator": instance_of(str),
+            "help": 'FontAwesome CSS URL to add when sd_fontawesome_source="cdn"',
+        },
+    )
+    fontawesome_latex: bool | str = dc.field(
         default=False,
         metadata={
-            "validator": instance_of(bool),
-            "help": "Render fontawesome icons in LaTeX output",
+            "validator": validate_fontawesome_latex,
+            "types": (bool, str),
+            "help": "Render fontawesome icons in LaTeX output: "
+            'False/"none", True/"fontawesome", or "fontawesome5"',
+            "doc_type": "bool | str",
         },
     )
     tabs_storage_prefix: str = dc.field(
@@ -185,6 +257,23 @@ class SdConfig:
 
     def __post_init__(self) -> None:
         validate_fields(self)
+
+    @property
+    def fontawesome_latex_mode(self) -> str:
+        """The normalized LaTeX fontawesome mode.
+
+        Maps the backwards-compatible boolean values to their string
+        equivalents (``True`` -> ``"fontawesome"``, ``False`` -> ``"none"``),
+        so downstream code only has to handle :data:`FONTAWESOME_LATEX_MODES`.
+
+        :return: One of :data:`FONTAWESOME_LATEX_MODES`.
+        """
+        value = self.fontawesome_latex
+        if value is True:
+            return "fontawesome"
+        if value is False:
+            return "none"
+        return value
 
     @classmethod
     def from_sphinx(cls, config: Config) -> SdConfig:
@@ -217,7 +306,12 @@ def setup_sd_config(app: Sphinx) -> None:
     :param app: The Sphinx application object.
     """
     for field in dc.fields(SdConfig):
-        app.add_config_value(f"sd_{field.name}", _field_default(field), "env")
+        app.add_config_value(
+            f"sd_{field.name}",
+            _field_default(field),
+            "env",
+            types=field.metadata.get("types", ()),
+        )
     # low priority, so that the values are validated
     # before any other `config-inited` listener reads them
     app.connect("config-inited", _validate_config_values, priority=400)
