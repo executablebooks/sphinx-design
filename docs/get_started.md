@@ -88,14 +88,14 @@ The key is the new directive name to add, and the value is a dictionary with the
 
 ## Supported browsers
 
-- Chrome >= 60
-- Firefox >= 60
-- Firefox ESR
-- iOS >= 12
-- Safari >= 12
-- Explorer >= 12
+sphinx-design targets [**Baseline** Widely Available](https://web.dev/baseline)
+web features — those interoperable across Chrome, Edge, Firefox and Safari for
+at least 30 months (in practice, the evergreen browsers of roughly the last
+2½ years). Internet Explorer is not supported.
 
-(Mirrors: <https://github.com/twbs/bootstrap/blob/v5.0.2/.browserslistrc>)
+Individual features may additionally use *Baseline Newly Available* CSS where it
+degrades gracefully; such exceptions are noted in the relevant feature's
+documentation.
 
 ## Migrating from sphinx-panels
 
