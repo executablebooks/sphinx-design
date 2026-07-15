@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
@@ -53,7 +53,7 @@ jobs:
     name: Tests (py${{ matrix.python-version }}, Sphinx${{ matrix.sphinx-version }}, on ${{ matrix.os }})
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
@@ -68,7 +68,7 @@ jobs:
         pytest --cov=sphinx_design --cov-report=xml --cov-report=term-missing
     - name: Upload to Codecov
       if: (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && matrix.python-version == '3.13' && matrix.sphinx-version == '~=8.0' && matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         name: pytests
@@ -84,7 +84,7 @@ jobs:
         format: [html, latex, man]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
@@ -123,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout source
-      uses: actions/checkout@v5
+      uses: actions/checkout@v7
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
