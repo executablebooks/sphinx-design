@@ -97,6 +97,38 @@ jobs:
     - name: Build documentation
       run: sphinx-build -nW --keep-going -b ${{ matrix.format }} docs/ docs/_build/${{ matrix.format }}
 
+  docs-build-pdf:
+
+    # compiling the LaTeX sources catches what the sphinx build alone cannot:
+    # missing LaTeX packages and icon names unknown to fontawesome5.sty
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.11"
+        cache: pip
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[rtd]
+    - name: Install SVG conversion tools (for sphinx.ext.imgconverter)
+      run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends imagemagick librsvg2-bin
+    - name: Build LaTeX sources
+      run: sphinx-build -nW --keep-going -b latex docs/ docs/_build/latex
+    - name: Compile PDF
+      uses: xu-cheng/latex-action@v2
+      with:
+        working_directory: docs/_build/latex
+        root_file: sphinxdesign.tex
+    - name: Upload PDF
+      uses: actions/upload-artifact@v4
+      with:
+        name: docs-pdf
+        path: docs/_build/latex/sphinxdesign.pdf
+
   # https://github.com/marketplace/actions/alls-green#why
   check:  # This job does nothing and is only used for the branch protection
 
@@ -106,6 +138,7 @@ jobs:
     - pre-commit
     - tests
     - docs-build-format
+    - docs-build-pdf
 
     runs-on: ubuntu-latest
 

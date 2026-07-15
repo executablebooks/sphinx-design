@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- 🔧 MAINTAIN: CI now compiles the documentation's LaTeX output to PDF
+  (exercising the `sd_fontawesome_latex="fontawesome5"` icon path, which the
+  docs now use), and the fa-build hint recommends `"fontawesome5"` over the
+  legacy FontAwesome 4 package ({pr}`PRNUM`)
 - ✨ NEW: `sd_fontawesome_version` makes icon role names version-agnostic:
   any spelling (`fas`, `fa-solid`, ...) can emit the FontAwesome `"4"`, `"5"`
   or `"6"` class scheme, so upgrading FontAwesome is a one-line `conf.py`
