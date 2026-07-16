@@ -11,7 +11,7 @@
   `sd_custom_directives`, fully TOML-representable; the roles are reconciled on
   each build, so config edits are picked up and a removed role is unregistered,
   and a name clashing with a docutils built-in or another extension's role is
-  skipped with a warning ({pr}`PRNUM`, {issue}`81`).
+  skipped with a warning ({pr}`295`, {issue}`81`).
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
