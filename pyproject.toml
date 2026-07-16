@@ -42,12 +42,19 @@ testing = [
     "pytest-cov",
     "pytest-regressions",
     "defusedxml",
+    # used only by the dev CSS tooling in tools/ (the checker parses with
+    # tinycss2, the generator minifies with rcssmin); the runtime package
+    # ships the pre-built artifact and has no third-party dependency.
+    "tinycss2",
+    "rcssmin",
 ]
 testing-no-myst = [
     "pytest>=8.3,<10.0",
     "pytest-cov",
     "pytest-regressions",
     "defusedxml",
+    "tinycss2",
+    "rcssmin",
 ]
 
 theme-furo = ["furo~=2025.12"]
@@ -66,6 +73,7 @@ exclude = [
     "docs/",
     "style/",
     "tests/",
+    "tools/",
 ]
 
 [tool.ruff.lint]
@@ -108,4 +116,9 @@ strict_equality = true
 
 [[tool.mypy.overrides]]
 module = ["docutils.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# dev-only CSS minifier used by tools/generate_css.py; ships no type stubs
+module = ["rcssmin"]
 ignore_missing_imports = true

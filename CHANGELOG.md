@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
+  generator (`tools/generate_css.py` driven by `style/design.toml` and
+  hand-authored `style/*.css`); `package.json` is gone. The compiled
+  `sphinx-design.min.css` is a rule-set no-op apart from two deliberate
+  changes. Hover/focus shades now use runtime `color-mix()` (behind a static
+  fallback), so overriding a `--sd-color-*` variable now flows through to its
+  `-highlight` shade instead of the shade being frozen at build time. Also
+  purges ~150 dead vendor prefixes (IE `-ms-flex*`, and `-moz-`/`-webkit-`
+  animation, box-sizing and user-select duplicates) that no supported browser
+  needs. The migration was verified rule-for-rule *and* cascade-order-faithful
+  against the previous stylesheet, and the new build fails loudly on
+  unregistered style files, malformed token data, or a stale/unparsable
+  artifact — see the new "Design: the CSS pipeline" documentation page
+  ({pr}`290`)
+- 📚 DOCS: Document the browser support policy as
+  [Baseline Widely Available](https://web.dev/baseline) (evergreen
+  Chrome/Edge/Firefox/Safari, no Internet Explorer), replacing the stale 2021
+  Bootstrap browserslist mirror ({pr}`290`)
 - 🔧 MAINTAIN: CI now compiles the documentation's LaTeX output to PDF
   (exercising the `sd_fontawesome_latex="fontawesome5"` icon path, which the
   docs now use), and the fa-build hint recommends `"fontawesome5"` over the

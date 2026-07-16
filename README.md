@@ -18,14 +18,11 @@ extensions = ["sphinx_design"]
 
 ## Supported browsers
 
-- Chrome >= 60
-- Firefox >= 60
-- Firefox ESR
-- iOS >= 12
-- Safari >= 12
-- Explorer >= 12
-
-(Mirrors: <https://github.com/twbs/bootstrap/blob/v5.0.2/.browserslistrc>)
+sphinx-design targets [**Baseline** Widely Available](https://web.dev/baseline)
+web features (interoperable across Chrome, Edge, Firefox and Safari for at least
+30 months — the evergreen browsers of roughly the last 2½ years). Internet
+Explorer is not supported. See the [getting started guide](./docs/get_started.md)
+for details.
 
 ## Theme support
 
@@ -47,9 +44,11 @@ See [Migrating from sphinx-panels](./docs/get_started.md) for more information.
 It is recommended to use [tox](https://tox.readthedocs.io/en/latest/) to run the tests and document builds.
 Run `tox -va` to see all the available tox environments.
 
-To run linting, formatting and SASS compilation, use [pre-commit](https://pre-commit.com/).
-`pre-commit run --all css` will run the SASS compiler, for which you will need [node](https://nodejs.org) and [npm](https://www.npmjs.com/) installed,
-or you can directly run `npm run css`.
+To run linting, formatting and CSS generation, use [pre-commit](https://pre-commit.com/).
+`pre-commit run --all-files css` regenerates the compiled stylesheet
+(`sphinx_design/static/sphinx-design.min.css`) from `style/design.toml` and the
+hand-authored `style/*.css`; you can also run it directly with
+`python tools/generate_css.py`.
 
 ## TODO
 
@@ -65,8 +64,6 @@ naming of directives/roles: standard prefix?
 why are cards setup with "word-wrap: break-word;"?
 
 handle latex
-
-Use autoprefixer when compiling SASS (see <https://getbootstrap.com/docs/5.0/getting-started/browsers-devices/#supported-browsers>)
 
 horizontal card (grid row inside card, picture on left)
 

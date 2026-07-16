@@ -1,0 +1,15 @@
+/* Transparent colour utilities (the non-generated part of the colour system).
+   The semantic sd-bg / sd-text / sd-outline colour families and the :root
+   custom properties are emitted by tools/generate_css.py from style/design.toml. */
+
+.sd-bg-transparent {
+  background-color: transparent !important;
+}
+
+.sd-outline-transparent {
+  border-color: transparent !important;
+}
+
+.sd-text-transparent {
+  color: transparent !important;
+}

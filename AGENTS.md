@@ -17,7 +17,6 @@ The extension works with multiple Sphinx themes including alabaster, sphinx-rtd-
 ```
 pyproject.toml          # Project configuration and dependencies
 tox.ini                 # Tox test environment configuration
-package.json            # Node.js config for SASS compilation
 
 sphinx_design/          # Main source code
 ├── __init__.py         # Package init with setup() entry point
@@ -31,16 +30,19 @@ sphinx_design/          # Main source code
 ├── tabs.py             # Tab directives
 ├── icons.py            # Icon roles (Material, FontAwesome, Octicons)
 ├── article_info.py     # Article info directive
-└── compiled/           # Compiled static assets (CSS, JS)
+├── compiled/           # Bundled icon data (JSON)
+└── static/             # Served static assets (compiled CSS, JS)
 
-style/                  # SASS source files
-├── index.scss          # Main SCSS entry point
-├── _variables.scss     # SCSS variables
-├── _grids.scss         # Grid styles
-├── _cards.scss         # Card styles
-├── _tabs.scss          # Tab styles
-├── _dropdown.scss      # Dropdown styles
-└── ...                 # Other component styles
+style/                  # CSS sources (compiled by tools/generate_css.py)
+├── design.toml         # Declarative tokens for the generated utility families
+├── cards.css           # Hand-authored card styles
+├── tabs.css            # Hand-authored tab styles
+├── dropdown.css        # Hand-authored dropdown styles
+└── ...                 # Other hand-authored component styles
+
+tools/                  # Dev-only tooling (not shipped in the wheel)
+├── generate_css.py     # Builds sphinx_design/static/sphinx-design.min.css
+└── check_css_equivalence.py  # CSS rule-set equivalence verifier (tinycss2)
 
 tests/                  # Test suite
 ├── conftest.py         # Pytest fixtures
@@ -124,10 +126,10 @@ tox -e ruff-fmt
 # Run pre-commit hooks on all files
 pre-commit run --all-files
 
-# Compile SASS to CSS
-npm run css
+# Regenerate the compiled CSS artifact
+python tools/generate_css.py
 # or via pre-commit
-pre-commit run --all css
+pre-commit run --all-files css
 ```
 
 ## Code Style Guidelines
@@ -283,19 +285,32 @@ Each component type has its own module with directives:
 
 #### Static Assets
 
-Compiled CSS and JS are stored in `sphinx_design/compiled/`:
+Compiled CSS and JS are stored in `sphinx_design/static/`:
 
-- CSS is compiled from SASS sources in `style/`
+- CSS is generated from the `style/` sources (see below)
 - JavaScript for tab functionality
 
 ### Styling
 
-The extension uses SASS for styling:
+The extension uses plain CSS, built by a small Python generator (no Node/Sass):
 
-1. SASS source files are in `style/`
-2. Compiled using `npm run css` (requires Node.js)
-3. Output goes to `sphinx_design/static/sphinx-design.min.css`
-4. CSS is automatically copied to build output during Sphinx builds
+1. Hand-authored component CSS lives in `style/*.css`, expanded selectors only
+   (no native CSS nesting), so the shipped stylesheet stays widely compatible.
+2. The mechanical utility families (spacing, sizing, borders, grid
+   columns/breakpoints, semantic colours, ...) are data-driven: edit
+   `style/design.toml` rather than hand-writing repetitive rules.
+3. `python tools/generate_css.py` concatenates the hand-authored CSS with the
+   generated utilities, minifies the result, and writes the single artifact
+   `sphinx_design/static/sphinx-design.min.css` (the served filename is public
+   API — do not rename it). The pre-commit `css` hook runs this and fails if the
+   committed artifact is stale.
+4. CSS is automatically copied to build output during Sphinx builds.
+
+Runtime hover/focus shades use `color-mix()` with a static fallback, so a user
+overriding a `--sd-color-*` custom property gets a matching hover shade. New CSS
+should follow the [Baseline Widely Available](https://web.dev/baseline) support
+policy; a *Baseline Newly Available* feature is acceptable only where it
+degrades gracefully (document the exception).
 
 ## Key Files
 
@@ -322,8 +337,10 @@ The extension uses SASS for styling:
 2. Define directive class(es) extending `SdDirective`
 3. Create a `setup_my_component(app: Sphinx)` function
 4. Call the setup function from `setup_extension()` in `extension.py`
-5. Add SASS styles in `style/_my_component.scss`
-6. Import the SASS file in `style/index.scss`
+5. Add styles: hand-authored rules in `style/<my_component>.css`, or (for
+   repetitive/data-driven families) tokens in `style/design.toml`
+6. Wire the new file into the `ASSEMBLY` order in `tools/generate_css.py` and
+   run it to regenerate the artifact
 7. Document in `docs/`
 8. Add tests in `tests/`
 
@@ -335,12 +352,25 @@ The extension uses SASS for styling:
 4. Document the new option
 5. Add tests for the new option
 
-### Working with SASS
+### Working with CSS
 
-1. Edit SASS files in `style/`
-2. Run `npm run css` to compile (or `pre-commit run --all css`)
+1. Edit the sources in `style/` (`*.css` for hand-authored rules,
+   `design.toml` for the generated utility families)
+2. Run `python tools/generate_css.py` to rebuild (or `pre-commit run --all-files css`)
 3. Compiled output goes to `sphinx_design/static/sphinx-design.min.css`
 4. Test with different themes to ensure compatibility
+
+**The cascade is the `ASSEMBLY` order** in `tools/generate_css.py`: hand files
+and generated blocks are concatenated in that exact sequence, and
+equal-specificity rules that set the same property resolve by source order
+(last wins). Reordering an `ASSEMBLY` entry — or moving a rule between a hand
+file and a generator — can therefore change rendering even though every rule
+still exists. When touching the order, verify with
+`python tools/check_css_equivalence.py OLD.css NEW.css`: its order pass flags
+exactly these regressions (source-order inversions between co-applying,
+equal-specificity rules that share a property). The generator also refuses to
+build if `ASSEMBLY`, the generator table and the `style/` directory drift out
+of sync, or if `design.toml` fails its schema check.
 
 ## Reference Documentation
 
@@ -351,4 +381,4 @@ The extension uses SASS for styling:
 - [Sphinx Repository](https://github.com/sphinx-doc/sphinx)
 - [Sphinx Extension Development](https://www.sphinx-doc.org/en/master/extdev/index.html)
 - [Bootstrap Documentation](https://getbootstrap.com/docs/5.0/)
-- [SASS Documentation](https://sass-lang.com/documentation)
+- [Baseline (web.dev)](https://web.dev/baseline)

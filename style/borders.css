@@ -1,0 +1,17 @@
+/* Box-shadow utilities (the .sd-border-* and .sd-rounded-* scales are generated). */
+
+.shadow-none {
+  box-shadow: none !important;
+}
+
+.sd-shadow-sm {
+  box-shadow: 0 .125rem .25rem var(--sd-color-shadow) !important;
+}
+
+.sd-shadow-md {
+  box-shadow: 0 .5rem 1rem var(--sd-color-shadow) !important;
+}
+
+.sd-shadow-lg {
+  box-shadow: 0 1rem 3rem var(--sd-color-shadow) !important;
+}

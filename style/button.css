@@ -1,0 +1,50 @@
+/* Adapted from Bootstrap v5.0.2 (https://getbootstrap.com/)
+   Copyright 2011-2019 The Bootstrap Authors
+   Copyright 2011-2019 Twitter, Inc.
+   Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+
+   The semantic .sd-btn-<colour>/.sd-btn-outline-<colour> families are generated
+   by tools/generate_css.py from style/design.toml. */
+
+.sd-btn {
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: .375rem .75rem;
+  text-align: center;
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  vertical-align: middle;
+  user-select: none;
+  outline-offset: .25rem;
+}
+
+.sd-btn:hover {
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-btn {
+    transition: none;
+  }
+}
+
+/* make the parent clickable */
+.sd-stretched-link::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: "";
+}
+
+.sd-hide-link-text {
+  font-size: 0;
+}
