@@ -9,7 +9,7 @@
   `<aside>` element and collapses to a full-width block below the `md`
   breakpoint (with a `.sd-clear-both` utility to stop the wrap); non-HTML
   outputs degrade to a plain titled block. Zero JavaScript
-  ({pr}`PRNUM`, {issue}`97`)
+  ({pr}`292`, {issue}`97`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
