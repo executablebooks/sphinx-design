@@ -97,6 +97,7 @@ furo <https://sphinx-design.readthedocs.io/en/furo-theme>
 :hidden:
 
 testing
+design_css
 changelog
 ```
 
