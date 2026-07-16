@@ -8,6 +8,7 @@ from sphinx.application import Sphinx
 from sphinx.transforms import SphinxTransform
 
 from .article_info import setup_article_info
+from .aside import setup_aside
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
 from .config import get_sd_config, setup_sd_config
@@ -52,6 +53,7 @@ def setup_extension(app: Sphinx) -> None:
         setup_icons(app)
         setup_tabs(app)
         setup_article_info(app)
+        setup_aside(app)
 
     app.connect(
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)

@@ -1,0 +1,8 @@
+.. aside::
+
+   An aside floats beside the flow, and the surrounding text wraps around it.
+
+.. aside:: Aside title
+   :align: left
+
+   Asides are handy for pull-outs, margin notes and side comments.

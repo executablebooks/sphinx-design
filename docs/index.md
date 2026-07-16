@@ -68,6 +68,7 @@ grids
 cards
 dropdowns
 tabs
+asides
 badges_buttons
 additional
 ```
@@ -131,6 +132,13 @@ Hide content in expandable containers.
 :link-type: doc
 
 Synchronisable, tabbed content sets.
+:::
+
+:::{grid-item-card} {octicon}`quote` Asides
+:link: asides
+:link-type: doc
+
+Floated call-outs that text wraps around.
 :::
 
 :::{grid-item-card} {octicon}`plus-circle` Badges, Buttons & Icons
