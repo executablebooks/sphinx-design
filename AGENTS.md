@@ -360,6 +360,18 @@ degrades gracefully (document the exception).
 3. Compiled output goes to `sphinx_design/static/sphinx-design.min.css`
 4. Test with different themes to ensure compatibility
 
+**The cascade is the `ASSEMBLY` order** in `tools/generate_css.py`: hand files
+and generated blocks are concatenated in that exact sequence, and
+equal-specificity rules that set the same property resolve by source order
+(last wins). Reordering an `ASSEMBLY` entry — or moving a rule between a hand
+file and a generator — can therefore change rendering even though every rule
+still exists. When touching the order, verify with
+`python tools/check_css_equivalence.py OLD.css NEW.css`: its order pass flags
+exactly these regressions (source-order inversions between co-applying,
+equal-specificity rules that share a property). The generator also refuses to
+build if `ASSEMBLY`, the generator table and the `style/` directory drift out
+of sync, or if `design.toml` fails its schema check.
+
 ## Reference Documentation
 
 - [Docutils Repository](https://github.com/live-clones/docutils)

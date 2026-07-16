@@ -41,6 +41,7 @@ repos:
       files: ^(style/.*\.(css|toml)|tools/generate_css\.py)$
       language: python
       language_version: python3.11  # the generator needs stdlib tomllib
+      additional_dependencies: [rcssmin]
       entry: python tools/generate_css.py
       require_serial: true
       pass_filenames: false

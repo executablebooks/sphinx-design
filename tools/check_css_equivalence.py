@@ -42,13 +42,10 @@ Known limitations (documented, deliberately not implemented):
   although the shorthand resets the longhand when it wins. The stylesheet's
   shorthand/longhand overlaps all live inside single rules, where declaration
   order is covered by the intra-rule pass.
-* the generator's **minifier** tightens combinators string- and
-  bracket-aware, but its earlier regex passes (whitespace collapse, space
-  stripping around ``{};,:``) are not string-aware; the repo sources only
-  contain empty ``content: ""`` strings, so nothing is affected.
-* **escaped quotes** (``\\"``) inside attribute-selector strings would end the
-  minifier's quote context early; the failure mode is under-minification
-  (a kept space), never a corrupted value. The sources contain none.
+
+(Minification is delegated to ``rcssmin``, which is string- and bracket-aware
+and works strictly at the whitespace/comment level, so it needs no caveats
+here.)
 
 This is a verification tool, not a permanent CI gate: it is meant to be run
 against the pre-migration commit while the stylesheet is otherwise quiet.
@@ -57,8 +54,9 @@ Usage::
 
     python tools/check_css_equivalence.py BASE.css NEW.css
 
-``tinycss2`` is only needed for this dev/CI tool (see the ``testing`` extra); the
-runtime package and the generator have no third-party dependency.
+``tinycss2`` (and the generator's ``rcssmin``) are only needed for the dev CSS
+tooling (see the ``testing`` extras); the runtime package ships the pre-built
+artifact and has no third-party dependency.
 """
 
 from __future__ import annotations

@@ -10,6 +10,7 @@ Covers:
 """
 
 from pathlib import Path
+import re
 
 import pytest
 
@@ -158,15 +159,17 @@ def test_compiled_css_restores_focus_rings():
     The CSS is a static asset, so we assert against the compiled file directly.
     """
     css = COMPILED_CSS.read_text(encoding="utf8")
+    # minifier-agnostic view: selectors compare with all whitespace squeezed
+    squeezed = re.sub(r"\s+", "", css)
 
     # focus-visible rings are present (buttons, coloured backgrounds, cards, ...)
     assert ":focus-visible" in css
 
     # tab labels: the ring is suppressed only for non-focus-visible (pointer)
     # focus, i.e. keyboard focus keeps a visible ring
-    assert ".sd-tab-set>input:not(:focus-visible)+label" in css
+    assert ".sd-tab-set>input:not(:focus-visible)+label" in squeezed
 
     # dropdown summary: the previous ``outline:none`` on focus (which killed the
     # keyboard ring) is gone, and an outline offset is applied instead
-    assert "sd-summary-title:focus{outline:none}" not in css
-    assert "outline-offset:.25rem" in css
+    assert "sd-summary-title:focus{outline:none}" not in squeezed
+    assert "outline-offset:.25rem" in squeezed

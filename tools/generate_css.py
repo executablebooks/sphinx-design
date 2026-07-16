@@ -6,13 +6,19 @@ to be produced by ``@each``/``@for`` loops (spacing, sizing, borders, grid
 columns/breakpoints, semantic colours, ...) are generated here from the
 declarative data in ``style/design.toml``. The hand-authored component CSS lives
 in ``style/*.css`` and is concatenated in around the generated blocks. The whole
-thing is passed through a small deterministic minifier and written to
+thing is minified with ``rcssmin`` and written to
 ``sphinx_design/static/sphinx-design.min.css`` (the served filename is public
 API and must not change).
 
-The script uses only the Python standard library (``tomllib`` is stdlib on
-3.11+), so it needs no third-party build dependency and can run inside the
-pre-commit ``css`` hook.
+Besides the stdlib (``tomllib`` is stdlib on 3.11+) the script needs only
+``rcssmin`` -- a pure-Python, deterministic CSS minifier. It is a *dev-only*
+dependency (the ``testing`` extras and the pre-commit ``css`` hook install it);
+the runtime package ships the pre-built artifact and depends on nothing.
+
+Both the data file and the assembly list are validated before every build:
+a ``style/*.css`` file that is not referenced (or referenced but missing), an
+unknown generator name, an orphaned generator function, or a malformed
+``design.toml`` all fail the build loudly rather than silently dropping rules.
 
 Usage::
 
@@ -26,9 +32,10 @@ from __future__ import annotations
 import argparse
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
-import re
 import sys
 import tomllib
+
+import rcssmin
 
 # Repository layout -----------------------------------------------------------
 
@@ -38,9 +45,17 @@ DATA_FILE = STYLE_DIR / "design.toml"
 OUTPUT_FILE = REPO_ROOT / "sphinx_design" / "static" / "sphinx-design.min.css"
 
 # Order in which hand-authored component files and generated utility blocks are
-# concatenated. Mirrors the old ``style/index.scss`` import order so the cascade
-# is preserved. Entries are either a filename (read verbatim from ``style/``) or
+# concatenated. Entries are either a filename (read verbatim from ``style/``) or
 # a ``("gen", name)`` marker resolved to a generator function below.
+#
+# THE CASCADE IS THIS ASSEMBLY ORDER. Equal-specificity rules that set the same
+# property resolve by source order (last wins), so moving an entry -- or moving
+# a rule between a hand file and a generator -- can silently change rendering
+# even though every rule still exists (e.g. `.sd-col-auto` vs the row-cols
+# width family, or the container max-width caps vs `.sd-row > *`). The list
+# mirrors the old ``style/index.scss`` import order; when reordering anything,
+# verify with ``tools/check_css_equivalence.py`` (its order pass exists exactly
+# for this).
 ASSEMBLY: list[str | tuple[str, str]] = [
     ("gen", "color_variants"),
     "colors.css",
@@ -402,76 +417,195 @@ GENERATORS = {
 }
 
 
+# Source validation -----------------------------------------------------------
+
+
+def _validate_assembly(style_dir: Path) -> None:
+    """Fail loudly when ``ASSEMBLY``, ``GENERATORS`` and ``style/`` drift apart.
+
+    A hand-authored file that exists but is not assembled would silently vanish
+    from the output; the other three drift directions are outright bugs. All
+    problems are collected and reported together.
+    """
+    on_disk = {path.name for path in style_dir.glob("*.css")}
+    listed_files = {entry for entry in ASSEMBLY if isinstance(entry, str)}
+    listed_gens = {entry[1] for entry in ASSEMBLY if isinstance(entry, tuple)}
+
+    problems: list[str] = []
+    problems += [
+        f"style/{name} exists on disk but is not referenced in ASSEMBLY"
+        for name in sorted(on_disk - listed_files)
+    ]
+    problems += [
+        f"ASSEMBLY references style/{name} which does not exist"
+        for name in sorted(listed_files - on_disk)
+    ]
+    problems += [
+        f"ASSEMBLY references generator {name!r} which has no function in GENERATORS"
+        for name in sorted(listed_gens - set(GENERATORS))
+    ]
+    problems += [
+        f"generator {name!r} exists in GENERATORS but is never referenced in ASSEMBLY"
+        for name in sorted(set(GENERATORS) - listed_gens)
+    ]
+    if problems:
+        raise ValueError(
+            "ASSEMBLY is out of sync with the style/ sources:\n  - "
+            + "\n  - ".join(problems)
+        )
+
+
+# expected shape of design.toml: {table: (required keys, value check, description)}
+_COLOR_KEYS = {"name", "value", "rgb", "text", "highlight"}
+_BREAKPOINT_KEYS = {"name", "min", "container_max"}
+_TOP_LEVEL_KEYS = {
+    "columns",
+    "spacings",
+    "root_fixed",
+    "breakpoints",
+    "sizes",
+    "borders",
+    "rounded",
+    "font_sizes",
+    "avatar_sizes",
+    "colors",
+}
+
+
+def _is_str_dict(value: object) -> bool:
+    return isinstance(value, dict) and all(
+        isinstance(k, str) and isinstance(v, str) for k, v in value.items()
+    )
+
+
+def _scalar_problems(data: dict) -> list[str]:
+    """Problems with the scalar / flat-table top-level keys."""
+    problems: list[str] = []
+    if "columns" in data and not (
+        isinstance(data["columns"], int) and data["columns"] > 0
+    ):
+        problems.append(
+            f"'columns' must be a positive integer, got {data['columns']!r}"
+        )
+    if "spacings" in data and not (
+        isinstance(data["spacings"], list)
+        and all(isinstance(s, str) for s in data["spacings"])
+    ):
+        problems.append("'spacings' must be a list of strings")
+    if "root_fixed" in data and not (
+        isinstance(data["root_fixed"], list)
+        and all(
+            isinstance(pair, list)
+            and len(pair) == 2
+            and all(isinstance(p, str) for p in pair)
+            for pair in data["root_fixed"]
+        )
+    ):
+        problems.append("'root_fixed' must be a list of [name, value] string pairs")
+    problems.extend(
+        f"'{key}' must be a table of string values"
+        for key in ("sizes", "borders", "rounded", "font_sizes", "avatar_sizes")
+        if key in data and not _is_str_dict(data[key])
+    )
+    return problems
+
+
+def _entry_problems(
+    table: str, entries: list, allowed: set[str], str_keys: set[str]
+) -> list[str]:
+    """Problems inside an array-of-tables key (``breakpoints`` / ``colors``)."""
+    problems: list[str] = []
+    for i, entry in enumerate(entries):
+        where = f"{table}[{i}]"
+        if not isinstance(entry, dict):
+            problems.append(f"'{where}' must be a table")
+            continue
+        problems.extend(
+            f"unknown key {key!r} in '{where}'" for key in sorted(set(entry) - allowed)
+        )
+        problems.extend(
+            f"missing key {key!r} in '{where}'" for key in sorted(allowed - set(entry))
+        )
+        problems.extend(
+            f"'{where}.{key}' must be a string"
+            for key in sorted(str_keys & set(entry))
+            if not isinstance(entry[key], str)
+        )
+    return problems
+
+
+def _rgb_problems(colors: list) -> list[str]:
+    return [
+        f"'colors[{i}].rgb' must be a list of three integers"
+        for i, color in enumerate(colors)
+        if isinstance(color, dict)
+        and "rgb" in color
+        and not (
+            isinstance(color["rgb"], list)
+            and len(color["rgb"]) == 3
+            and all(isinstance(c, int) for c in color["rgb"])
+        )
+    ]
+
+
+def _validate_data(data: dict) -> None:
+    """Schema-check ``design.toml``; error messages name the offending key."""
+    problems: list[str] = []
+    problems.extend(
+        f"unknown top-level key {key!r}" for key in sorted(set(data) - _TOP_LEVEL_KEYS)
+    )
+    problems.extend(
+        f"missing required key {key!r}" for key in sorted(_TOP_LEVEL_KEYS - set(data))
+    )
+    problems.extend(_scalar_problems(data))
+
+    if isinstance(data.get("breakpoints"), list):
+        problems.extend(
+            _entry_problems(
+                "breakpoints", data["breakpoints"], _BREAKPOINT_KEYS, _BREAKPOINT_KEYS
+            )
+        )
+    elif "breakpoints" in data:
+        problems.append("'breakpoints' must be an array of tables")
+
+    if isinstance(data.get("colors"), list):
+        problems.extend(
+            _entry_problems(
+                "colors", data["colors"], _COLOR_KEYS, _COLOR_KEYS - {"rgb"}
+            )
+        )
+        problems.extend(_rgb_problems(data["colors"]))
+    elif "colors" in data:
+        problems.append("'colors' must be an array of tables")
+
+    if problems:
+        raise ValueError("design.toml is invalid:\n  - " + "\n  - ".join(problems))
+
+
 # Assembly + minification -----------------------------------------------------
 
 
-def _strip_combinator_spaces(css: str) -> str:
-    """Remove spaces around ``>``/``~``/``+`` selector combinators only.
-
-    Combinators are stripped only in selector context: at parenthesis-depth 0,
-    outside ``[...]`` attribute selectors and outside quoted strings. Spaces
-    inside ``(...)`` -- notably the ``+``/``-`` operators of ``calc()`` -- inside
-    ``[attr="a > b"]`` and inside any ``"..."``/``'...'`` string are left intact,
-    so both values and attribute selectors stay valid.
-    """
-    out: list[str] = []
-    depth = 0  # () nesting: calc(), color-mix(), :not(), ...
-    bracket = 0  # [] nesting: attribute selectors
-    quote = ""  # active string delimiter while inside a quoted string
-    for i, char in enumerate(css):
-        if quote:
-            out.append(char)
-            if char == quote:
-                quote = ""
-            continue
-        if char in "\"'":
-            quote = char
-            out.append(char)
-        elif char == "(":
-            depth += 1
-            out.append(char)
-        elif char == ")":
-            depth -= 1
-            out.append(char)
-        elif char == "[":
-            bracket += 1
-            out.append(char)
-        elif char == "]":
-            bracket -= 1
-            out.append(char)
-        elif char == " " and depth == 0 and bracket == 0:
-            prev = out[-1] if out else ""
-            nxt = css[i + 1] if i + 1 < len(css) else ""
-            if prev in ">~+" or nxt in ">~+":
-                continue  # this space hugs a combinator; drop it
-            out.append(char)
-        else:
-            out.append(char)
-    return "".join(out)
-
-
 def minify(css: str) -> str:
-    """Deterministically strip comments and insignificant whitespace.
+    """Minify with ``rcssmin`` (pure Python, deterministic, string-aware).
 
-    Intentionally simple (no external minifier): comments go, whitespace runs
-    collapse, spaces around structural characters (and after ``:``) are removed,
-    and selector combinators are tightened. Spaces around ``+``/``-`` inside
-    ``calc()`` are preserved so values stay valid.
+    ``rcssmin`` operates strictly at the whitespace/comment level: it never
+    merges, reorders or rewrites rules, so the cascade proven by
+    ``tools/check_css_equivalence.py`` is untouched.
     """
-    css = re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
-    css = re.sub(r"\s+", " ", css)
-    css = re.sub(r"\s*([{};,])\s*", r"\1", css)
-    css = re.sub(r":\s+", ":", css)
-    css = _strip_combinator_spaces(css)
-    css = css.replace(";}", "}")
-    return css.strip()
+    return rcssmin.cssmin(css)
 
 
 def build_css(root: Path = REPO_ROOT) -> str:
-    """Build the full minified stylesheet from the data file and hand CSS."""
+    """Build the full minified stylesheet from the data file and hand CSS.
+
+    Raises :class:`ValueError` when the assembly list or the data file are
+    inconsistent (see :func:`_validate_assembly` / :func:`_validate_data`).
+    """
     style_dir = root / "style"
+    _validate_assembly(style_dir)
     with (style_dir / "design.toml").open("rb") as handle:
         data = tomllib.load(handle)
+    _validate_data(data)
 
     parts: list[str] = []
     for entry in ASSEMBLY:
@@ -497,7 +631,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    css = build_css()
+    try:
+        css = build_css()
+    except ValueError as exc:
+        sys.stderr.write(f"error: {exc}\n")
+        return 1
 
     if args.stdout:
         sys.stdout.write(css)
