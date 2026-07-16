@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- ✨ NEW: `accordion` directive groups `dropdown`s into an exclusive set —
+  opening one item automatically collapses the others, using the native,
+  JavaScript-free `<details name>` attribute. It degrades gracefully on
+  browsers that predate the feature (each item stays independently
+  collapsible), and offers a `:flush:` edge-to-edge variant and a `class`
+  option ({pr}`291`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled

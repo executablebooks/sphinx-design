@@ -648,3 +648,218 @@ def test_config_toml_round_trip():
             "options": {"color": "primary", "icon": "code"},
         }
     }
+
+
+ACCORDION_NESTED = {
+    "rst": """
+Test
+====
+
+.. accordion::
+
+   .. dropdown:: A
+
+      A content
+
+   .. dropdown:: B
+
+      .. dropdown:: Nested
+
+         nested content
+
+.. accordion::
+
+   .. dropdown:: C
+
+      C content
+""",
+    "myst": """
+# Test
+
+:::::{accordion}
+
+:::{dropdown} A
+A content
+:::
+
+::::{dropdown} B
+:::{dropdown} Nested
+nested content
+:::
+::::
+
+:::::
+
+:::::{accordion}
+
+:::{dropdown} C
+C content
+:::
+:::::
+""",
+}
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_accordion_group_names(fmt, sphinx_builder):
+    """Direct child dropdowns of an accordion share a group name; nested
+    dropdowns do not join the group, and separate accordions get distinct
+    names -- so opening an item only ever closes its own group's siblings.
+    """
+    if fmt == "rst":
+        builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+        builder.src_path.joinpath("index.rst").write_text(
+            ACCORDION_NESTED["rst"], encoding="utf8"
+        )
+    else:
+        builder = sphinx_builder()
+        builder.src_path.joinpath("index.md").write_text(
+            ACCORDION_NESTED["myst"], encoding="utf8"
+        )
+    builder.build()  # asserts no warnings
+
+    doctree = builder.get_doctree("index")
+    dropdowns = list(doctree.findall(lambda node: is_component(node, "dropdown")))
+    # A, B, Nested (inside B), C -- in document order
+    assert len(dropdowns) == 4
+    name_a, name_b, name_nested, name_c = (d.get("details_name") for d in dropdowns)
+    # the two direct children of the first accordion share one group name
+    assert name_a is not None
+    assert name_a == name_b
+    # the dropdown nested inside an item's body must NOT inherit the group name
+    assert name_nested is None
+    # a second accordion on the same page gets a distinct group name
+    assert name_c is not None
+    assert name_c != name_a
+    # names follow the deterministic docname-derived scheme (readable slug +
+    # raw-docname digest + per-document serial); assert the structure rather
+    # than the exact digest, so the fixtures stay robust
+    assert name_a.startswith("sd-accordion-index-")
+    assert name_a.endswith("-0")
+    assert name_c.endswith("-1")
+
+    # and the grouping reaches the rendered HTML <details name="...">
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    # three grouped <details> (A, B, C); the nested one carries no name
+    assert html.count(f'name="{name_a}"') == 2
+    assert html.count(f'name="{name_c}"') == 1
+    assert html.count('name="sd-accordion') == 3
+
+
+def test_accordion_group_names_singlehtml_no_collision(sphinx_builder):
+    """Docnames that fold to the same ``make_id`` slug must still get distinct
+    group names, so a ``singlehtml`` build -- which places every document on a
+    single page -- does not accidentally couple their exclusive groups.
+
+    Regression test for the ``make_id`` lossiness collision: ``a/b`` and
+    ``a-b`` both slugify to ``a-b``, and the per-document serial counter
+    restarts at 0 for each, so without the raw-docname digest both accordions
+    would emit an identical ``<details name>``.
+    """
+    # sanity: the two docnames really do collide under make_id
+    assert nodes.make_id("a/b") == nodes.make_id("a-b")
+
+    accordion_rst = (
+        ".. accordion::\n\n"
+        "   .. dropdown:: one\n\n      content\n\n"
+        "   .. dropdown:: two\n\n      content\n"
+    )
+    builder = sphinx_builder(
+        "singlehtml", conf_kwargs={"extensions": ["sphinx_design"]}
+    )
+    src = builder.src_path
+    (src / "a").mkdir()
+    (src / "a" / "b.rst").write_text(
+        f"Doc A slash B\n=============\n\n{accordion_rst}", encoding="utf8"
+    )
+    (src / "a-b.rst").write_text(
+        f"Doc A dash B\n============\n\n{accordion_rst}", encoding="utf8"
+    )
+    (src / "index.rst").write_text(
+        "Root\n====\n\n.. toctree::\n\n   a/b\n   a-b\n", encoding="utf8"
+    )
+    builder.build()  # asserts no warnings
+
+    def group_name(docname: str) -> str:
+        doctree = builder.get_doctree(docname)
+        dropdowns = list(doctree.findall(lambda n: is_component(n, "dropdown")))
+        names = {d["details_name"] for d in dropdowns}
+        assert len(names) == 1, names
+        return names.pop()
+
+    name_slash = group_name("a/b")
+    name_dash = group_name("a-b")
+    # both share the same lossy slug, but the raw-docname digest keeps them apart
+    assert name_slash != name_dash, (name_slash, name_dash)
+
+    # the assembled single page therefore carries two distinct <details name>
+    # groups (not one coupled group of four items)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert html.count(f'name="{name_slash}"') == 2
+    assert html.count(f'name="{name_dash}"') == 2
+
+
+def test_accordion_invalid_child_warns(sphinx_builder):
+    """A non-dropdown child of an accordion warns (design.accordion) and is
+    skipped, while valid dropdown siblings are still grouped.
+    """
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        """
+Test
+====
+
+.. accordion::
+
+   .. dropdown:: A
+
+      A content
+
+   not a dropdown
+
+   .. dropdown:: B
+
+      B content
+""",
+        encoding="utf8",
+    )
+    builder.build(assert_pass=False)
+    assert "All children of an 'accordion' should be 'dropdown'" in builder.warnings
+    assert "[design.accordion]" in builder.warnings
+    # the two valid dropdowns are still grouped
+    doctree = builder.get_doctree("index")
+    dropdowns = list(doctree.findall(lambda node: is_component(node, "dropdown")))
+    assert len(dropdowns) == 2
+    assert dropdowns[0]["details_name"] == dropdowns[1]["details_name"]
+
+
+def test_accordion_multiple_open_warns(sphinx_builder):
+    """More than one ``:open:`` item is invalid for an exclusive group: warn
+    and keep only the first open.
+    """
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        """
+Test
+====
+
+.. accordion::
+
+   .. dropdown:: A
+      :open:
+
+      A content
+
+   .. dropdown:: B
+      :open:
+
+      B content
+""",
+        encoding="utf8",
+    )
+    builder.build(assert_pass=False)
+    assert "Multiple open 'dropdown' items in an 'accordion'" in builder.warnings
+    assert "[design.accordion]" in builder.warnings
+    doctree = builder.get_doctree("index")
+    dropdowns = list(doctree.findall(lambda node: is_component(node, "dropdown")))
+    assert [d["opened"] for d in dropdowns] == [True, False]
