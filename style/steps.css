@@ -11,9 +11,18 @@
    style/design.toml) override --sd-steps-marker-bg / --sd-steps-marker-text. */
 
 .sd-steps {
-  list-style: none;
   margin: 1.5rem 0;
   padding-inline-start: 0;
+}
+
+/* Sphinx's basic.css (shipped with every theme) sets `ol.arabic {list-style:
+   decimal}` at specificity (0,1,1); a plain `.sd-steps` (0,1,0) loses to it and
+   the native "N." marker renders beside our circular one. The doubled class
+   lifts this to (0,2,0) so it wins regardless of stylesheet load order (e.g.
+   alabaster's custom.css loads after our artifact, so `ol.sd-steps` would not
+   be enough). */
+.sd-steps.sd-steps {
+  list-style: none;
 }
 
 .sd-step {

@@ -2,7 +2,7 @@
     <section ids="heading" names="heading">
         <title>
             Heading
-        <enumerated_list classes="sd-steps" design_component="steps" enumtype="arabic" prefix="" start="3" suffix=".">
+        <steps_list classes="sd-steps" design_component="steps" enumtype="arabic" prefix="" start="3" suffix=".">
             <list_item classes="sd-step" design_component="step">
                 <rubric classes="sd-step-title">
                     Third

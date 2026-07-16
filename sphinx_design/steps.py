@@ -30,10 +30,55 @@ DIRECTIVE_NAME_STEPS = "steps"
 DIRECTIVE_NAME_STEP = "step"
 
 
+class steps_list(nodes.enumerated_list):  # noqa: N801
+    """An ``enumerated_list`` that also carries ``role="list"`` in HTML output.
+
+    Hiding the native list marker (``list-style: none``) makes some screen
+    readers (notably WebKit/VoiceOver) drop the list semantics; ``role="list"``
+    restores them. The HTML visitor delegates to the writer's own
+    ``visit_enumerated_list`` -- so ``start``/``enumtype``/class handling stays
+    version-proof -- then injects the attribute into the just-emitted ``<ol>``.
+    Non-HTML writers render it as a plain ``enumerated_list`` (see
+    :func:`setup_steps`).
+    """
+
+
+def visit_steps_list_html(self, node):
+    # delegate to the writer's own <ol> emission (keeps start/enumtype/class
+    # handling forward-compatible), then add role="list" to the emitted tag
+    start = len(self.body)
+    self.visit_enumerated_list(node)
+    for i in range(len(self.body) - 1, start - 1, -1):
+        if self.body[i].lstrip().startswith("<ol"):
+            self.body[i] = self.body[i].replace("<ol", '<ol role="list"', 1)
+            break
+
+
+def depart_steps_list_html(self, node):
+    self.depart_enumerated_list(node)
+
+
+def visit_steps_list_enum(self, node):
+    # non-HTML builders: behave exactly like a plain enumerated_list
+    self.visit_enumerated_list(node)
+
+
+def depart_steps_list_enum(self, node):
+    self.depart_enumerated_list(node)
+
+
 def setup_steps(app: Sphinx) -> None:
     """Set up the steps components."""
     app.add_directive(DIRECTIVE_NAME_STEPS, StepsDirective)
     app.add_directive(DIRECTIVE_NAME_STEP, StepDirective)
+    app.add_node(
+        steps_list,
+        html=(visit_steps_list_html, depart_steps_list_html),
+        latex=(visit_steps_list_enum, depart_steps_list_enum),
+        text=(visit_steps_list_enum, depart_steps_list_enum),
+        man=(visit_steps_list_enum, depart_steps_list_enum),
+        texinfo=(visit_steps_list_enum, depart_steps_list_enum),
+    )
 
 
 class StepsDirective(SdDirective):
@@ -60,7 +105,7 @@ class StepsDirective(SdDirective):
         # a real ordered list: assistive tech gets the numbering, and non-HTML
         # builders degrade to a numbered list. ``suffix``/``enumtype`` mirror
         # what the rst parser sets on an ordinary ``#.`` list.
-        steps = nodes.enumerated_list(
+        steps = steps_list(
             "",
             design_component="steps",
             classes=classes,
@@ -75,11 +120,16 @@ class StepsDirective(SdDirective):
             steps["start"] = start
         self.set_source_info(steps)
         self.state.nested_parse(self.content, self.content_offset, steps)
-        # each child must be a ``step``; an ``enumerated_list`` can only hold
-        # ``list_item`` children, so drop (rather than keep) anything else
+        # each child must be a ``step``; drop anything else, but keep hyperlink
+        # targets (a target child renders fine and docutils PropagateTargets
+        # relocates its id onto the following step, so references still resolve)
         valid_children: list[nodes.Node] = []
         for item in steps.children:
             if is_ignorable_child(item):
+                # comments and system messages can be safely dropped,
+                # but hyperlink targets must be kept, so references resolve
+                if isinstance(item, nodes.target):
+                    valid_children.append(item)
                 continue
             if not is_component(item, "step"):
                 LOGGER.warning(

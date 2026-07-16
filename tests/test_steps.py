@@ -7,7 +7,9 @@ same tree where the two markups are expected to agree.
 """
 
 from collections.abc import Callable
+import re
 
+from docutils import nodes
 import pytest
 
 from sphinx_design.shared import is_component
@@ -153,6 +155,82 @@ def test_non_step_child_warns(sphinx_builder):
     step_items = [c for c in steps[0].children if is_component(c, "step")]
     assert len(step_items) == 2
     assert len(steps[0].children) == 2
+
+
+TARGET_SOURCES = {
+    "rst": (
+        ".. steps::\n\n"
+        "   .. _step-two-target:\n\n"
+        "   .. step:: One\n\n      first\n\n"
+        "   .. step:: Two\n\n      second\n\n"
+        "See :ref:`the second step <step-two-target>`.\n"
+    ),
+    "myst": (
+        "::::{steps}\n\n"
+        "(step-two-target)=\n\n"
+        ":::{step} One\nfirst\n:::\n\n"
+        ":::{step} Two\nsecond\n:::\n::::\n\n"
+        "See {ref}`the second step <step-two-target>`.\n"
+    ),
+}
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_target_between_steps_resolves(fmt, sphinx_builder):
+    """A hyperlink target between steps is kept, so references still resolve.
+
+    docutils PropagateTargets moves the id onto the following step (list_item),
+    which survives to the HTML output. Mirrors the tab-set target policy.
+    """
+    builder = _build(fmt, TARGET_SOURCES[fmt], sphinx_builder)
+    builder.build()  # asserts no warnings
+    doctree = builder.get_doctree("index", post_transforms=True)
+    references = list(doctree.findall(nodes.reference))
+    assert len(references) == 1
+    refid = references[0]["refid"]
+    assert refid == "step-two-target"
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert f'id="{refid}"' in html
+
+
+def test_steps_role_list_in_html(sphinx_builder):
+    """The rendered ``<ol>`` carries ``role="list"`` (restores list semantics
+    for screen readers once the native marker is hidden)."""
+    builder = _build("rst", ".. steps::\n\n   .. step:: A\n\n      a\n", sphinx_builder)
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert re.search(r'<ol[^>]*\brole="list"[^>]*\bclass="[^"]*sd-steps', html) or (
+        re.search(r'<ol[^>]*\bclass="[^"]*sd-steps[^"]*"[^>]*\brole="list"', html)
+    )
+
+
+@pytest.mark.parametrize("builder_name", ["text", "latex"])
+def test_steps_degrades_in_non_html(builder_name, sphinx_builder):
+    """Non-HTML builders render the steps as a plain numbered list (no
+    ``role`` attribute leaks, numbering honours ``start``)."""
+    builder = sphinx_builder(
+        builder_name, conf_kwargs={"extensions": ["sphinx_design"]}
+    )
+    builder.src_path.joinpath("index.rst").write_text(
+        "Title\n=====\n\n"
+        ".. steps::\n   :start: 3\n\n"
+        "   .. step:: First\n\n      alpha\n\n"
+        "   .. step:: Second\n\n      beta\n",
+        encoding="utf8",
+    )
+    builder.build()
+    out = builder.out_path
+    if builder_name == "text":
+        text = (out / "index.txt").read_text(encoding="utf8")
+        assert "role=" not in text
+        # numbered list starting at the ``start`` offset
+        assert "3." in text and "4." in text
+    else:
+        text = next(out.glob("*.tex")).read_text(encoding="utf8")
+        assert "role=" not in text
+        # a real LaTeX enumerate, offset by ``start`` (\setcounter to start-1)
+        assert "\\begin{enumerate}" in text
+        assert "\\setcounter{enumi}{2}" in text
 
 
 @pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
