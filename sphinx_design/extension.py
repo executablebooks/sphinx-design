@@ -7,6 +7,7 @@ from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.transforms import SphinxTransform
 
+from .accordion import setup_accordion
 from .article_info import setup_article_info
 from .badges_buttons import setup_badges_and_buttons
 from .cards import setup_cards
@@ -49,6 +50,7 @@ def setup_extension(app: Sphinx) -> None:
         setup_cards(app)
         setup_grids(app)
         setup_dropdown(app)
+        setup_accordion(app)
         setup_icons(app)
         setup_tabs(app)
         setup_article_info(app)

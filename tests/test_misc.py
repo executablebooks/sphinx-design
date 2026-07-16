@@ -648,3 +648,162 @@ def test_config_toml_round_trip():
             "options": {"color": "primary", "icon": "code"},
         }
     }
+
+
+ACCORDION_NESTED = {
+    "rst": """
+Test
+====
+
+.. accordion::
+
+   .. dropdown:: A
+
+      A content
+
+   .. dropdown:: B
+
+      .. dropdown:: Nested
+
+         nested content
+
+.. accordion::
+
+   .. dropdown:: C
+
+      C content
+""",
+    "myst": """
+# Test
+
+:::::{accordion}
+
+:::{dropdown} A
+A content
+:::
+
+::::{dropdown} B
+:::{dropdown} Nested
+nested content
+:::
+::::
+
+:::::
+
+:::::{accordion}
+
+:::{dropdown} C
+C content
+:::
+:::::
+""",
+}
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_accordion_group_names(fmt, sphinx_builder):
+    """Direct child dropdowns of an accordion share a group name; nested
+    dropdowns do not join the group, and separate accordions get distinct
+    names -- so opening an item only ever closes its own group's siblings.
+    """
+    if fmt == "rst":
+        builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+        builder.src_path.joinpath("index.rst").write_text(
+            ACCORDION_NESTED["rst"], encoding="utf8"
+        )
+    else:
+        builder = sphinx_builder()
+        builder.src_path.joinpath("index.md").write_text(
+            ACCORDION_NESTED["myst"], encoding="utf8"
+        )
+    builder.build()  # asserts no warnings
+
+    doctree = builder.get_doctree("index")
+    dropdowns = list(doctree.findall(lambda node: is_component(node, "dropdown")))
+    # A, B, Nested (inside B), C -- in document order
+    assert len(dropdowns) == 4
+    name_a, name_b, name_nested, name_c = (d.get("details_name") for d in dropdowns)
+    # the two direct children of the first accordion share one group name
+    assert name_a is not None
+    assert name_a == name_b
+    # the dropdown nested inside an item's body must NOT inherit the group name
+    assert name_nested is None
+    # a second accordion on the same page gets a distinct group name
+    assert name_c is not None
+    assert name_c != name_a
+    # names are the deterministic, document-derived scheme
+    assert name_a == "sd-accordion-index-0"
+    assert name_c == "sd-accordion-index-1"
+
+    # and the grouping reaches the rendered HTML <details name="...">
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    # three grouped <details> (A, B, C); the nested one carries no name
+    assert html.count('name="sd-accordion-index-0"') == 2
+    assert html.count('name="sd-accordion-index-1"') == 1
+    assert html.count('name="sd-accordion') == 3
+
+
+def test_accordion_invalid_child_warns(sphinx_builder):
+    """A non-dropdown child of an accordion warns (design.accordion) and is
+    skipped, while valid dropdown siblings are still grouped.
+    """
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        """
+Test
+====
+
+.. accordion::
+
+   .. dropdown:: A
+
+      A content
+
+   not a dropdown
+
+   .. dropdown:: B
+
+      B content
+""",
+        encoding="utf8",
+    )
+    builder.build(assert_pass=False)
+    assert "All children of an 'accordion' should be 'dropdown'" in builder.warnings
+    assert "[design.accordion]" in builder.warnings
+    # the two valid dropdowns are still grouped
+    doctree = builder.get_doctree("index")
+    dropdowns = list(doctree.findall(lambda node: is_component(node, "dropdown")))
+    assert len(dropdowns) == 2
+    assert dropdowns[0]["details_name"] == dropdowns[1]["details_name"]
+
+
+def test_accordion_multiple_open_warns(sphinx_builder):
+    """More than one ``:open:`` item is invalid for an exclusive group: warn
+    and keep only the first open.
+    """
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        """
+Test
+====
+
+.. accordion::
+
+   .. dropdown:: A
+      :open:
+
+      A content
+
+   .. dropdown:: B
+      :open:
+
+      B content
+""",
+        encoding="utf8",
+    )
+    builder.build(assert_pass=False)
+    assert "Multiple open 'dropdown' items in an 'accordion'" in builder.warnings
+    assert "[design.accordion]" in builder.warnings
+    doctree = builder.get_doctree("index")
+    dropdowns = list(doctree.findall(lambda node: is_component(node, "dropdown")))
+    assert [d["opened"] for d in dropdowns] == [True, False]
