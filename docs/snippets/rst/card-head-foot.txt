@@ -1,7 +1,11 @@
 .. card:: Card Title
 
-    Header
-    ^^^
+    .. card-header::
+
+        Header
+
     Card content
-    +++
-    Footer
+
+    .. card-footer::
+
+        Footer

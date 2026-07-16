@@ -13,17 +13,25 @@
         :img-top: images/particle_background.jpg
         :img-alt:
 
-        Header
-        ^^^
+        .. card-header::
+
+            Header
+
         Content
-        +++
-        Footer
+
+        .. card-footer::
+
+            Footer
 
     .. grid-item-card:: Title
         :img-bottom: images/particle_background.jpg
 
-        Header
-        ^^^
+        .. card-header::
+
+            Header
+
         Content
-        +++
-        Footer
+
+        .. card-footer::
+
+            Footer
