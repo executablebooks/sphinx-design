@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- ✨ NEW: `sd_custom_roles` defines reusable badge roles in `conf.py`,
+  inheriting a built-in badge role (`bdg`, `bdg-<color>`, `bdg-*-line`,
+  `bdg-link-*`, `bdg-ref-*`) and optionally baking in a default `tooltip` — the
+  recommended way to declare repeated status badges (`stable`/`beta`/...) once,
+  instead of retyping the `` ; tooltip `` suffix at every use site (a
+  per-instance suffix still overrides the baked default). A companion to
+  `sd_custom_directives`, fully TOML-representable; the roles are reconciled on
+  each build, so config edits are picked up and a removed role is unregistered,
+  and a name clashing with a docutils built-in or another extension's role is
+  skipped with a warning ({pr}`295`, {issue}`81`).
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled

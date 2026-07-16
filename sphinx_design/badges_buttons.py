@@ -1,18 +1,24 @@
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
 import re
 from typing import Any
 
 from docutils import nodes
 from docutils.parsers.rst import directives
+from docutils.parsers.rst import roles as rst_roles
 from docutils.parsers.rst.states import Inliner
 from docutils.utils import unescape
 from sphinx import addnodes
 from sphinx.application import Sphinx
+from sphinx.config import Config
 from sphinx.transforms.post_transforms import SphinxPostTransform
 from sphinx.util import ws_re
 from sphinx.util.docutils import ReferenceRole, SphinxRole
+from sphinx.util.logging import getLogger
 
+from sphinx_design.config import WARNING_TYPE, SdConfig
 from sphinx_design.shared import SEMANTIC_COLORS, SdDirective, make_choice, text_align
+
+LOGGER = getLogger(__name__)
 
 ROLE_NAME_BADGE_PREFIX = "bdg"
 ROLE_NAME_LINK_PREFIX = "bdg-link"
@@ -25,27 +31,50 @@ DIRECTIVE_NAME_BUTTON_REF = "button-ref"
 # in particular for rounded-pill class etc
 
 
+#: A single built-in badge role, as ``(name, role_class, color, outline)``.
+BadgeRoleSpec = tuple[str, type["_TooltipRoleMixin"], "str | None", bool]
+
+
+def _iter_badge_roles() -> Iterator[BadgeRoleSpec]:
+    """Yield the ``(name, role_class, color, outline)`` of every built-in badge role.
+
+    This is the single source of truth for the badge role family, used both to
+    register the roles (:func:`setup_badges_and_buttons`) and to resolve an
+    ``sd_custom_roles`` ``inherit`` target (:func:`setup_custom_roles`).
+
+    .. note::
+
+        The custom-role ``inherit`` mechanism is deliberately limited to this
+        badge family in v1. Extending it to the icon roles (``icons.py``) or the
+        button *roles* would mean yielding those here too, and giving their role
+        constructors the same ``tooltip`` keyword the badge roles now accept.
+    """
+    yield ROLE_NAME_BADGE_PREFIX, BadgeRole, None, False
+    yield ROLE_NAME_LINK_PREFIX, LinkBadgeRole, None, False
+    yield ROLE_NAME_REF_PREFIX, XRefBadgeRole, None, False
+    for color in SEMANTIC_COLORS:
+        yield "-".join((ROLE_NAME_BADGE_PREFIX, color)), BadgeRole, color, False
+        yield "-".join((ROLE_NAME_BADGE_PREFIX, color, "line")), BadgeRole, color, True
+        yield "-".join((ROLE_NAME_LINK_PREFIX, color)), LinkBadgeRole, color, False
+        yield (
+            "-".join((ROLE_NAME_LINK_PREFIX, color, "line")),
+            LinkBadgeRole,
+            color,
+            True,
+        )
+        yield "-".join((ROLE_NAME_REF_PREFIX, color)), XRefBadgeRole, color, False
+        yield (
+            "-".join((ROLE_NAME_REF_PREFIX, color, "line")),
+            XRefBadgeRole,
+            color,
+            True,
+        )
+
+
 def setup_badges_and_buttons(app: Sphinx) -> None:
     """Setup the badge components."""
-    app.add_role(ROLE_NAME_BADGE_PREFIX, BadgeRole())
-    app.add_role(ROLE_NAME_LINK_PREFIX, LinkBadgeRole())
-    app.add_role(ROLE_NAME_REF_PREFIX, XRefBadgeRole())
-    for color in SEMANTIC_COLORS:
-        app.add_role("-".join((ROLE_NAME_BADGE_PREFIX, color)), BadgeRole(color))
-        app.add_role(
-            "-".join((ROLE_NAME_BADGE_PREFIX, color, "line")),
-            BadgeRole(color, outline=True),
-        )
-        app.add_role("-".join((ROLE_NAME_LINK_PREFIX, color)), LinkBadgeRole(color))
-        app.add_role(
-            "-".join((ROLE_NAME_LINK_PREFIX, color, "line")),
-            LinkBadgeRole(color, outline=True),
-        )
-        app.add_role("-".join((ROLE_NAME_REF_PREFIX, color)), XRefBadgeRole(color))
-        app.add_role(
-            "-".join((ROLE_NAME_REF_PREFIX, color, "line")),
-            XRefBadgeRole(color, outline=True),
-        )
+    for name, role_cls, color, outline in _iter_badge_roles():
+        app.add_role(name, role_cls(color, outline=outline))
 
     app.add_node(
         sd_badge,
@@ -62,6 +91,91 @@ def setup_badges_and_buttons(app: Sphinx) -> None:
     app.add_post_transform(ButtonRefContentGraft)
     app.add_post_transform(BadgeRefTooltipStash)
     app.add_post_transform(BadgeRefTooltipGraft)
+
+
+#: Marker attribute set on the role instances this extension registers from
+#: ``sd_custom_roles``. docutils' role registry (``roles._roles``) is
+#: process-global and shared across Sphinx apps, so carrying "ownership" on the
+#: stored role object itself lets every ``config-inited`` reconcile *our* roles
+#: (refresh or unregister) without a side table that could drift from the
+#: registry - e.g. across the many apps a test session builds.
+_SD_CUSTOM_ROLE_ATTR = "_sd_custom_role"
+
+
+def _role_name_taken(name: str) -> bool:
+    """Return whether ``name`` already resolves to a role.
+
+    docutils looks roles up case-insensitively, so the lower-cased name is
+    compared against both the locally registered roles (``roles._roles``, the
+    registry Sphinx's own ``add_role`` consults) *and* docutils' canonical
+    built-in roles (``roles._role_registry``: ``code``/``math``/``strong``/
+    ``emphasis``/``literal``/... ). Both are long-stable private attributes;
+    docutils exposes no public query for either.
+    """
+    key = name.lower()
+    return key in rst_roles._roles or key in rst_roles._role_registry
+
+
+def setup_custom_roles(app: Sphinx, config: Config) -> None:
+    """Register (and reconcile) the custom roles declared in ``sd_custom_roles``.
+
+    Parallel to :func:`sphinx_design.shared.setup_custom_directives`: each entry
+    inherits a built-in sphinx-design *badge* role (v1 scope; see
+    :func:`_iter_badge_roles`), optionally baking in a default ``tooltip`` used
+    whenever no per-instance ``; suffix`` overrides it.
+
+    The entry shapes have already been validated on ``config-inited``
+    (see ``sphinx_design.config``); here we additionally check ``inherit``
+    against the known badge roles. Because it runs on every ``config-inited``
+    against a process-global registry, the reconciliation policy is:
+
+    * a name we registered before is **refreshed** (re-registered with override,
+      picking up tooltip/inherit edits on an in-process rebuild);
+    * a name we registered before but now absent from the config is
+      **unregistered**, so it never leaks into a later build or sibling app;
+    * a name clashing with a *foreign* role (another extension's, or a docutils
+      built-in such as ``code``/``strong``) is skipped with a warning.
+    """
+
+    def _warn(msg: str) -> None:
+        LOGGER.warning(f"sd_custom_roles: {msg}", type=WARNING_TYPE, subtype="config")
+
+    specs = {
+        name: (role_cls, color, outline)
+        for name, role_cls, color, outline in _iter_badge_roles()
+    }
+    # extension point: to also inherit icon/button roles, yield them from
+    # ``_iter_badge_roles`` (and give those constructors a ``tooltip`` keyword).
+
+    # decide the roles to (re)register: a known ``inherit``, and a name that is
+    # either already ours (refresh) or free (a foreign clash is skipped)
+    desired: dict[str, tuple[str, dict[str, Any]]] = {}  # lower name -> (name, data)
+    for name, data in SdConfig.from_sphinx(config).custom_roles.items():
+        inherit = data["inherit"]
+        if inherit not in specs:
+            _warn(f"'{name}.inherit' is an unknown badge role: {inherit}")
+            continue
+        existing = rst_roles._roles.get(name.lower())
+        if not getattr(existing, _SD_CUSTOM_ROLE_ATTR, False) and _role_name_taken(
+            name
+        ):
+            _warn(f"'{name}' clashes with an existing role, skipping")
+            continue
+        desired[name.lower()] = (name, data)
+
+    # unregister any of *our* previously-registered roles dropped from the config
+    # (the registry is process-global, so this is what stops a stale role
+    # resolving in a later in-process build or a sibling app)
+    for key, role in list(rst_roles._roles.items()):
+        if getattr(role, _SD_CUSTOM_ROLE_ATTR, False) and key not in desired:
+            del rst_roles._roles[key]
+
+    # (re)register, refreshing tooltip/inherit changes via ``override=True``
+    for name, data in desired.values():
+        role_cls, color, outline = specs[data["inherit"]]
+        role = role_cls(color, outline=outline, tooltip=data.get("tooltip"))
+        setattr(role, _SD_CUSTOM_ROLE_ATTR, True)
+        app.add_role(name, role, override=True)
 
 
 def create_bdg_classes(color: str | None, outline: bool) -> list[str]:
@@ -202,6 +316,10 @@ class _TooltipRoleMixin(SphinxRole):
     The parsed tooltip (or ``None``) is stored on :attr:`tooltip`, and the
     remaining text - with the suffix removed - is forwarded to the base role,
     so that ``ReferenceRole``'s title/target parsing still applies to it.
+
+    The badge roles share this constructor (``color``/``outline``, plus an
+    optional baked ``tooltip``), so that they - and any config-defined roles
+    inheriting them (see :func:`setup_custom_roles`) - are built uniformly.
     """
 
     #: the tooltip parsed from the current role invocation, if any
@@ -211,6 +329,28 @@ class _TooltipRoleMixin(SphinxRole):
     #: ``title <target>`` form (set by the link/ref badge roles, whose bare
     #: form is a target in which ``;`` is a legal character)
     tooltip_requires_explicit_target: bool = False
+
+    def __init__(
+        self,
+        color: str | None = None,
+        *,
+        outline: bool = False,
+        tooltip: str | None = None,
+    ) -> None:
+        """Construct a badge role.
+
+        :param color: the semantic colour, or ``None`` for the plain badge.
+        :param outline: whether to use the outline (``-line``) variant.
+        :param tooltip: a baked-in default tooltip, used when no per-instance
+            ``; suffix`` overrides it (set by config-defined roles). An explicit
+            suffix always wins. ``None`` for the built-in roles, keeping their
+            output byte-identical.
+        """
+        super().__init__()
+        self.color = color
+        self.outline = outline
+        #: the baked default tooltip (see the ``tooltip`` parameter)
+        self.default_tooltip = tooltip
 
     def __call__(  # noqa: PLR0913
         self,
@@ -249,16 +389,15 @@ class _TooltipRoleMixin(SphinxRole):
         # resolve raw (MyST-style) ``\;`` escapes in the forwarded text; a
         # no-op for rST, whose escapes are NUL-encoded and resolved downstream
         text = _RAW_ESCAPED_SEMICOLON_RE.sub(";", text)
+        if self.tooltip is None:
+            # no per-instance suffix: fall back to any baked default (``None``
+            # for the built-in roles). A suffix, when present, always wins.
+            self.tooltip = self.default_tooltip
         return super().__call__(name, rawtext, text, lineno, inliner, options, content)
 
 
 class BadgeRole(_TooltipRoleMixin):
     """Role to display a badge."""
-
-    def __init__(self, color: str | None = None, *, outline: bool = False) -> None:
-        super().__init__()
-        self.color = color
-        self.outline = outline
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
@@ -278,11 +417,6 @@ class LinkBadgeRole(_TooltipRoleMixin, ReferenceRole):
 
     # ``;`` is legal in URLs: tooltips only after ``text <target>``
     tooltip_requires_explicit_target = True
-
-    def __init__(self, color: str | None = None, *, outline: bool = False) -> None:
-        super().__init__()
-        self.color = color
-        self.outline = outline
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
@@ -305,11 +439,6 @@ class XRefBadgeRole(_TooltipRoleMixin, ReferenceRole):
 
     # ``;`` is legal in reference targets: tooltips only after ``text <target>``
     tooltip_requires_explicit_target = True
-
-    def __init__(self, color: str | None = None, *, outline: bool = False) -> None:
-        super().__init__()
-        self.color = color
-        self.outline = outline
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
         """Run the role."""
