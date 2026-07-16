@@ -3,7 +3,7 @@
         <title>
             Heading
         <container classes="sd-accordion" design_component="accordion" is_div="True">
-            <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" details_name="sd-accordion-index-0" opened="False">
+            <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" details_name="sd-accordion-index-e540cdd1-0" opened="False">
                 <dropdown_title classes="sd-summary-title sd-card-header">
                     <inline classes="sd-summary-text">
                         First item
@@ -13,7 +13,7 @@
                 <container classes="sd-summary-content sd-card-body" design_component="dropdown-body" is_div="True">
                     <paragraph classes="sd-card-text">
                         Opening another item closes this one.
-            <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" details_name="sd-accordion-index-0" opened="True">
+            <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" details_name="sd-accordion-index-e540cdd1-0" opened="True">
                 <dropdown_title classes="sd-summary-title sd-card-header">
                     <inline classes="sd-summary-text">
                         Second item
@@ -23,7 +23,7 @@
                 <container classes="sd-summary-content sd-card-body" design_component="dropdown-body" is_div="True">
                     <paragraph classes="sd-card-text">
                         Content of the second item.
-            <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" details_name="sd-accordion-index-0" opened="False">
+            <dropdown_main classes="sd-sphinx-override sd-dropdown sd-card sd-mb-3" details_name="sd-accordion-index-e540cdd1-0" opened="False">
                 <dropdown_title classes="sd-summary-title sd-card-header">
                     <inline classes="sd-summary-text">
                         Third item

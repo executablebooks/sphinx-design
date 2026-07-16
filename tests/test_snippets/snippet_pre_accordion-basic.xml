@@ -3,17 +3,17 @@
         <title>
             Heading
         <container classes="sd-accordion" design_component="accordion" is_div="True">
-            <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" details_name="sd-accordion-index-0" has_title="True" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
+            <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" details_name="sd-accordion-index-e540cdd1-0" has_title="True" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
                 <rubric>
                     First item
                 <paragraph>
                     Opening another item closes this one.
-            <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" details_name="sd-accordion-index-0" has_title="True" icon="True" is_div="True" opened="True" title_classes="" type="dropdown">
+            <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" details_name="sd-accordion-index-e540cdd1-0" has_title="True" icon="True" is_div="True" opened="True" title_classes="" type="dropdown">
                 <rubric>
                     Second item
                 <paragraph>
                     Content of the second item.
-            <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" details_name="sd-accordion-index-0" has_title="True" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
+            <container body_classes="" chevron="True" container_classes="sd-mb-3" design_component="dropdown" details_name="sd-accordion-index-e540cdd1-0" has_title="True" icon="True" is_div="True" opened="False" title_classes="" type="dropdown">
                 <rubric>
                     Third item
                 <paragraph>
