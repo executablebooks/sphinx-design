@@ -22,6 +22,7 @@ they take ``(inst, field, value)`` and raise on invalid values.
 from __future__ import annotations
 
 import dataclasses as dc
+import re
 from typing import TYPE_CHECKING, Any, Protocol
 
 from sphinx.util.logging import getLogger
@@ -203,6 +204,70 @@ def validate_custom_directives(
         validate_custom_directive(field, name, data)
 
 
+#: The keys a single ``sd_custom_roles`` entry may declare.
+CUSTOM_ROLE_KEYS = ("inherit", "tooltip")
+
+#: A syntactically usable role name: non-empty and free of whitespace (which
+#: docutils' inline-role parser can never match). Unicode letters, digits,
+#: hyphens, colons and mixed case are all accepted (docutils looks roles up
+#: case-insensitively).
+_ROLE_NAME_RE = re.compile(r"\A\S+\Z")
+
+
+def validate_custom_role(field: dc.Field[Any], name: Any, data: Any) -> None:
+    """Validate the shape of a single custom role (name -> data) entry.
+
+    Note, whether ``data["inherit"]`` refers to a known sphinx-design badge
+    role can only be checked at registration time
+    (see ``sphinx_design.badges_buttons.setup_custom_roles``).
+
+    :param field: The dataclass field the entry belongs to.
+    :param name: The name of the new role.
+    :param data: The role data, expected shape
+        ``{inherit: str, tooltip: str}`` (``tooltip`` optional).
+    :raises TypeError | ValueError: If the entry is invalid.
+    """
+    if not isinstance(name, str):
+        raise TypeError(f"key must be a string: {name!r}")
+    if not _ROLE_NAME_RE.match(name):
+        raise ValueError(
+            f"role name {name!r} is invalid: it must be non-empty and contain "
+            "no whitespace (docutils could never parse such a role)"
+        )
+    if not isinstance(data, dict):
+        raise TypeError(f"{name!r} value must be a dictionary")
+    if "inherit" not in data:
+        raise ValueError(f"{name!r} value must have an 'inherit' key")
+    if not isinstance(data["inherit"], str):
+        raise TypeError(f"'{name}.inherit' value must be a string")
+    if "tooltip" in data and not isinstance(data["tooltip"], str):
+        raise TypeError(f"'{name}.tooltip' value must be a string")
+    # unlike custom directives (whose option set is directive-specific), a role
+    # entry has a small, fixed key set, so unknown keys are rejected to catch typos
+    unknown = [key for key in data if key not in CUSTOM_ROLE_KEYS]
+    if unknown:
+        raise ValueError(
+            f"'{name}' has unknown keys {unknown!r} (allowed: {list(CUSTOM_ROLE_KEYS)!r})"
+        )
+
+
+def validate_custom_roles(
+    inst: Any, field: dc.Field[Any], value: Any, suffix: str = ""
+) -> None:
+    """Validate the custom roles mapping, raising on the first invalid entry.
+
+    :param inst: The dataclass instance (or None if not yet created).
+    :param field: The dataclass field.
+    :param value: The value to validate.
+    :param suffix: Suffix to append to the field name in error messages.
+    :raises TypeError | ValueError: If the value is invalid.
+    """
+    if not isinstance(value, dict):
+        raise TypeError(f"'{field.name}{suffix}' must be a dictionary (got {value!r})")
+    for name, data in value.items():
+        validate_custom_role(field, name, data)
+
+
 @dc.dataclass
 class SdConfig:
     """Global configuration for sphinx-design (all values TOML-compatible).
@@ -216,6 +281,15 @@ class SdConfig:
             "validator": validate_custom_directives,
             "entry_validator": validate_custom_directive,
             "help": "Custom directives, inheriting from sphinx-design ones",
+            "doc_type": "dict[str, dict]",
+        },
+    )
+    custom_roles: dict[str, Any] = dc.field(
+        default_factory=dict,
+        metadata={
+            "validator": validate_custom_roles,
+            "entry_validator": validate_custom_role,
+            "help": "Custom roles, inheriting from sphinx-design badge ones",
             "doc_type": "dict[str, dict]",
         },
     )

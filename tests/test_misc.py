@@ -506,6 +506,7 @@ def test_button_i18n_translated(sphinx_builder):
 
 INVALID_CONFIG_VALUES = {
     "custom_directives": (["not", "a", "dict"], "must be a dictionary"),
+    "custom_roles": (["not", "a", "dict"], "must be a dictionary"),
     "fontawesome_source": ("invalid", "must be one of"),
     "fontawesome_cdn_url": (123, "must be of type"),
     "fontawesome_version": ("7", "must be one of"),
@@ -579,6 +580,42 @@ def test_config_custom_directives_unknown_inherit(sphinx_builder):
     assert "'foo.inherit' is an unknown directive key: unknown" in builder.warnings
 
 
+def test_config_custom_roles_invalid_entry(sphinx_builder):
+    """An invalid ``sd_custom_roles`` entry should emit a ``design.config``
+    warning and be discarded, without affecting valid entries.
+    """
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "sd_custom_roles": {
+                "bdg-stable": {"inherit": "bdg-success", "tooltip": "Stable"},
+                "bdg-bad": {"tooltip": "no inherit"},
+                "bdg-typo": {"inherit": "bdg-info", "tootlip": "misspelt key"},
+                "bad name": {"inherit": "bdg-info"},
+            },
+        }
+    )
+    _write_index_rst(builder)
+    builder.build(assert_pass=False)
+    assert "'bdg-bad' value must have an 'inherit' key" in builder.warnings
+    assert "'bdg-typo' has unknown keys" in builder.warnings
+    assert "role name 'bad name' is invalid" in builder.warnings
+    assert list(get_sd_config(builder.app.env).custom_roles) == ["bdg-stable"]
+
+
+def test_config_custom_roles_unknown_inherit(sphinx_builder):
+    """An unknown ``inherit`` badge role should emit a ``design.config`` warning."""
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "sd_custom_roles": {"bdg-foo": {"inherit": "not-a-badge"}},
+        }
+    )
+    _write_index_rst(builder)
+    builder.build(assert_pass=False)
+    assert "'bdg-foo.inherit' is an unknown badge role: not-a-badge" in builder.warnings
+
+
 def test_config_warnings_suppressible(sphinx_builder):
     """Config warnings are emitted with the ``design.config`` type/subtype,
     so they can be suppressed via ``suppress_warnings``.
@@ -609,6 +646,14 @@ def test_config_strict_validation():
         SdConfig(custom_directives="not-a-dict")
     with pytest.raises(ValueError, match="must have an 'inherit' key"):
         SdConfig(custom_directives={"foo": {}})
+    with pytest.raises(TypeError, match="'custom_roles' must be a dictionary"):
+        SdConfig(custom_roles="not-a-dict")
+    with pytest.raises(ValueError, match="must have an 'inherit' key"):
+        SdConfig(custom_roles={"bdg-foo": {}})
+    with pytest.raises(ValueError, match="has unknown keys"):
+        SdConfig(custom_roles={"bdg-foo": {"inherit": "bdg", "bad": 1}})
+    with pytest.raises(ValueError, match="role name 'bad name' is invalid"):
+        SdConfig(custom_roles={"bad name": {"inherit": "bdg"}})
 
 
 def test_config_toml_round_trip():
@@ -629,6 +674,10 @@ def test_config_toml_round_trip():
     [custom_directives.dropdown-syntax.options]
     color = "primary"
     icon = "code"
+
+    [custom_roles.bdg-stable]
+    inherit = "bdg-success"
+    tooltip = "A released, supported version"
     """
     data = tomllib.loads(toml_str)
     assert set(data) == {f.name for f in dc.fields(SdConfig)}, (
@@ -646,5 +695,11 @@ def test_config_toml_round_trip():
             "inherit": "dropdown",
             "argument": "Syntax",
             "options": {"color": "primary", "icon": "code"},
+        }
+    }
+    assert config.custom_roles == {
+        "bdg-stable": {
+            "inherit": "bdg-success",
+            "tooltip": "A released, supported version",
         }
     }

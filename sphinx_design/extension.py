@@ -8,7 +8,7 @@ from sphinx.application import Sphinx
 from sphinx.transforms import SphinxTransform
 
 from .article_info import setup_article_info
-from .badges_buttons import setup_badges_and_buttons
+from .badges_buttons import setup_badges_and_buttons, setup_custom_roles
 from .cards import setup_cards
 from .config import get_sd_config, setup_sd_config
 from .dropdown import setup_dropdown
@@ -56,6 +56,7 @@ def setup_extension(app: Sphinx) -> None:
     app.connect(
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)
     )
+    app.connect("config-inited", setup_custom_roles)
 
 
 @contextmanager
