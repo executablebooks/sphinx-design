@@ -20,6 +20,7 @@ from .shared import (
     create_component,
     setup_custom_directives,
 )
+from .steps import setup_steps
 from .tabs import setup_tabs
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -51,6 +52,7 @@ def setup_extension(app: Sphinx) -> None:
         setup_dropdown(app)
         setup_icons(app)
         setup_tabs(app)
+        setup_steps(app)
         setup_article_info(app)
 
     app.connect(

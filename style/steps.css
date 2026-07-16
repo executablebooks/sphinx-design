@@ -1,0 +1,97 @@
+/* Numbered procedure steps.
+
+   The container is a real <ol> and each step a real <li>, so the numbering is
+   semantic (assistive tech announces it, non-HTML builders degrade to a
+   numbered list). The native list marker is hidden and replaced by a circular
+   marker whose number is counter(list-item) -- the built-in list counter, so it
+   honours the <ol start="N"> offset with nothing baked into the doctree.
+
+   The marker/rail colour comes from the semantic palette so themes retint it
+   automatically; the .sd-steps-<colour> variants (generated from
+   style/design.toml) override --sd-steps-marker-bg / --sd-steps-marker-text. */
+
+.sd-steps {
+  margin: 1.5rem 0;
+  padding-inline-start: 0;
+}
+
+/* Sphinx's basic.css (shipped with every theme) sets `ol.arabic {list-style:
+   decimal}` at specificity (0,1,1); a plain `.sd-steps` (0,1,0) loses to it and
+   the native "N." marker renders beside our circular one. The doubled class
+   lifts this to (0,2,0) so it wins regardless of stylesheet load order (e.g.
+   alabaster's custom.css loads after our artifact, so `ol.sd-steps` would not
+   be enough). */
+.sd-steps.sd-steps {
+  list-style: none;
+}
+
+.sd-step {
+  position: relative;
+  /* room for the marker + connecting rail on the inline-start side */
+  padding-inline-start: 3rem;
+  padding-bottom: 1.5rem;
+}
+
+/* drop the trailing gap under the final step */
+.sd-step:last-child {
+  padding-bottom: 0;
+}
+
+/* circular numbered marker */
+.sd-step::before {
+  content: counter(list-item);
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--sd-steps-marker-bg, var(--sd-color-primary));
+  color: var(--sd-steps-marker-text, var(--sd-color-primary-text));
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1;
+  /* centre the number within the circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* connecting rail, running from below one marker down to the next */
+.sd-step::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: 2rem;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--sd-steps-marker-bg, var(--sd-color-primary));
+  opacity: .35;
+  transform: translateX(-50%);
+}
+
+/* no rail after the last marker */
+.sd-step:last-child::after {
+  display: none;
+}
+
+/* the (optional) step title, a rubric aligned to the marker.
+   the `.sd-step >` prefix lifts specificity to (0,2,0) so it wins over a
+   theme's own `p.rubric` rule (e.g. furo). */
+.sd-step > .sd-step-title {
+  margin-top: 0;
+  margin-bottom: .5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+/* trim the leading/trailing margins of the step body */
+.sd-step-content > :first-child {
+  margin-top: 0;
+}
+
+.sd-step-content > :last-child {
+  margin-bottom: 0;
+}

@@ -178,6 +178,8 @@ def test_generated_family_counts_match_design_toml():
         family = {template.format(name) for name in palette}
         assert sum(sel in family for sel in selectors) == n_colors, template
     assert count(r"\.sd-text-[a-z]+,\.sd-text-[a-z]+>p") == n_colors
+    # steps: one marker-colour variant rule per palette colour
+    assert count(r"\.sd-steps-[a-z]+") == n_colors
     # spacing scale: one all-sides padding/margin rule per step
     assert count(r"\.sd-p-\d+") == n_spacings
     assert count(r"\.sd-m-\d+") == n_spacings

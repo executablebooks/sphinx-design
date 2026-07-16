@@ -68,6 +68,7 @@ grids
 cards
 dropdowns
 tabs
+steps
 badges_buttons
 additional
 ```
@@ -131,6 +132,13 @@ Hide content in expandable containers.
 :link-type: doc
 
 Synchronisable, tabbed content sets.
+:::
+
+:::{grid-item-card} {octicon}`list-ordered` Steps
+:link: steps
+:link-type: doc
+
+Numbered, visually-connected procedures.
 :::
 
 :::{grid-item-card} {octicon}`plus-circle` Badges, Buttons & Icons
