@@ -55,6 +55,7 @@ All file/line references are against commit `bbaf94a` (post v0.7.0).
 | 24 | [packaging-1.0](24-packaging-1-0.md) | release | — | most others |
 | 25 | [drop-sass](25-drop-sass.md) | refactor/infra | stale browser-support docs; sass toolchain | 10, 20 |
 | 26 | [custom-roles](26-custom-roles.md) | feature | #81 follow-up (generalizes sd_custom_directives) | 02, 20 |
+| 27 | [design-docs](27-design-docs.md) | docs | — (extends #290's design-page pattern) | best after Phase 3 |
 
 ## Execution plan
 
