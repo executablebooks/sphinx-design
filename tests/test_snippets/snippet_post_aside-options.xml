@@ -1,0 +1,24 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <aside_main aria_labelledby="target" classes="sd-aside sd-aside-right sd-aside-w-25 sd-m-1 class-aside">
+            <rubric classes="sd-aside-title class-title" ids="target" names="target">
+                Narrow, right-aligned
+            <container classes="sd-aside-body class-body" design_component="aside-body" is_div="True">
+                <paragraph>
+                    A 25% wide aside, floated right.
+        <aside_main aria_labelledby="sd-aside-title-1" classes="sd-aside sd-aside-left sd-aside-w-50 sd-mb-3">
+            <rubric classes="sd-aside-title" ids="sd-aside-title-1">
+                Wide, left-aligned
+            <container classes="sd-aside-body" design_component="aside-body" is_div="True">
+                <paragraph>
+                    A 50% wide aside, floated left.
+        <paragraph>
+            <reference internal="True" refid="target">
+                <inline classes="std std-ref">
+                    Narrow, right-aligned
+            , 
+            <reference internal="True" refid="target">
+                <inline classes="std std-ref">
+                    text

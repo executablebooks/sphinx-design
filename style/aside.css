@@ -1,0 +1,67 @@
+/* Aside: a floated call-out box that the surrounding text wraps around (#97).
+
+   Mobile-first: the box is a full-width block by default and only floats from
+   the `md` breakpoint (768px, see style/design.toml) upwards, so on small
+   screens it degrades to a readable full-width block. The float direction and
+   the widths therefore live inside the media query. The `.sd-aside-w-*` widths
+   are defined here (rather than reusing the `.sd-w-*` sizing utilities) because
+   the 33% step has no sizing utility and inline styles are deliberately
+   avoided. The surface reuses the card custom properties so asides match the
+   active theme. */
+
+.sd-aside {
+  box-sizing: border-box;
+  padding: 1rem;
+  border: 1px solid var(--sd-color-card-border);
+  border-radius: .25rem;
+  background-color: var(--sd-color-card-background);
+  color: var(--sd-color-card-text);
+}
+
+/* raise the specificity to (0,2,0) so the reset beats a theme's `p.rubric`
+   (0,1,1): the title is a rubric, and themes must not re-introduce a top margin
+   or drop the bold weight */
+.sd-aside > .sd-aside-title {
+  margin-top: 0;
+  font-weight: 700;
+}
+
+.sd-aside-body > :last-child {
+  margin-bottom: 0;
+}
+
+/* drop this class on the following block to stop the text wrapping early */
+.sd-clear-both {
+  clear: both !important;
+}
+
+@media (min-width: 768px) {
+  /* Physical margins (not logical `margin-inline`) so the text-side gap tracks
+     the physical float under `dir="rtl"`: the float side is physical, so the
+     gap must be too. In LTR these are byte-for-byte the old `margin-inline`
+     values; the block margins (incl. the default `sd-mb-3` bottom) are
+     untouched. */
+  .sd-aside-left {
+    float: left;
+    margin-left: 0;
+    margin-right: 1.5rem;
+  }
+
+  .sd-aside-right {
+    float: right;
+    margin-left: 1.5rem;
+    margin-right: 0;
+  }
+
+  .sd-aside-w-25 {
+    width: 25%;
+  }
+
+  .sd-aside-w-33 {
+    width: 33.3333%;
+  }
+
+  .sd-aside-w-50 {
+    width: 50%;
+  }
+}

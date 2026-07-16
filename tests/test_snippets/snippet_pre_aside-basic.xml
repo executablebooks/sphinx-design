@@ -1,0 +1,14 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <container classes="sd-aside sd-aside-right sd-aside-w-33 sd-mb-3" design_component="aside" is_div="True">
+            <container classes="sd-aside-body" design_component="aside-body" is_div="True">
+                <paragraph>
+                    An aside floats beside the flow, and the surrounding text wraps around it.
+        <container classes="sd-aside sd-aside-left sd-aside-w-33 sd-mb-3" design_component="aside" is_div="True">
+            <rubric classes="sd-aside-title">
+                Aside title
+            <container classes="sd-aside-body" design_component="aside-body" is_div="True">
+                <paragraph>
+                    Asides are handy for pull-outs, margin notes and side comments.
