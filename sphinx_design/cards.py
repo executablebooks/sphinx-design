@@ -455,7 +455,8 @@ class CardDirective(SdDirective):
         footer: nodes.container | None,
     ) -> tuple[nodes.container | None, list[nodes.Node], nodes.container | None]:
         """Hoist any card-header/card-footer directives nested in the legacy
-        chunks (mixed syntax), so the directives take precedence.
+        chunks (mixed syntax); directive slot content is merged into the
+        corresponding slot, after any separator-produced content.
 
         The directives may be nested in *any* legacy chunk -- the body, or even
         inside a separator-derived header/footer slot (which would otherwise
@@ -478,7 +479,8 @@ class CardDirective(SdDirective):
 
         LOGGER.warning(
             "Card mixes '^^^'/'+++' separators with card-header/card-footer "
-            "directives; the directives take precedence. If a '^^^'/'+++' line "
+            "directives; the directive content is merged into the slots (after "
+            "any separator content). If a '^^^'/'+++' line "
             "is incidental body content (e.g. inside a code block), disable the "
             f"legacy separators with sd_card_legacy_separators=False "
             f"[{WARNING_TYPE}.card]",
