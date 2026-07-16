@@ -16,21 +16,29 @@ Text
 :img-top: images/particle_background.jpg
 :img-alt:
 
+:::{card-header}
 Header
-^^^
+:::
+
 Content
-+++
+
+:::{card-footer}
 Footer
+:::
 ::::
 
 ::::{grid-item-card} Title
 :img-bottom: images/particle_background.jpg
 
+:::{card-header}
 Header
-^^^
+:::
+
 Content
-+++
+
+:::{card-footer}
 Footer
+:::
 ::::
 
 :::::

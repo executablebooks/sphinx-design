@@ -511,6 +511,7 @@ INVALID_CONFIG_VALUES = {
     "fontawesome_version": ("7", "must be one of"),
     "fontawesome_latex": ("bad-mode", "must be a bool or one of"),
     "tabs_storage_prefix": (123, "must be of type"),
+    "card_legacy_separators": (123, "must be of type"),
 }
 """An invalidly typed value (and expected warning) for every ``SdConfig`` field."""
 
@@ -621,6 +622,7 @@ def test_config_toml_round_trip():
     fontawesome_version = "6"
     fontawesome_latex = true
     tabs_storage_prefix = "sphinx-design-tab-id-"
+    card_legacy_separators = false
 
     [custom_directives.dropdown-syntax]
     inherit = "dropdown"
@@ -640,6 +642,7 @@ def test_config_toml_round_trip():
     assert config.fontawesome_version == "6"
     assert config.fontawesome_latex is True
     assert config.tabs_storage_prefix == "sphinx-design-tab-id-"
+    assert config.card_legacy_separators is False
     assert config.fontawesome_latex_mode == "fontawesome"
     assert config.custom_directives == {
         "dropdown-syntax": {

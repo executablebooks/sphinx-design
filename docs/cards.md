@@ -25,16 +25,25 @@ See the [Material Design](https://material.io/components/cards) and [Bootstrap c
 ````
 `````
 
-All content before the first occurrence of three or more `^^^` is considered as a header,
-and all content after the final occurrence of three or more `+++` is considered as a footer:
+## Card headers and footers
 
-:::{card} Card Title
+Add a header and/or footer to a card with the `card-header` and `card-footer` directives.
+They always render in their slots — the header at the top and the footer at the bottom of
+the card — regardless of where they appear within the card body (the recommended order is
+header, then body, then footer):
+
+::::{card} Card Title
+
+:::{card-header}
 Header
-^^^
+:::
+
 Card content
-+++
+
+:::{card-footer}
 Footer
 :::
+::::
 
 `````{dropdown-syntax}
 
@@ -48,26 +57,46 @@ Footer
 ````
 `````
 
+For a single line of content, the `header` and `footer` options are a convenient
+short-hand (they accept inline markup, and compose with the card body):
+
+:::{card} Card Title
+:header: A **header**
+:footer: A footer
+
+Card content
+:::
+
 When using cards in grids (see [`grid-item-card`](./grids.md)) footers can be aligned.
 
-::::{grid} 2
-:::{grid-item-card} Card Title
+::::::{grid} 2
+:::::{grid-item-card} Card Title
+
+::::{card-header}
 Header
-^^^
+::::
+
 Card content
-+++
+
+::::{card-footer}
 Footer
-:::
-:::{grid-item-card} Card Title
+::::
+:::::
+:::::{grid-item-card} Card Title
+
+::::{card-header}
 Header
-^^^
+::::
+
 Longer
 
 Card content
-+++
+
+::::{card-footer}
 Footer
-:::
 ::::
+:::::
+::::::
 
 ## Card images
 
@@ -91,22 +120,30 @@ Text
 :img-top: images/particle_background.jpg
 :img-alt: your desired alt text
 
+:::{card-header}
 Header
-^^^
+:::
+
 Content
-+++
+
+:::{card-footer}
 Footer
+:::
 ::::
 
 ::::{grid-item-card} Title
 :img-bottom: images/particle_background.jpg
 :img-alt: your desired alt text
 
+:::{card-header}
 Header
-^^^
+:::
+
 Content
-+++
+
+:::{card-footer}
 Footer
+:::
 ::::
 
 :::::
@@ -288,6 +325,14 @@ link-alt
 shadow
 : The size of the shadow below the card: `none`, `sm` (default), `md`, `lg`.
 
+header
+: Inline-markup short-hand for a single-line header
+  (equivalent to a `card-header` directive; the two are mutually exclusive).
+
+footer
+: Inline-markup short-hand for a single-line footer
+  (equivalent to a `card-footer` directive; the two are mutually exclusive).
+
 class-card
 : Additional CSS classes for the card container element.
 
@@ -308,3 +353,114 @@ class-img-top
 
 class-img-bottom
 : Additional CSS classes for the bottom image (if present).
+
+(legacy-separator-syntax)=
+
+## Legacy separator syntax
+
+:::{deprecated} 0.8
+Prefer the `card-header` / `card-footer` directives (above).
+The `^^^` / `+++` separators are **deprecated**: they scan the card's raw source
+lines, so a `^^^` or `+++` line inside nested content (for example a code block)
+is mistaken for a separator, and they have no meaning to non-Python MyST tools.
+:::
+
+Historically, a card header and footer were delimited within the body itself:
+all content before the first line of three-or-more `^^^` became the header,
+and all content after the final line of three-or-more `+++` became the footer.
+
+::::{card} Card Title
+Header
+^^^
+Card content
++++
+Footer
+::::
+
+This syntax is still recognised by default, but emits a deprecation warning
+(once per document). The rewrite is mechanical:
+
+| Legacy separators | Header / footer directives |
+| --- | --- |
+| `Header` above a `^^^` line | a `card-header` directive |
+| `Footer` below a `+++` line | a `card-footer` directive |
+
+`````{tab-set}
+````{tab-item} MyST
+```markdown
+:::{card} Card Title
+Header
+^^^
+Body
++++
+Footer
+:::
+```
+becomes
+```markdown
+::::{card} Card Title
+
+:::{card-header}
+Header
+:::
+
+Body
+
+:::{card-footer}
+Footer
+:::
+::::
+```
+````
+````{tab-item} reStructuredText
+```rst
+.. card:: Card Title
+
+   Header
+   ^^^
+   Body
+   +++
+   Footer
+```
+becomes
+```rst
+.. card:: Card Title
+
+   .. card-header::
+
+      Header
+
+   Body
+
+   .. card-footer::
+
+      Footer
+```
+````
+`````
+
+:::{important} Migrate, then flip the flag
+While the legacy separators are enabled (the default), the raw-line scan runs
+on **every** card, so a stray column-0 `^^^` or `+++` — even inside a code
+block, and even in a card that has already migrated to the `card-header` /
+`card-footer` directives — is still treated as a separator (mis-splitting the
+card and emitting a mixed-syntax warning). The single-parse robustness is only
+realized once the separators are turned off.
+
+The recommended order is therefore **migrate first, then flip the flag**:
+convert every card to the directives, then set
+`sd_card_legacy_separators = False` in your `conf.py`.
+:::
+
+With `sd_card_legacy_separators = False`, `^^^` / `+++` lines are no longer
+scanned — but they do **not** reliably render as literal text, so migrate
+before flipping:
+
+- in MyST, a bare `+++` line is a block break and silently disappears;
+- in reStructuredText, a `^^^` / `++++` line can raise a docutils `CRITICAL`
+  "Unexpected section title or transition" error.
+
+To keep the legacy syntax on but silence the deprecation warning, add
+`"design.card_legacy"` to the Sphinx `suppress_warnings` list.
+
+**Timeline**: deprecated now (default on) → default off at `1.0` → removed at `2.0`.
