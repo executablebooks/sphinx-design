@@ -1,0 +1,9 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <enumerated_list classes="sd-steps" design_component="steps" enumtype="arabic" prefix="" suffix=".">
+            <list_item classes="sd-step" design_component="step">
+                <container classes="sd-step-content" design_component="step-content" is_div="True">
+                    <paragraph>
+                        Just content, no title.

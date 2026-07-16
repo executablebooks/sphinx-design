@@ -1,0 +1,14 @@
+::::{steps}
+
+:::{step} Install the package
+Run `pip install sphinx-design`.
+:::
+
+:::{step} Configure your project
+Add `sphinx_design` to the `extensions` list in your `conf.py`.
+:::
+
+:::{step} Build the docs
+You are ready to use the components.
+:::
+::::

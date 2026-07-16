@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- ✨ NEW: `steps` and `step` directives for numbered, visually-connected
+  procedures (install guides, tutorials). The numbers are CSS counters over a
+  real ordered list, so they stay semantic for assistive technology and degrade
+  to a plain numbered list in non-HTML builders, and never desynchronise on
+  translation or re-ordering (no number is baked into the doctree). Markers take
+  a `color` semantic-colour variant, and the list a `start` offset ({pr}`PRNUM`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled

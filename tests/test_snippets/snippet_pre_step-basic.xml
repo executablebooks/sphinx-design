@@ -1,0 +1,35 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <enumerated_list classes="sd-steps" design_component="steps" enumtype="arabic" prefix="" suffix=".">
+            <list_item classes="sd-step" design_component="step">
+                <rubric classes="sd-step-title">
+                    Install the package
+                <container classes="sd-step-content" design_component="step-content" is_div="True">
+                    <paragraph>
+                        Run 
+                        <literal>
+                            pip install sphinx-design
+                        .
+            <list_item classes="sd-step" design_component="step">
+                <rubric classes="sd-step-title">
+                    Configure your project
+                <container classes="sd-step-content" design_component="step-content" is_div="True">
+                    <paragraph>
+                        Add 
+                        <literal>
+                            sphinx_design
+                         to the 
+                        <literal>
+                            extensions
+                         list in your 
+                        <literal>
+                            conf.py
+                        .
+            <list_item classes="sd-step" design_component="step">
+                <rubric classes="sd-step-title">
+                    Build the docs
+                <container classes="sd-step-content" design_component="step-content" is_div="True">
+                    <paragraph>
+                        You are ready to use the components.
