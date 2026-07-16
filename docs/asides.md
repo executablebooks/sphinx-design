@@ -71,9 +71,10 @@ At `:width: 50%` the box takes up half the content width.
 ```{note}
 Widths are only applied from the `md` breakpoint (768&nbsp;px) upwards. Below
 that the aside becomes a full-width block regardless of the `width` option, so
-it stays readable on small screens. If a right-floated aside collides with a
-theme's in-page (right-hand) table of contents at narrow widths, prefer a
-smaller `width` or `:align: left`.
+it stays readable on small screens. On themes with a right-hand in-page table
+of contents (such as pydata-sphinx-theme), the main column is already narrower,
+so a right-floated aside leaves less room for the wrapped text; prefer a smaller
+`width` or `:align: left` there.
 ```
 
 ## Stopping the wrap
@@ -96,6 +97,27 @@ A short aside.
 This paragraph is pushed below the aside because the preceding empty `div` has
 the `sd-clear-both` class.
 
+:::{important} Always clear a *trailing* aside
+A float is not contained by its parent section, so an aside that is the **last
+element of a section** (with no text left to wrap) can extend past the end of
+the section and overlap whatever follows — the next heading, or content injected
+by the theme. When an aside is the final piece of a section, follow it with a
+cleared block:
+
+```
+.. aside:: Wrap-up note
+   :align: right
+
+   The last content in this section.
+
+.. div:: sd-clear-both
+```
+
+Themes can address this globally instead, by clearfixing their main content
+column (for example `.article-container { display: flow-root }`), which
+contains every float without an explicit clearing element.
+:::
+
 ## Semantic output
 
 In HTML an aside is rendered as a native
@@ -104,6 +126,34 @@ element (not a plain `<div>`), which correctly conveys "tangentially related
 content" to assistive technologies and reader modes. In non-HTML outputs
 (LaTeX, text, ...) it degrades to a plain titled block. No JavaScript is
 involved: the float and the responsive collapse are pure CSS.
+
+A **titled** aside is labelled by its title: the `<aside>` carries an
+`aria-labelledby` attribute pointing at the title element (which is given a
+stable, automatically generated id when you do not supply a `:name:`), so screen
+readers announce the region by its heading. An **untitled** aside has no heading
+text to label it with and is intentionally left unlabelled — give it a title if
+you want it announced as a named region.
+
+## Cross-referencing
+
+When you give an aside a `:name:`, the target (and therefore the `id` anchor)
+lands on the **title** element for a titled aside, or on the `<aside>` itself
+for an untitled one. For a titled aside `` :ref:`the-name` `` renders using the
+title text, exactly like referencing a section:
+
+```
+.. aside:: Design rationale
+   :name: rationale
+
+   ...
+
+See the :ref:`rationale` aside.
+```
+
+An **untitled** named aside has no caption text, so — as with any captionless
+target in Sphinx — a bare `` :ref:`the-name` `` cannot derive its link text: it
+warns and renders as plain text without a link. Reference it with **explicit
+text** instead: `` :ref:`jump to the note <the-name>` ``.
 
 ## `aside` options
 

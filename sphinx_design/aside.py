@@ -28,7 +28,12 @@ class aside_main(nodes.Element, nodes.General):  # noqa: N801
 
 
 def visit_aside_main(self, node: nodes.Element) -> None:
-    self.body.append(self.starttag(node, "aside"))
+    attributes = {}
+    # titled asides are labelled by their title (see AsideHtmlTransform)
+    labelledby = node.get("aria_labelledby")
+    if labelledby:
+        attributes["aria-labelledby"] = labelledby
+    self.body.append(self.starttag(node, "aside", **attributes))
 
 
 def depart_aside_main(self, node: nodes.Element) -> None:
@@ -112,6 +117,12 @@ class AsideHtmlTransform(SphinxPostTransform):
     every writer; for HTML we replace it with an :class:`aside_main` node so the
     call-out is emitted as a semantic ``<aside>``. The children (title rubric and
     body) and any ``ids`` are carried across unchanged.
+
+    For a titled aside the ``<aside>`` is given ``aria-labelledby`` pointing at
+    its title, so assistive technology announces the region by its heading. The
+    title is given a stable, deterministic id (``sd-aside-title-<n>``, numbered
+    in document order like the tab ids) when it does not already carry one from
+    ``:name:``. Untitled asides are left unlabelled (no invented label text).
     """
 
     default_priority = 199
@@ -120,8 +131,18 @@ class AsideHtmlTransform(SphinxPostTransform):
     def run(self, **kwargs: Any) -> None:
         """Run the transform."""
         document: nodes.document = self.document
-        for node in list(document.findall(lambda n: is_component(n, "aside"))):
+        for count, node in enumerate(
+            list(document.findall(lambda n: is_component(n, "aside")))
+        ):
             newnode = aside_main(classes=node["classes"])
             newnode["ids"] += node["ids"]
+            # wire aria-labelledby to the title (titled asides only)
+            title = next(
+                (c for c in node.children if isinstance(c, nodes.rubric)), None
+            )
+            if title is not None:
+                if not title["ids"]:
+                    title["ids"].append(f"sd-aside-title-{count}")
+                newnode["aria_labelledby"] = title["ids"][0]
             newnode += node.children
             node.replace_self(newnode)
