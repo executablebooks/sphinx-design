@@ -16,10 +16,10 @@
   (planned to become the default at 1.0). One behaviour change: an *empty*
   `card-header` / `card-footer` directive now errors (`Content block expected`),
   where an empty legacy chunk produced an empty slot. See the cards
-  documentation for the mechanical migration ({pr}`PRNUM`)
+  documentation for the mechanical migration ({pr}`294`)
 - ♻️ REFACTOR: The private `CardDirective._create_component` helper is renamed
   to `_create_slot`; a back-compatible alias is kept for one release for
-  downstream extensions that call it ({pr}`PRNUM`)
+  downstream extensions that call it ({pr}`294`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
