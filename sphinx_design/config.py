@@ -249,7 +249,7 @@ class SdConfig:
             "types": (bool, str),
             "help": "Render fontawesome icons in LaTeX output: "
             'False/"none", True/"fontawesome", or "fontawesome5"',
-            "doc_type": "bool | str",
+            "doc_type": "bool \| str",
         },
     )
     tabs_storage_prefix: str = dc.field(
