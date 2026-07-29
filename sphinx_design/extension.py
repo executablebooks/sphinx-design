@@ -56,6 +56,7 @@ def setup_extension(app: Sphinx) -> None:
     app.connect(
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)
     )
+    app.connect("doctree-resolved", _resolve_new_tab_refs)
 
 
 @contextmanager
@@ -71,6 +72,21 @@ def capture_directives(app: Sphinx):
     app.add_directive = _add_directive  # type: ignore[assignment,method-assign]
     yield directive_map
     app.add_directive = add_directive  # type: ignore[method-assign]
+
+
+def _resolve_new_tab_refs(app: Sphinx, doctree: nodes.document, docname: str) -> None:
+    """Set ``target`` and ``rel`` on card link references that request a new tab.
+
+    Cross-references are resolved to ``nodes.reference`` during the write
+    phase, before ``doctree-resolved`` fires, so we can safely walk the tree
+    here for both URL and internal-link cards.
+    """
+    for container in doctree.findall(PassthroughTextElement):
+        if not container.get("sd_new_tab"):
+            continue
+        for ref in container.findall(nodes.reference):
+            ref["target"] = "_blank"
+            ref["rel"] = "noreferrer noopener"
 
 
 def add_static_assets(app: Sphinx) -> None:

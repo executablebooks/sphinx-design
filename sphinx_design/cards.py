@@ -65,6 +65,7 @@ class CardDirective(SdDirective):
         "link": directives.unchanged_required,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
+        "link-new-tab": directives.flag,
         "shadow": make_choice(["none", "sm", "md", "lg"]),
         "class-card": directives.class_option,
         "class-header": directives.class_option,
@@ -185,6 +186,9 @@ class CardDirective(SdDirective):
                     refuri=link_target,
                     classes=_classes,
                 )
+                if "link-new-tab" in options:
+                    link["target"] = "_blank"
+                    link["rel"] = "noreferrer noopener"
             else:
                 ref_options = {
                     # TODO the presence of classes raises an error if the link cannot be found
@@ -200,6 +204,8 @@ class CardDirective(SdDirective):
                     _rawtext, nodes.inline(_rawtext, _rawtext), **ref_options
                 )
             inst.set_source_info(link)
+            if "link-new-tab" in options:
+                link_container["sd_new_tab"] = True
             link_container += link
             container.append(link_container)
 

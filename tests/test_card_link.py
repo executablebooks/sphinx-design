@@ -273,3 +273,139 @@ def test_card_ref_unresolved_warns(sphinx_builder):
     # build completed and the content survives, just without a resolved link
     assert "Card body" in html
     assert _stretched_link_hrefs(html) == []
+
+
+# ---------------------------------------------------------------------------
+# link-new-tab tests
+# ---------------------------------------------------------------------------
+
+NEW_TAB_URL_RST = """
+Heading
+=======
+
+.. card:: New-tab URL card
+    :link: https://example.com
+    :link-new-tab:
+
+    Card body
+"""
+
+NEW_TAB_URL_MYST = """
+# Heading
+
+:::{card} New-tab URL card
+:link: https://example.com
+:link-new-tab:
+
+Card body
+:::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_url_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` adds ``target="_blank"`` and ``rel="noreferrer noopener"``
+    to a URL card link.
+    """
+    builder = _build(sphinx_builder, fmt, NEW_TAB_URL_RST, NEW_TAB_URL_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["https://example.com"]
+    assert re.search(r'<a [^>]*sd-stretched-link[^>]*target="_blank"', html), (
+        "target=_blank not found on stretched-link anchor"
+    )
+    assert re.search(
+        r'<a [^>]*sd-stretched-link[^>]*rel="noreferrer noopener"', html
+    ), "rel=noreferrer noopener not found on stretched-link anchor"
+
+
+NEW_TAB_REF_RST = """
+Heading
+=======
+
+My Section
+----------
+
+Some content.
+
+.. card:: New-tab internal card
+    :link: my section
+    :link-type: ref
+    :link-new-tab:
+
+    Card body
+"""
+
+NEW_TAB_REF_MYST = """
+# Heading
+
+## My Section
+
+Some content.
+
+:::{card} New-tab internal card
+:link: my section
+:link-type: ref
+:link-new-tab:
+
+Card body
+:::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_ref_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` also applies to internal cross-reference cards.
+
+    ``pending_xref`` is resolved to ``nodes.reference`` before
+    ``doctree-resolved`` fires, so the event handler can stamp the
+    ``target`` and ``rel`` attributes onto the real anchor.
+    """
+    builder = _build(sphinx_builder, fmt, NEW_TAB_REF_RST, NEW_TAB_REF_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert "#my-section" in _stretched_link_hrefs(html)
+    assert re.search(r'<a [^>]*sd-stretched-link[^>]*target="_blank"', html), (
+        "target=_blank not found on resolved ref anchor"
+    )
+    assert re.search(
+        r'<a [^>]*sd-stretched-link[^>]*rel="noreferrer noopener"', html
+    ), "rel=noreferrer noopener not found on resolved ref anchor"
+
+
+NEW_TAB_GRID_RST = """
+Heading
+=======
+
+.. grid:: 1
+
+    .. grid-item-card:: New-tab grid card
+        :link: https://example.com
+        :link-new-tab:
+
+        Grid card body
+"""
+
+NEW_TAB_GRID_MYST = """
+# Heading
+
+::::{grid} 1
+
+:::{grid-item-card} New-tab grid card
+:link: https://example.com
+:link-new-tab:
+
+Grid card body
+:::
+
+::::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_grid_item_card_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` works on ``grid-item-card`` (synced ``option_spec``)."""
+    builder = _build(sphinx_builder, fmt, NEW_TAB_GRID_RST, NEW_TAB_GRID_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["https://example.com"]
+    assert re.search(r'<a [^>]*sd-stretched-link[^>]*target="_blank"', html), (
+        "target=_blank not found on grid-item-card stretched-link anchor"
+    )

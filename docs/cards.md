@@ -137,6 +137,14 @@ Try hovering over then clicking on the cards below:
 The entire card can be clicked to navigate to `https://example.com`.
 :::
 
+:::{card} Clickable Card (external, new tab)
+:link: https://example.com
+:link-alt: example.com
+:link-new-tab:
+
+The entire card can be clicked to open `https://example.com` in a new tab.
+:::
+
 :::{card} Clickable Card (internal)
 :link: cards-clickable
 :link-type: ref
@@ -284,6 +292,11 @@ link-type
 
 link-alt
 : Alternative text for the link (that will be used by screen-readers).
+
+link-new-tab
+: Flag. When set, the card link opens in a new browser tab
+  (`target="_blank"`, `rel="noreferrer noopener"`).
+  Works with all `link-type` values.
 
 shadow
 : The size of the shadow below the card: `none`, `sm` (default), `md`, `lg`.
