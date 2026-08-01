@@ -66,7 +66,7 @@ theme-im = ["sphinx-immaterial~=0.13.9"]
 [dependency-groups]
 # keep in sync with the mirrors-mypy / ruff-pre-commit revs in .pre-commit-config.yaml
 mypy = ["mypy==2.3.0"]
-ruff = ["ruff==0.15.21"]
+ruff = ["ruff==0.16.0"]
 
 [tool.flit.sdist]
 exclude = [
