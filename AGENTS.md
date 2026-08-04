@@ -10,7 +10,7 @@ sphinx-design is a Sphinx extension for designing beautiful, view size responsiv
 - Responsive design inspired by [Bootstrap](https://getbootstrap.com/) (v5), [Material Design](https://material.io), and [Material-UI](https://material-ui.com/)
 - Support for both reStructuredText and [MyST Markdown](https://myst-parser.readthedocs.io/) (via integration with myst-parser)
 
-The extension works with multiple Sphinx themes including alabaster, sphinx-rtd-theme, pydata-sphinx-theme, sphinx-book-theme, furo, and sphinx-immaterial.
+The extension works with multiple Sphinx themes including alabaster, sphinx-rtd-theme, pydata-sphinx-theme, sphinx-book-theme, furo, sphinx-immaterial, and shibuya.
 
 ## Repository Structure
 
@@ -103,6 +103,7 @@ tox -e docs-pydata
 tox -e docs-sbt
 tox -e docs-furo
 tox -e docs-im
+tox -e docs-shibuya
 
 # Clean build (set CLEAN env var)
 CLEAN=1 tox -e docs-furo

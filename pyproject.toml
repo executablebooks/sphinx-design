@@ -62,6 +62,7 @@ theme-pydata = ["pydata-sphinx-theme~=0.20.0"]
 theme-rtd = ["sphinx-rtd-theme~=3.1"]
 theme-sbt = ["sphinx-book-theme~=1.2"]
 theme-im = ["sphinx-immaterial~=0.13.9"]
+theme-shibuya = ["shibuya~=2026.7.12"]
 
 [dependency-groups]
 # keep in sync with the mirrors-mypy / ruff-pre-commit revs in .pre-commit-config.yaml

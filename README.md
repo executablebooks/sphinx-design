@@ -33,6 +33,7 @@ View the documentation in multiple themes:
 - [pydata-sphinx-theme](https://sphinx-design.readthedocs.io/en/pydata-theme)
 - [sphinx-rtd-theme](https://sphinx-design.readthedocs.io/en/rtd-theme)
 - [furo](https://sphinx-design.readthedocs.io/en/furo-theme)
+- [shibuya](https://sphinx-design.readthedocs.io/en/shibuya-theme)
 
 ## Comparison to sphinx-panels
 

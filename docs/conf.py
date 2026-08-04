@@ -128,6 +128,11 @@ if html_theme == "sphinx_immaterial":
             },
         ],
     }
+if html_theme == "shibuya":
+    html_theme_options = {
+        "accent_color": "orange",
+        "github_url": "https://github.com/executablebooks/sphinx-design",
+    }
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 myst_enable_extensions = [

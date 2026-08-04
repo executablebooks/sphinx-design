@@ -89,6 +89,7 @@ sphinx-book-theme <https://sphinx-design.readthedocs.io/en/sbt-theme>
 pydata-sphinx-theme <https://sphinx-design.readthedocs.io/en/pydata-theme>
 sphinx-rtd-theme <https://sphinx-design.readthedocs.io/en/rtd-theme>
 furo <https://sphinx-design.readthedocs.io/en/furo-theme>
+shibuya <https://sphinx-design.readthedocs.io/en/shibuya-theme>
 ```
 
 
