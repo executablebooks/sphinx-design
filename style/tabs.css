@@ -90,3 +90,69 @@ html .sd-tab-set > label:hover {
 .sd-tab-content > .sd-tab-set {
   margin: 0;
 }
+
+/* Vertical orientation, opted into with the tab-set's `:orientation: vertical`.
+
+   The labels, their radio inputs and the panes are flat siblings, so the visual
+   order cannot come from the source order. Grid placement supplies it instead:
+   every label is assigned the first column, and the one pane that is not
+   `display: none` takes the second across every row. No separate HTML structure
+   is needed for this mode.
+
+   Everything below is the horizontal layout turned a quarter turn: the label's
+   underline becomes a right border, and the pane's overline becomes a single
+   rule down its left edge, which the active label's border merges into. */
+.sd-tab-set-vertical {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) minmax(0, 1fr);
+  align-items: start;
+}
+
+/* The rail and the pane share an edge, so the active label's border lands on
+   the pane's rule instead of being held away from it by a column gap. Padding
+   opens the space between the two columns. */
+.sd-tab-set-vertical > label {
+  grid-column: 1;
+  border-bottom: none;
+  border-right: .125rem solid var(--sd-color-tabs-underline-inactive);
+  padding-right: 1rem;
+  text-align: left;
+}
+
+.sd-tab-set-vertical > .sd-tab-content {
+  grid-column: 2;
+  /* Span every row rather than the first one alone, whose height the pane would
+     otherwise set, pushing the labels below it off the rail. `1 / -1` cannot say
+     this here: `-1` counts back from the last explicit row, and this grid
+     declares columns only. The span overshoots any real tab count instead;
+     surplus rows are empty and take no height. */
+  grid-row: 1 / span 99;
+  /* Stretch across those rows, or the rule runs only as deep as the pane's own
+     content instead of the full rail. */
+  align-self: stretch;
+  box-shadow: -0.0625rem 0 var(--sd-color-tabs-overline);
+  padding: 0 0 0 1.5rem;
+}
+
+/* Narrower than the `md` breakpoint, two columns leave the pane a ribbon: hand
+   every overridden property back to the horizontal layout. Each is restated
+   rather than unset, a shorthand having no way to fall back to an earlier
+   rule's value. */
+@media (max-width: 767.98px) {
+  .sd-tab-set-vertical {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .sd-tab-set-vertical > label {
+    border-bottom: .125rem solid var(--sd-color-tabs-underline-inactive);
+    border-right: none;
+    padding: .5em 1.25em;
+  }
+
+  .sd-tab-set-vertical > .sd-tab-content {
+    align-self: auto;
+    box-shadow: 0 -0.0625rem var(--sd-color-tabs-overline),0 .0625rem var(--sd-color-tabs-underline);
+    padding: .75rem 0;
+  }
+}
