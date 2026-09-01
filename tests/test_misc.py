@@ -504,6 +504,78 @@ def test_button_i18n_translated(sphinx_builder):
     assert badges[0].astext() == "stable"
 
 
+TAB_TABLE_MYST = """\
+# Heading
+
+::::{tab-set}
+
+:::{tab-item} Label1
+Content1
+
+| UniqueHeaderA | UniqueHeaderB |
+| --- | --- |
+| UniqueCellC | UniqueCellD |
+:::
+
+::::
+"""
+
+
+@pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
+def test_tab_table_i18n_gettext(sphinx_builder):
+    """Table cells inside a MyST tab-item must be extracted for gettext.
+
+    See https://github.com/executablebooks/sphinx-design/issues/234
+    """
+    builder = sphinx_builder("gettext")
+    builder.src_path.joinpath("index.md").write_text(TAB_TABLE_MYST, encoding="utf8")
+    builder.build()
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    for msgid in (
+        "Heading",
+        "Label1",
+        "Content1",
+        "UniqueHeaderA",
+        "UniqueHeaderB",
+        "UniqueCellC",
+        "UniqueCellD",
+    ):
+        assert f'msgid "{msgid}"' in pot, pot
+
+
+@pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
+def test_tab_table_i18n_translated(sphinx_builder):
+    """Translated table cells inside a tab-item must appear in the HTML output.
+
+    See https://github.com/executablebooks/sphinx-design/issues/234
+    """
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["myst_parser", "sphinx_design"],
+            "myst_enable_extensions": ["colon_fence"],
+            "language": "de",
+            "locale_dirs": ["locales"],
+        }
+    )
+    builder.src_path.joinpath("index.md").write_text(TAB_TABLE_MYST, encoding="utf8")
+    catalog = Catalog(locale="de", domain="index")
+    catalog.add("UniqueHeaderA", "KopfA")
+    catalog.add("UniqueHeaderB", "KopfB")
+    catalog.add("UniqueCellC", "ZelleC")
+    catalog.add("UniqueCellD", "ZelleD")
+    mo_dir = builder.src_path / "locales" / "de" / "LC_MESSAGES"
+    mo_dir.mkdir(parents=True)
+    with (mo_dir / "index.mo").open("wb") as handle:
+        write_mo(handle, catalog)
+
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    for translated in ("KopfA", "KopfB", "ZelleC", "ZelleD"):
+        assert translated in html, html
+    for original in ("UniqueHeaderA", "UniqueHeaderB", "UniqueCellC", "UniqueCellD"):
+        assert original not in html, html
+
+
 INVALID_CONFIG_VALUES = {
     "custom_directives": (["not", "a", "dict"], "must be a dictionary"),
     "fontawesome_source": ("invalid", "must be one of"),

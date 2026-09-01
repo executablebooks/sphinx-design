@@ -132,6 +132,7 @@ class TabItemDirective(SdDirective):
             classes=["sd-tab-content", *self.options.get("class-content", [])],
         )
         self.state.nested_parse(self.content, self.content_offset, tab_content)
+        _propagate_table_source(tab_content)
         tab_item += tab_content
 
         return [tab_item]
@@ -195,6 +196,27 @@ class TabSetCodeDirective(SdDirective):
             new_children.append(tab_item)
         tab_set.children = new_children
         return [tab_set]
+
+
+def _propagate_table_source(root: nodes.Node) -> None:
+    """Copy source/line from a table onto descendants that lack them.
+
+    MyST's table renderer sets source on the ``table`` node but not on cell
+    paragraphs. At document level those cells inherit
+    ``document.current_source``; during ``nested_parse`` that is ``None``,
+    so Sphinx's gettext extractor skips them (``is_translatable`` requires
+    ``node.source``). See https://github.com/executablebooks/sphinx-design/issues/234
+    """
+    for table in root.findall(nodes.table):
+        source = table.source
+        if not source:
+            continue
+        line = table.line
+        for child in table.findall(nodes.Element):
+            if child.source is None:
+                child.source = source
+            if child.line is None:
+                child.line = line
 
 
 class sd_tab_input(nodes.Element, nodes.General):  # noqa: N801

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- 🐛 FIX: Table cells inside a MyST ``tab-item`` are now extracted for gettext
+  and translated, rather than being omitted from the ``.pot`` because they
+  lacked ``source`` after nested parse ({issue}`234`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
