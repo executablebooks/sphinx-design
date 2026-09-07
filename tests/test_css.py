@@ -28,7 +28,7 @@ ARTIFACT = REPO_ROOT / "sphinx_design" / "static" / "sphinx-design.min.css"
 
 sys.path.insert(0, str(TOOLS_DIR))
 
-import generate_css  # noqa: E402
+import generate_css
 
 
 def test_artifact_is_up_to_date():
