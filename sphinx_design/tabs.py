@@ -12,9 +12,24 @@ from .shared import (
     create_component,
     is_component,
     is_ignorable_child,
+    make_choice,
 )
 
 LOGGER = getLogger(__name__)
+
+ORIENTATIONS = ("horizontal", "vertical")
+"""Layouts a tab set can be rendered in, the first one being the default."""
+
+
+def orientation_classes(orientation: str | None) -> list[str]:
+    """Return the modifier classes carrying a tab set's orientation.
+
+    :param orientation: One of :data:`ORIENTATIONS`, or ``None`` for the default.
+    :return: The classes to append to the tab set's own.
+    """
+    if orientation == "vertical":
+        return ["sd-tab-set-vertical"]
+    return []
 
 
 def setup_tabs(app: Sphinx) -> None:
@@ -31,6 +46,7 @@ class TabSetDirective(SdDirective):
 
     has_content = True
     option_spec = {
+        "orientation": make_choice(ORIENTATIONS),
         "sync-group": directives.unchanged_required,
         "class": directives.class_option,
     }
@@ -38,7 +54,12 @@ class TabSetDirective(SdDirective):
     def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         tab_set = create_component(
-            "tab-set", classes=["sd-tab-set", *self.options.get("class", [])]
+            "tab-set",
+            classes=[
+                "sd-tab-set",
+                *orientation_classes(self.options.get("orientation")),
+                *self.options.get("class", []),
+            ],
         )
         self.set_source_info(tab_set)
         self.state.nested_parse(self.content, self.content_offset, tab_set)
@@ -143,6 +164,7 @@ class TabSetCodeDirective(SdDirective):
     has_content = True
     option_spec = {
         "no-sync": directives.flag,
+        "orientation": make_choice(ORIENTATIONS),
         "sync-group": directives.unchanged_required,
         "class-set": directives.class_option,
         "class-item": directives.class_option,
@@ -151,7 +173,12 @@ class TabSetCodeDirective(SdDirective):
     def run_with_defaults(self) -> list[nodes.Node]:
         self.assert_has_content()
         tab_set = create_component(
-            "tab-set", classes=["sd-tab-set", *self.options.get("class-set", [])]
+            "tab-set",
+            classes=[
+                "sd-tab-set",
+                *orientation_classes(self.options.get("orientation")),
+                *self.options.get("class-set", []),
+            ],
         )
         self.set_source_info(tab_set)
         self.state.nested_parse(self.content, self.content_offset, tab_set)
