@@ -72,12 +72,12 @@ def test_icon_title_in_toctree(fmt, sphinx_builder):
 
     # the resolved toctree, rendered inline in the referring page's body
     wrapper = re.search(
-        r'<div class="toctree-wrapper compound">.*?</div>', index_html, re.S
+        r'<div class="toctree-wrapper compound">.*?</div>', index_html, re.DOTALL
     )
     assert wrapper, "resolved toctree not found in index.html"
     region = wrapper.group(0)
 
-    entries = re.findall(r'<li class="toctree-l1">.*?</li>', region, re.S)
+    entries = re.findall(r'<li class="toctree-l1">.*?</li>', region, re.DOTALL)
     assert len(entries) == 1, "expected exactly one toctree entry"
     entry = entries[0]
 
