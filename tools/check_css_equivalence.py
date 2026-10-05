@@ -70,7 +70,7 @@ import warnings
 
 warnings.simplefilter("ignore")  # tinycss2 deprecation chatter is not relevant here
 
-import tinycss2  # noqa: E402
+import tinycss2
 
 # Enumerated intentional differences ------------------------------------------
 
