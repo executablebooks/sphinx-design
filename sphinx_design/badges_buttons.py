@@ -335,6 +335,60 @@ class XRefBadgeRole(_TooltipRoleMixin, ReferenceRole):
         return [node], []
 
 
+_LINE_BLOCK_LINE = re.compile(r"^[ \t]*\|(.*)$")
+
+
+def _is_button_line_block(content: Sequence[str]) -> bool:
+    """Return whether ``content`` is only an RST line block.
+
+    ``inline_text`` does not understand block markup, so a button whose body is
+    ``| hey`` / ``| new line`` would otherwise keep the bar characters (#156).
+    """
+    nonempty = [line for line in content if line.strip()]
+    return bool(nonempty) and all(_LINE_BLOCK_LINE.match(line) for line in nonempty)
+
+
+def _flatten_line_block(block: nodes.line_block) -> list[nodes.Node]:
+    """Turn a parsed line block into inline nodes separated by ``<br>``."""
+    pieces: list[nodes.Node] = []
+    for child in block:
+        if pieces:
+            pieces.append(nodes.raw("", "<br>", format="html"))
+        if isinstance(child, nodes.line):
+            pieces.extend(item.deepcopy() for item in child.children)
+        elif isinstance(child, nodes.line_block):
+            pieces.extend(_flatten_line_block(child))
+    return pieces
+
+
+def _line_blocks_in(node: nodes.Element) -> list[nodes.line_block] | None:
+    """Return line blocks when ``node`` contains nothing else.
+
+    A bar indented past a directive option (``:expand:``) is a block quote
+    whose only child is the line block. A blank line between bars is two
+    sibling line blocks. Both are the markup from #156; anything else is not.
+    """
+    children = list(node)
+    while len(children) == 1 and isinstance(children[0], nodes.block_quote):
+        children = list(children[0])
+    if children and all(isinstance(child, nodes.line_block) for child in children):
+        return children
+    return None
+
+
+def _flatten_line_blocks(blocks: list[nodes.line_block]) -> list[nodes.Node]:
+    """Join line blocks with a break where a blank line split them."""
+    pieces: list[nodes.Node] = []
+    for block in blocks:
+        flattened = _flatten_line_block(block)
+        if not flattened:
+            continue
+        if pieces:
+            pieces.append(nodes.raw("", "<br>", format="html"))
+        pieces.extend(flattened)
+    return pieces
+
+
 class _ButtonDirective(SdDirective):
     """A base button directive."""
 
@@ -368,6 +422,19 @@ class _ButtonDirective(SdDirective):
         """Create the reference node."""
         raise NotImplementedError
 
+    def _button_content_nodes(self) -> list[nodes.Node]:
+        """Parse button body, expanding an RST line block into separate lines."""
+        if _is_button_line_block(self.content):
+            container = nodes.Element()
+            self.state.nested_parse(self.content, self.content_offset, container)
+            blocks = _line_blocks_in(container)
+            if blocks is not None:
+                return _flatten_line_blocks(blocks)
+        textnodes, _ = self.state.inline_text(
+            "\n".join(self.content), self.lineno + self.content_offset
+        )
+        return textnodes
+
     def run_with_defaults(self) -> list[nodes.Node]:
         rawtext = self.arguments[0]
         target = self.get_target(rawtext)
@@ -392,9 +459,7 @@ class _ButtonDirective(SdDirective):
             node["reftitle"] = self.options["tooltip"]
 
         if self.content:
-            textnodes, _ = self.state.inline_text(
-                "\n".join(self.content), self.lineno + self.content_offset
-            )
+            textnodes = self._button_content_nodes()
             # make link text translatable -
             # target gettext to the content lines, not the outer directive
             translatable = nodes.inline("", "", *textnodes, translatable=True)

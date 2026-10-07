@@ -10,6 +10,8 @@ Covers:
   ``button-link``, rather than being flattened to plain text.
 * An unresolved ``button-ref`` target must emit a normal missing-reference
   warning and still build (no traceback).
+* #156 - a ``button-link`` whose content is an RST line block must show the
+  lines, not the literal ``|`` markers.
 """
 
 from docutils import nodes
@@ -323,6 +325,80 @@ def test_button_ref_nested_xref_no_crash(fmt, sphinx_builder):
     assert 'href="#jump-target"' in html
     assert "Jump to" in html
     assert _BUTTON_REF_MARKER_PREFIX not in html
+
+
+LINE_BLOCK_RST = """
+Heading
+=======
+
+.. button-link:: https://example.com
+    :expand:
+
+    | hey
+    | new line
+"""
+
+# The report indents the bars one column past ``:expand:``. Docutils then
+# parses a block quote around the line block, and the bars used to survive.
+ISSUE_LINE_BLOCK_RST = """
+Heading
+=======
+
+.. button-link:: example.com
+    :expand:
+
+     | hey
+     | new line
+"""
+
+BLANK_LINE_BLOCK_RST = """
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    | hey
+
+    | new line
+"""
+
+
+def _assert_button_lines(html: str, href: str) -> None:
+    assert f'href="{href}"' in html
+    assert "| hey" not in html
+    assert "| new line" not in html
+    assert "hey<br>new line" in html
+
+
+def test_button_link_line_block_is_not_literal(sphinx_builder):
+    """RST line blocks inside ``button-link`` become separate lines (#156)."""
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(LINE_BLOCK_RST, encoding="utf8")
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    _assert_button_lines(html, "https://example.com")
+
+
+def test_button_link_line_block_indented_under_option(sphinx_builder):
+    """Bars indented past an option still render as lines (#156)."""
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        ISSUE_LINE_BLOCK_RST, encoding="utf8"
+    )
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    _assert_button_lines(html, "example.com")
+
+
+def test_button_link_line_block_blank_line(sphinx_builder):
+    """A blank line between bars does not leave the markers in the button."""
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        BLANK_LINE_BLOCK_RST, encoding="utf8"
+    )
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    _assert_button_lines(html, "https://example.com")
 
 
 def test_button_ref_titlecase_ref_type(sphinx_builder):
