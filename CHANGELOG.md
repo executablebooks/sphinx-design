@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- 🐛 FIX: `button-link` and `button-ref` render an RST line block as separate
+  lines, including when the bars are indented under an option such as
+  `:expand:`, instead of keeping the `|` characters in the button
+  ({pr}`308`, {issue}`156`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
