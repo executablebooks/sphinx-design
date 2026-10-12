@@ -120,14 +120,14 @@ You can use the `sd_custom_directives` configuration option in your `conf.py` to
 
 ```python
 sd_custom_directives = {
-  "dropdown-syntax": {
-    "inherit": "dropdown",
-    "argument": "Syntax",
-    "options": {
-      "color": "primary",
-      "icon": "code",
-    },
-  }
+    "dropdown-syntax": {
+        "inherit": "dropdown",
+        "argument": "Syntax",
+        "options": {
+            "color": "primary",
+            "icon": "code",
+        },
+    }
 }
 ```
 
