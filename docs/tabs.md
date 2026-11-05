@@ -31,6 +31,44 @@ Content 2
 
 See the [Material Design](https://material.io/components/tabs) description for further details.
 
+## Vertical Tabs
+
+::::{versionadded} 0.7.0
+Add `:orientation: vertical` to a `tab-set` or `tab-set-code` to stack the labels down a rail on the left, with the selected content beside them.
+This suits sets holding more labels than fit on one line, where the horizontal layout wraps them into a strip that is hard to scan.
+::::
+
+::::{tab-set}
+:orientation: vertical
+
+:::{tab-item} Label1
+Content 1
+:::
+
+:::{tab-item} Label2
+Content 2
+:::
+
+:::{tab-item} A longer label
+Content 3
+:::
+
+::::
+
+`````{dropdown-syntax}
+
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/tab-vertical.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/tab-vertical.txt
+:language: rst
+```
+````
+`````
+
+Below the `md` breakpoint the set falls back to the horizontal layout, two columns being too narrow to read at that width.
+
 ## Synchronised Tabs
 
 The Selection of tab items can be synchronised across multiple tab-sets.
