@@ -457,6 +457,37 @@ def test_button_link_bar_text_is_not_a_line_block(sphinx_builder):
     assert text.startswith("Download the notes"), text
 
 
+LINE_BLOCK_THEN_PARAGRAPH_RST = """\
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    | hey
+    | new line [#]_
+
+    trailing paragraph
+
+.. [#] A footnote.
+"""
+
+
+def test_button_link_line_block_then_paragraph_parsed_once(sphinx_builder):
+    """A line block followed by other text is parsed once, as inline text.
+
+    Such text is not only line blocks, so it keeps its bars (as before #156);
+    block-parsing it first, then falling back to inline text, would parse the
+    footnote reference twice (a spurious "Too many autonumbered footnote
+    references", and the reference left unresolved).
+    """
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_THEN_PARAGRAPH_RST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith("| hey | new line <a"), text
+    assert "[#]" not in text, text
+    assert 'class="footnote-reference' in text, text
+
+
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_button_link_myst_bars_unchanged(sphinx_builder):
     """Line blocks are RST syntax: MyST button text keeps its bars, parsed once.

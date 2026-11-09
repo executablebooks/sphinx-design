@@ -368,17 +368,30 @@ _LINE_BLOCK_START = re.compile(r"[ \t]*\|( +|$)")
 """The start of an RST line block (docutils' ``line_block`` pattern), indented."""
 
 
-def _starts_with_line_block(content: Sequence[str]) -> bool:
-    """Return whether the first non-blank line of ``content`` starts a line block.
+def _is_line_block_text(content: Sequence[str]) -> bool:
+    """Return whether ``content`` looks like nothing but RST line blocks.
 
-    Only then is the button body block-parsed; any other body (including one
-    that starts with a substitution, such as ``|icon| Download``) is parsed
-    once, as inline text.
+    Every non-blank line at the outermost indent must start a line-block line;
+    deeper lines are allowed, as continuation lines or nested blocks.
+    Only such a body is block-parsed, and any other body (one that starts with
+    a substitution, such as ``|icon| Download``, or a line block followed by a
+    paragraph) is parsed once, as inline text: parsing it twice would repeat
+    the side effects of the first parse (messages, footnote numbering,
+    substitution definitions).
+
+    The check is textual, so a deeper-indented paragraph after a blank line
+    still passes it; the parsed result is then checked as well, and such a
+    body falls back to inline text after all.
     """
-    for line in content:
-        if line.strip():
-            return _LINE_BLOCK_START.match(line) is not None
-    return False
+    lines = [line for line in content if line.strip()]
+    if not lines:
+        return False
+    indent = min(len(line) - len(line.lstrip()) for line in lines)
+    return all(
+        _LINE_BLOCK_START.match(line) is not None
+        for line in lines
+        if len(line) - len(line.lstrip()) == indent
+    )
 
 
 def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
@@ -462,7 +475,7 @@ class _ButtonDirective(SdDirective):
         separate lines (#156): ``inline_text`` knows no block markup, so it
         would keep the ``|`` characters.
         """
-        if isinstance(self.state, RSTState) and _starts_with_line_block(self.content):
+        if isinstance(self.state, RSTState) and _is_line_block_text(self.content):
             container = nodes.Element()
             self.state.nested_parse(self.content, self.content_offset, container)
             lines = _line_block_lines(container)
