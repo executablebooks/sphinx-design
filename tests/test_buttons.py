@@ -827,3 +827,21 @@ def test_resolve_new_tab_refs_any_marked_element():
     assert marked["rel"] == "noreferrer noopener"
     assert "target" not in unmarked
     assert "rel" not in unmarked
+
+
+def test_resolve_new_tab_refs_keeps_authored_target():
+    """A reference inside a marked element that already has a ``target``
+    (e.g. a link with its own attributes nested in a button's text)
+    is left as authored, while its sibling references are still stamped.
+    """
+    document = new_document("test", get_default_settings(Parser))
+    paragraph = nodes.paragraph(sd_new_tab=True)
+    paragraph += nodes.reference("", "x", refuri="a")
+    paragraph += nodes.reference("", "y", refuri="b", target="_self", rel="me")
+    document += paragraph
+    _resolve_new_tab_refs(None, document, "test")
+    stamped, authored = document.findall(nodes.reference)
+    assert stamped["target"] == "_blank"
+    assert stamped["rel"] == "noreferrer noopener"
+    assert authored["target"] == "_self"
+    assert authored["rel"] == "me"

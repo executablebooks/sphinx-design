@@ -88,10 +88,14 @@ def _resolve_new_tab_refs(app: Sphinx, doctree: nodes.document, docname: str) ->
     Cross-references are resolved to ``nodes.reference`` during the write
     phase, before ``doctree-resolved`` fires, so we can safely walk the tree
     here for both URL and internal links.
+    A reference that already has a ``target`` (for example a link nested in
+    a button's text, given its own attributes) is left as authored.
     Writers other than HTML ignore both attributes.
     """
     for container in doctree.findall(_has_new_tab_marker):
         for ref in container.findall(nodes.reference):
+            if "target" in ref:
+                continue
             ref["target"] = "_blank"
             ref["rel"] = "noreferrer noopener"
 
