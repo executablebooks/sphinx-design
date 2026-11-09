@@ -364,91 +364,40 @@ class XRefBadgeRole(_TooltipRoleMixin, ReferenceRole):
         return [node], []
 
 
-_LINE_BLOCK_START = re.compile(r"[ \t]*\|( +|$)")
-"""The start of an RST line block (docutils' ``line_block`` pattern), indented."""
+_LINE_BLOCK_START = re.compile(r"\|( +|$)")
+"""The start of an RST line-block line (docutils' ``line_block`` pattern)."""
 
 
-def _is_line_block_text(content: Sequence[str]) -> bool:
-    """Return whether ``content`` looks like nothing but RST line blocks.
+def _line_block_lines(content: Sequence[str]) -> list[tuple[int, str]] | None:
+    """Split ``content`` into its line-block lines, if it is nothing but those.
 
-    Every non-blank line at the outermost indent must start a line-block line;
-    deeper lines are allowed, as continuation lines or nested blocks.
-    Only such a body is block-parsed, and any other body (one that starts with
-    a substitution, such as ``|icon| Download``, or a line block followed by a
-    paragraph) is parsed once, as inline text: parsing it twice would repeat
-    the side effects of the first parse (messages, footnote numbering,
-    substitution definitions).
-
-    The check is textual, so a deeper-indented paragraph after a blank line
-    still passes it; the parsed result is then checked as well, and such a
-    body falls back to inline text after all.
+    Return ``(offset, text)`` per line (``offset`` into ``content``), or None.
+    Every non-blank line at the first line's indent must start with a bar
+    (``|`` and a space, or a bare ``|``); a deeper line directly after a
+    non-blank line continues the previous line. Anything else is not a line
+    block. The check is purely textual, so the text is parsed exactly once.
     """
-    lines = [line for line in content if line.strip()]
-    if not lines:
-        return False
-    indent = min(len(line) - len(line.lstrip()) for line in lines)
-    return all(
-        _LINE_BLOCK_START.match(line) is not None
-        for line in lines
-        if len(line) - len(line.lstrip()) == indent
-    )
-
-
-def _non_messages(node: nodes.Element) -> list[nodes.Node]:
-    """Return the children of ``node`` that are not system messages."""
-    return [c for c in node.children if not isinstance(c, nodes.system_message)]
-
-
-def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
-    """Return the lines of the line blocks in ``node``, if it contains nothing else.
-
-    Bars indented past the directive options (the markup in #156) are parsed as
-    a block quote whose only child is the line block, so such block quotes are
-    unwrapped. Line blocks separated by a blank line, and nested line blocks,
-    contribute their lines in document order.
-    System messages are ignored: docutils places those of the inline markup in
-    a line (e.g. an unknown role) beside the line block, and has already
-    reported them, so falling back to inline text would parse it twice.
-    """
-    children = _non_messages(node)
-    while len(children) == 1 and isinstance(children[0], nodes.block_quote):
-        children = _non_messages(children[0])
-    if not children or not all(isinstance(c, nodes.line_block) for c in children):
-        return None
-    return [line for block in children for line in block.findall(nodes.line)]
-
-
-def _join_button_lines(
-    lines: list[nodes.line], source: str | None, lineno: int | None
-) -> list[nodes.Node]:
-    """Return the content of ``lines``, with a line break between lines.
-
-    Each line is a translatable message of its own (as in a normal line block),
-    so a message never contains a line break.
-    A line that docutils gave no source info (before docutils 0.22) is given
-    ``source`` and ``lineno`` instead: sphinx extracts no message from a
-    translatable node without a source.
-    """
-    pieces: list[nodes.Node] = []
-    for index, line in enumerate(lines):
-        if index:
-            pieces.append(sd_line_break("", " "))
-        if not line.children:
+    result: list[tuple[int, str]] = []
+    indent: int | None = None
+    previous_blank = True
+    for offset, raw in enumerate(content):
+        text = raw.lstrip()
+        if not text:
+            previous_blank = True
             continue
-        # move (rather than copy) the parsed inline nodes: docutils registers
-        # some of them (e.g. footnote and named references) on the document
-        children = line.children[:]
-        del line[:]
-        translatable = nodes.inline(line.rawsource, "", *children, translatable=True)
-        if line.source is None:
-            translatable.source, translatable.line = source, lineno
+        depth = len(raw) - len(text)
+        if indent is None:
+            indent = depth
+        match = _LINE_BLOCK_START.match(text) if depth == indent else None
+        if match is not None:
+            result.append((offset, text[match.end() :].strip()))
+        elif depth > indent and result and not previous_blank:
+            line_offset, line_text = result[-1]
+            result[-1] = (line_offset, f"{line_text}\n{text}")
         else:
-            translatable.source, translatable.line = line.source, line.line
-        # sphinx unwraps a translatable inline by appending its children to its
-        # parent (RemoveTranslatableInline): give each line a parent of its own,
-        # so that the lines keep their order
-        pieces.append(nodes.inline("", "", translatable))
-    return pieces
+            return None
+        previous_blank = False
+    return result or None
 
 
 class _ButtonDirective(SdDirective):
@@ -489,18 +438,31 @@ class _ButtonDirective(SdDirective):
 
         The text is inline markup, except that an RST line block renders as
         separate lines (#156): ``inline_text`` knows no block markup, so it
-        would keep the ``|`` characters.
+        would keep the ``|`` characters. The lines are found textually and
+        each is parsed once, as inline text, into a gettext message of its own.
         """
-        if isinstance(self.state, RSTState) and _is_line_block_text(self.content):
-            container = nodes.Element()
-            self.state.nested_parse(self.content, self.content_offset, container)
-            lines = _line_block_lines(container)
-            if lines is not None:
-                # the first content line (content_offset is a 0-based offset)
-                source, lineno = self.state_machine.get_source_and_line(
-                    self.content_offset + 1
+        lines = (
+            _line_block_lines(self.content)
+            if isinstance(self.state, RSTState)
+            else None
+        )
+        if lines is not None:
+            pieces: list[nodes.Node] = []
+            for index, (offset, text) in enumerate(lines):
+                if index:
+                    pieces.append(sd_line_break("", " "))
+                if not text:
+                    continue
+                lineno = self.content_offset + offset + 1
+                textnodes, _ = self.state.inline_text(text, lineno)
+                translatable = nodes.inline(text, "", *textnodes, translatable=True)
+                translatable.source, translatable.line = (
+                    self.state_machine.get_source_and_line(lineno)
                 )
-                return _join_button_lines(lines, source, lineno)
+                # sphinx unwraps a translatable inline into its parent
+                # (RemoveTranslatableInline): give each line its own parent
+                pieces.append(nodes.inline("", "", translatable))
+            return pieces
         textnodes, _ = self.state.inline_text(
             "\n".join(self.content), self.lineno + self.content_offset
         )

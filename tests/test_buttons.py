@@ -25,6 +25,7 @@ from sphinx_design.badges_buttons import (
     _BUTTON_REF_MARKER_PREFIX,
     ButtonLinkDirective,
     ButtonRefDirective,
+    _line_block_lines,
 )
 from sphinx_design.icons import sd_icon
 
@@ -610,3 +611,113 @@ def test_button_link_line_block_translated(sphinx_builder):
     builder.build()
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert _button_texts(html) == ["hallo<br /><em>neue</em> Zeile"]
+
+
+# Bodies that look like a line block at their outermost indent, but are not
+# only line-block lines. Each must be parsed once, as inline text, exactly as
+# before #156 was fixed: ``(body, expected button text, expected warnings)``.
+NOT_ONLY_LINE_BLOCK_CASES = {
+    # docutils: a line block, then a block quote holding another line block
+    "blank-then-deeper-bar": (
+        "    | a [#]_\n\n        | b\n",
+        "| a <a",
+        [],
+    ),
+    # docutils: a line block, then a block quote holding a paragraph
+    "blank-then-deeper-paragraph": (
+        "    | a [#]_\n\n        b\n",
+        "| a <a",
+        [],
+    ),
+    # docutils: a block quote that ends without a blank line, then a line block
+    "first-line-deeper": (
+        "      | a [#]_\n    | b\n",
+        "| a <a",
+        [],
+    ),
+    # a second parse would register the target twice (a "Duplicate explicit
+    # target name" warning, and the target's id renamed)
+    "blank-then-deeper-paragraph-target": (
+        "    | _`tgt` a [#]_\n\n        b\n",
+        "| tgt a <a",
+        [],
+    ),
+    # docutils: a line block, then a block quote holding a directive
+    "blank-then-deeper-directive": (
+        "    | a [#]_\n\n        .. note:: x\n",
+        "| a <a",
+        [],
+    ),
+    # a block parse would define ``zz`` in the document; as inline text,
+    # ``|zz|`` is a reference to an undefined substitution, as before
+    "blank-then-deeper-substitution-definition": (
+        "    | a [#]_\n\n        .. |zz| replace:: Z\n",
+        "| a <a",
+        ['Undefined substitution referenced: "zz"'],
+    ),
+}
+
+
+@pytest.mark.parametrize(
+    "body,expected,warnings",
+    NOT_ONLY_LINE_BLOCK_CASES.values(),
+    ids=NOT_ONLY_LINE_BLOCK_CASES.keys(),
+)
+def test_button_link_not_only_line_block_parsed_once(
+    body, expected, warnings, sphinx_builder
+):
+    """Text that is not only line-block lines is parsed once, as inline text.
+
+    The line-block check is textual and the text is never block-parsed, so a
+    body that docutils would parse as a line block plus something else keeps
+    its bars, and shows none of the side effects of a second parse: a spurious
+    "Too many autonumbered footnote references" (and the reference left
+    unresolved), a duplicate explicit target, a "Block quote ends without a
+    blank line" warning, or a substitution definition leaking into the page.
+    """
+    rst = (
+        "Heading\n=======\n\n.. button-link:: https://example.com\n\n"
+        f"{body}\nAfter.\n\n.. [#] A footnote.\n"
+    )
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(rst, encoding="utf8")
+    builder.build(assert_pass=False)
+    reported = [line for line in builder.warnings.splitlines() if line.strip()]
+    assert len(reported) == len(warnings), builder.warnings
+    for line, warning in zip(reported, warnings, strict=True):
+        assert warning in line, builder.warnings
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith(expected), text
+    assert "[#]" not in html
+    assert "<br" not in text, text
+    if "_`tgt`" in body:
+        assert '<span class="target" id="tgt">' in html
+
+
+SPLIT_CASES = {
+    "plain": (["| a", "| b"], [(0, "a"), (1, "b")]),
+    "indented": ([" | a", " | b"], [(0, "a"), (1, "b")]),
+    "blank-between": (["| a", "", "| b"], [(0, "a"), (2, "b")]),
+    "bare-bar": (["| a", "|", "| b"], [(0, "a"), (1, ""), (2, "b")]),
+    "continuation": (["| a", "  more", "| b"], [(0, "a\nmore"), (2, "b")]),
+    "nested": (["| a", "|    b"], [(0, "a"), (1, "b")]),
+    "empty": ([], None),
+    "substitution-first": (["|sub| a"], None),
+    "paragraph-after": (["| a", "", "b"], None),
+    "deeper-after-blank": (["| a", "", "  | b"], None),
+    "first-line-deeper": (["  | a", "| b"], None),
+    "deeper-first-line-only": (["  | a"], [(0, "a")]),
+}
+
+
+@pytest.mark.parametrize(
+    "content,expected", SPLIT_CASES.values(), ids=SPLIT_CASES.keys()
+)
+def test_line_block_lines(content, expected):
+    """The text is split into line-block lines, or rejected, without parsing it.
+
+    A deeper line continues the previous line only directly after it, as in
+    docutils; after a blank line it starts a block quote, which is not a line.
+    """
+    assert _line_block_lines(content) == expected
