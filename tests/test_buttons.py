@@ -10,8 +10,14 @@ Covers:
   ``button-link``, rather than being flattened to plain text.
 * An unresolved ``button-ref`` target must emit a normal missing-reference
   warning and still build (no traceback).
+* #156 - a button whose RST content is a line block renders its lines as
+  separate lines, rather than keeping the literal ``|`` markers.
 """
 
+import re
+
+from babel.messages.catalog import Catalog
+from babel.messages.mofile import write_mo
 from docutils import nodes
 import pytest
 
@@ -340,3 +346,267 @@ def test_button_ref_titlecase_ref_type(sphinx_builder):
     builder = _build(sphinx_builder, "rst", src, MULTIWORD["myst"])
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert 'href="#my-article-section"' in html
+
+
+_BUTTON_RE = re.compile(
+    r'<a [^>]*class="[^"]*\bsd-btn\b[^"]*"[^>]*>(.*?)</a>', re.DOTALL
+)
+
+
+def _button_texts(html: str) -> list[str]:
+    """Return the inner HTML of each button, without ``<span>`` wrappers."""
+    return [
+        " ".join(re.sub(r"</?span[^>]*>", "", inner).split())
+        for inner in _BUTTON_RE.findall(html)
+    ]
+
+
+def _build_rst(sphinx_builder, rst, buildername="html", **files):
+    builder = sphinx_builder(buildername, conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(rst, encoding="utf8")
+    for name, text in files.items():
+        builder.src_path.joinpath(f"{name}.rst").write_text(text, encoding="utf8")
+    builder.build()  # asserts no warnings
+    return builder
+
+
+LINE_BLOCK_CASES = {
+    "plain": ("    | hey\n    | new line\n", "hey<br />new line"),
+    # the markup of #156: the bars are indented one column past the options,
+    # so docutils parses a block quote around the line block
+    "indented-past-options": ("     | hey\n     | new line\n", "hey<br />new line"),
+    "blank-line-between": ("    | hey\n\n    | new line\n", "hey<br />new line"),
+    "continuation-line": (
+        "    | hey there\n      continued\n    | new line\n",
+        "hey there continued<br />new line",
+    ),
+    "nested": ("    | hey\n    |    indented\n", "hey<br />indented"),
+    "inline-markup": (
+        "    | *hey*\n    | new :octicon:`heart` line\n",
+        "<em>hey</em><br />new",
+    ),
+    # the parsed nodes are moved into the button, not copied: docutils numbers
+    # the footnote references it registered while parsing
+    "footnote-reference": (
+        "    | hey\n    | new line [#]_\n\n.. [#] A footnote.\n",
+        "hey<br />new line <a",
+    ),
+}
+
+
+@pytest.mark.parametrize(
+    "body,expected", LINE_BLOCK_CASES.values(), ids=LINE_BLOCK_CASES.keys()
+)
+def test_button_link_line_block(body, expected, sphinx_builder):
+    """An RST line block in a ``button-link`` renders as separate lines (#156)."""
+    rst = f"Heading\n=======\n\n.. button-link:: https://example.com\n    :expand:\n\n{body}"
+    builder = _build_rst(sphinx_builder, rst)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith(expected), text
+    assert "|" not in text
+
+
+def test_button_ref_line_block(sphinx_builder):
+    """``button-ref`` shares the line-block path, including after resolution."""
+    rst = """\
+Heading
+=======
+
+.. button-ref:: other
+    :ref-type: doc
+
+    | hey
+    | new line
+
+.. toctree::
+
+    other
+"""
+    builder = _build_rst(sphinx_builder, rst, other="Other\n=====\n")
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert 'href="other.html"' in html
+    assert _button_texts(html) == ["hey<br />new line"]
+
+
+NOT_A_LINE_BLOCK_RST = """\
+Heading
+=======
+
+.. |sub| replace:: Download
+
+.. button-link:: https://example.com
+
+    |sub| the notes [#]_
+
+.. [#] A footnote.
+"""
+
+
+def test_button_link_bar_text_is_not_a_line_block(sphinx_builder):
+    """Text that starts with a substitution is parsed once, as inline text.
+
+    ``|sub| text`` is not a docutils line block (a bar must be followed by a
+    space or end the line), so it must not be block-parsed first: a second
+    parse would duplicate side effects, such as the autonumbered footnote
+    reference here (a spurious "Too many autonumbered footnote references").
+    """
+    builder = _build_rst(sphinx_builder, NOT_A_LINE_BLOCK_RST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith("Download the notes"), text
+
+
+LINE_BLOCK_THEN_PARAGRAPH_RST = """\
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    | hey
+    | new line [#]_
+
+    trailing paragraph
+
+.. [#] A footnote.
+"""
+
+
+def test_button_link_line_block_then_paragraph_parsed_once(sphinx_builder):
+    """A line block followed by other text is parsed once, as inline text.
+
+    Such text is not only line blocks, so it keeps its bars (as before #156);
+    block-parsing it first, then falling back to inline text, would parse the
+    footnote reference twice (a spurious "Too many autonumbered footnote
+    references", and the reference left unresolved).
+    """
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_THEN_PARAGRAPH_RST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith("| hey | new line <a"), text
+    assert "[#]" not in text, text
+    assert 'class="footnote-reference' in text, text
+
+
+@pytest.mark.parametrize(
+    "indent", ["    ", "     "], ids=["plain", "indented-past-options"]
+)
+def test_button_link_line_block_with_message_parsed_once(indent, sphinx_builder):
+    """A line block whose inline markup reports a message is still lines, parsed once.
+
+    docutils puts the messages of a line's inline markup (here, an unknown role)
+    beside the line block (inside the block quote, for the markup of #156).
+    Falling back to inline text for that would parse the text twice: the
+    message reported twice, a spurious "Too many autonumbered footnote
+    references", the footnote reference left unresolved, and the bars kept.
+    """
+    rst = (
+        "Heading\n=======\n\n.. button-link:: https://example.com\n    :expand:\n\n"
+        f"{indent}| hey\n{indent}| there :notarole:`x` [#]_\n\n.. [#] A footnote.\n"
+    )
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(rst, encoding="utf8")
+    builder.build(assert_pass=False)
+    assert builder.warnings.count('Unknown interpreted text role "notarole"') == 1, (
+        builder.warnings
+    )
+    assert "Too many autonumbered" not in builder.warnings, builder.warnings
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith("hey<br />there <a"), text
+    assert 'class="footnote-reference' in html
+    assert "[#]" not in html
+
+
+@pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
+def test_button_link_myst_bars_unchanged(sphinx_builder):
+    """Line blocks are RST syntax: MyST button text keeps its bars, parsed once.
+
+    Block-parsing the MyST text as well would report its parse-time warnings
+    (here, an unknown role) twice.
+    """
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["myst_parser", "sphinx_design"],
+            "myst_enable_extensions": ["colon_fence"],
+        }
+    )
+    builder.src_path.joinpath("index.md").write_text(
+        "# Heading\n\n"
+        "```{button-link} https://example.com\n| hey\n| new {notarole}`line`\n```\n",
+        encoding="utf8",
+    )
+    builder.build(assert_pass=False)
+    assert builder.warnings.count('Unknown interpreted text role "notarole"') == 1, (
+        builder.warnings
+    )
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith("| hey | new"), text
+
+
+LINE_BLOCK_RST = """\
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    | hey
+    | new line
+"""
+
+
+def test_button_link_line_block_text(sphinx_builder):
+    """Builders without a line break separate the lines with a space."""
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "text")
+    text = (builder.out_path / "index.txt").read_text(encoding="utf8")
+    assert "hey new line" in text, text
+    doctree = builder.get_doctree("index", post_transforms=True)
+    [button] = [r for r in doctree.findall(nodes.reference) if "sd-btn" in r["classes"]]
+    assert button.astext() == "hey new line"
+
+
+def test_button_link_line_block_latex(sphinx_builder):
+    """LaTeX output breaks the line inside the link (``\\sphinxhref``)."""
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "latex")
+    [tex] = builder.out_path.glob("*.tex")
+    assert r"\sphinxhref{https://example.com}{hey\newline{}new line}" in tex.read_text(
+        encoding="utf8"
+    )
+
+
+def test_button_link_line_block_gettext(sphinx_builder):
+    """Each line is its own message, with no line break in it.
+
+    Before docutils 0.22 the parsed lines carry no source info, and sphinx
+    extracts no message from a node without a source, so the button gives
+    them the source of its content.
+    """
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "gettext")
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    assert 'msgid "hey"' in pot, pot
+    assert 'msgid "new line"' in pot, pot
+    assert "hey new line" not in pot, pot
+    assert "<br" not in pot, pot
+
+
+def test_button_link_line_block_translated(sphinx_builder):
+    """The lines are translated one by one, and keep their order."""
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "language": "de",
+            "locale_dirs": ["locales"],
+        }
+    )
+    builder.src_path.joinpath("index.rst").write_text(LINE_BLOCK_RST, encoding="utf8")
+    catalog = Catalog(locale="de", domain="index")
+    catalog.add("hey", "hallo")
+    catalog.add("new line", "*neue* Zeile")
+    mo_dir = builder.src_path / "locales" / "de" / "LC_MESSAGES"
+    mo_dir.mkdir(parents=True)
+    with (mo_dir / "index.mo").open("wb") as handle:
+        write_mo(handle, catalog)
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _button_texts(html) == ["hallo<br /><em>neue</em> Zeile"]

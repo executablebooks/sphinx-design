@@ -180,6 +180,36 @@ and icons), which is rendered in the button, just as it is for `button-link`:
 **Bold text**
 ```
 
+To break the text of a button over several lines, write it as a line block in
+reStructuredText (one `|` per line), or end each line but the last with a
+backslash (`\`, a hard line break) in MyST Markdown:
+
+```{eval-rst}
+.. button-link:: https://example.com
+    :color: primary
+
+    | Multi-line
+    | button text
+```
+
+````{tab-set-code}
+```markdown
+:::{button-link} https://example.com
+:color: primary
+
+Multi-line\
+button text
+:::
+```
+```rst
+.. button-link:: https://example.com
+    :color: primary
+
+    | Multi-line
+    | button text
+```
+````
+
 Reference targets may also contain spaces, for example the labels that
 `sphinx.ext.autosectionlabel` generates from section titles.
 
