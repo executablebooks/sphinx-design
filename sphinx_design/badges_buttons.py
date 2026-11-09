@@ -4,7 +4,7 @@ from typing import Any
 
 from docutils import nodes
 from docutils.parsers.rst import directives
-from docutils.parsers.rst.states import Inliner
+from docutils.parsers.rst.states import Inliner, RSTState
 from docutils.utils import unescape
 from sphinx import addnodes
 from sphinx.application import Sphinx
@@ -335,57 +335,50 @@ class XRefBadgeRole(_TooltipRoleMixin, ReferenceRole):
         return [node], []
 
 
-_LINE_BLOCK_LINE = re.compile(r"^[ \t]*\|(.*)$")
+_LINE_BLOCK_START = re.compile(r"[ \t]*\|( +|$)")
+"""The start of an RST line block (docutils' ``line_block`` pattern), indented."""
 
 
-def _is_button_line_block(content: Sequence[str]) -> bool:
-    """Return whether ``content`` is only an RST line block.
+def _starts_with_line_block(content: Sequence[str]) -> bool:
+    """Return whether the first non-blank line of ``content`` starts a line block.
 
-    ``inline_text`` does not understand block markup, so a button whose body is
-    ``| hey`` / ``| new line`` would otherwise keep the bar characters (#156).
+    Only then is the button body block-parsed; any other body (including one
+    that starts with a substitution, such as ``|icon| Download``) is parsed
+    once, as inline text.
     """
-    nonempty = [line for line in content if line.strip()]
-    return bool(nonempty) and all(_LINE_BLOCK_LINE.match(line) for line in nonempty)
+    for line in content:
+        if line.strip():
+            return _LINE_BLOCK_START.match(line) is not None
+    return False
 
 
-def _flatten_line_block(block: nodes.line_block) -> list[nodes.Node]:
-    """Turn a parsed line block into inline nodes separated by ``<br>``."""
-    pieces: list[nodes.Node] = []
-    for child in block:
-        if pieces:
-            pieces.append(nodes.raw("", "<br>", format="html"))
-        if isinstance(child, nodes.line):
-            pieces.extend(item.deepcopy() for item in child.children)
-        elif isinstance(child, nodes.line_block):
-            pieces.extend(_flatten_line_block(child))
-    return pieces
+def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
+    """Return the lines of the line blocks in ``node``, if it contains nothing else.
 
-
-def _line_blocks_in(node: nodes.Element) -> list[nodes.line_block] | None:
-    """Return line blocks when ``node`` contains nothing else.
-
-    A bar indented past a directive option (``:expand:``) is a block quote
-    whose only child is the line block. A blank line between bars is two
-    sibling line blocks. Both are the markup from #156; anything else is not.
+    Bars indented past the directive options (the markup in #156) are parsed as
+    a block quote whose only child is the line block, so such block quotes are
+    unwrapped. Line blocks separated by a blank line, and nested line blocks,
+    contribute their lines in document order.
     """
-    children = list(node)
+    children = node.children
     while len(children) == 1 and isinstance(children[0], nodes.block_quote):
-        children = list(children[0])
-    if children and all(isinstance(child, nodes.line_block) for child in children):
-        return children
-    return None
+        children = children[0].children
+    if not children or not all(isinstance(c, nodes.line_block) for c in children):
+        return None
+    return [line for block in children for line in block.findall(nodes.line)]
 
 
-def _flatten_line_blocks(blocks: list[nodes.line_block]) -> list[nodes.Node]:
-    """Join line blocks with a break where a blank line split them."""
+def _join_button_lines(lines: list[nodes.line]) -> list[nodes.Node]:
+    """Return the inline content of ``lines``, with a line break between lines."""
     pieces: list[nodes.Node] = []
-    for block in blocks:
-        flattened = _flatten_line_block(block)
-        if not flattened:
-            continue
-        if pieces:
+    for index, line in enumerate(lines):
+        if index:
             pieces.append(nodes.raw("", "<br>", format="html"))
-        pieces.extend(flattened)
+        # move (rather than copy) the parsed inline nodes: docutils registers
+        # some of them (e.g. footnote and named references) on the document
+        children = line.children[:]
+        del line[:]
+        pieces.extend(children)
     return pieces
 
 
@@ -422,14 +415,19 @@ class _ButtonDirective(SdDirective):
         """Create the reference node."""
         raise NotImplementedError
 
-    def _button_content_nodes(self) -> list[nodes.Node]:
-        """Parse button body, expanding an RST line block into separate lines."""
-        if _is_button_line_block(self.content):
+    def _content_text_nodes(self) -> list[nodes.Node]:
+        """Parse the button text.
+
+        The text is inline markup, except that an RST line block renders as
+        separate lines (#156): ``inline_text`` knows no block markup, so it
+        would keep the ``|`` characters.
+        """
+        if isinstance(self.state, RSTState) and _starts_with_line_block(self.content):
             container = nodes.Element()
             self.state.nested_parse(self.content, self.content_offset, container)
-            blocks = _line_blocks_in(container)
-            if blocks is not None:
-                return _flatten_line_blocks(blocks)
+            lines = _line_block_lines(container)
+            if lines is not None:
+                return _join_button_lines(lines)
         textnodes, _ = self.state.inline_text(
             "\n".join(self.content), self.lineno + self.content_offset
         )
@@ -459,7 +457,7 @@ class _ButtonDirective(SdDirective):
             node["reftitle"] = self.options["tooltip"]
 
         if self.content:
-            textnodes = self._button_content_nodes()
+            textnodes = self._content_text_nodes()
             # make link text translatable -
             # target gettext to the content lines, not the outer directive
             translatable = nodes.inline("", "", *textnodes, translatable=True)
