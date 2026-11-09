@@ -22,6 +22,8 @@ Written to also run under ``py311-no-myst``: core assertions use
 reStructuredText, and the MyST variants are guarded by ``MYST_PARAM``.
 """
 
+import re
+
 from docutils import nodes
 import pytest
 from sphinx import addnodes
@@ -349,8 +351,15 @@ def test_ref_badge_tooltip_survives_resolution(fmt, sphinx_builder):
     builder = _build(sphinx_builder, fmt, REF["rst"], REF["myst"])
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
 
-    # both badges resolve to the target anchor
-    assert html.count('href="#my-target"') == 2
+    # both badges resolve to the target anchor; only the badge anchors are
+    # counted, since the theme's own links to the section (its headerlink,
+    # the sidebar TOC) depend on which id the parser makes the section's
+    # primary one, and MyST-Parser's heading-anchor rework
+    # (executablebooks/MyST-Parser#1158) makes it the explicit target
+    badge_anchors = re.findall(
+        r'<a class="[^"]*\bsd-badge\b[^"]*" href="#my-target"[ >]', html
+    )
+    assert len(badge_anchors) == 2
     # the tooltipped one carries the title; it survived resolution
     assert (
         '<a class="sd-sphinx-override sd-badge sd-bg-primary sd-bg-text-primary'
