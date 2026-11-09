@@ -535,6 +535,10 @@ def test_button_link_line_block_with_message_parsed_once(indent, sphinx_builder)
     assert builder.warnings.count('Unknown interpreted text role "notarole"') == 1, (
         builder.warnings
     )
+    # reported at the line it is on, the second line of the line block
+    assert re.search(
+        r"index\.rst:8: ERROR: Unknown interpreted text role", builder.warnings
+    ), builder.warnings
     assert "Too many autonumbered" not in builder.warnings, builder.warnings
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     [text] = _button_texts(html)
@@ -609,8 +613,9 @@ def test_button_link_line_block_gettext(sphinx_builder):
     """
     builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "gettext")
     pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
-    assert 'msgid "hey"' in pot, pot
-    assert 'msgid "new line"' in pot, pot
+    # each message is located at its own line, not at the first line's
+    assert 'index.rst:6\nmsgid "hey"' in pot, pot
+    assert 'index.rst:7\nmsgid "new line"' in pot, pot
     assert "hey new line" not in pot, pot
     assert "<br" not in pot, pot
 
@@ -808,3 +813,38 @@ def test_button_link_inline_text_lines(sphinx_builder):
         ("inc.txt:3", "inc one inc :notarole:`z`"),
     ]:
         assert f'{location}\nmsgid "{msgid}"' in pot, pot
+
+
+LINE_BLOCK_LINES_INC = """\
+Included
+--------
+
+.. button-link:: https://example.com
+
+    | inc one
+    | inc :notarole:`z`
+"""
+
+
+def test_button_link_line_block_lines(sphinx_builder):
+    """Each line of a line block is located at its own line, in its own file.
+
+    A message of a line's inline markup is reported at that line, and the
+    line's gettext message is located there, also in an included file.
+    """
+    builder = sphinx_builder("gettext", conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        "Heading\n=======\n\n.. include:: inc.txt\n", encoding="utf8"
+    )
+    builder.src_path.joinpath("inc.txt").write_text(
+        LINE_BLOCK_LINES_INC, encoding="utf8"
+    )
+    builder.build(assert_pass=False)
+    reported = re.findall(
+        r"(\w+\.(?:rst|txt)):(\d+): ERROR: Unknown interpreted text role",
+        builder.warnings,
+    )
+    assert reported == [("inc.txt", "7")], builder.warnings
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    assert 'inc.txt:6\nmsgid "inc one"' in pot, pot
+    assert 'inc.txt:7\nmsgid "inc :notarole:`z`"' in pot, pot
