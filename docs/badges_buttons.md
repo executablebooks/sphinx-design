@@ -182,7 +182,11 @@ and icons), which is rendered in the button, just as it is for `button-link`:
 
 To break the text of a button over several lines, write it as a line block in
 reStructuredText (one `|` per line), or end each line but the last with a
-backslash (`\`, a hard line break) in MyST Markdown:
+backslash (`\`, a hard line break) in MyST Markdown.
+The MyST hard line break only breaks the line in HTML and LaTeX output:
+other builders, such as text, join the lines, and the gettext message contains
+the raw break markup, so translated projects should use the reStructuredText
+line block (in MyST, inside an `eval-rst` block):
 
 ```{eval-rst}
 .. button-link:: https://example.com
