@@ -386,8 +386,8 @@ LINE_BLOCK_CASES = {
         "    | *hey*\n    | new :octicon:`heart` line\n",
         "<em>hey</em><br />new",
     ),
-    # the parsed nodes are moved into the button, not copied: docutils numbers
-    # the footnote references it registered while parsing
+    # the text is parsed once, so the autonumbered footnote reference is
+    # registered once, and numbered and resolved as in a paragraph
     "footnote-reference": (
         "    | hey\n    | new line [#]_\n\n.. [#] A footnote.\n",
         "hey<br />new line <a",
@@ -519,11 +519,11 @@ def test_button_link_line_block_then_paragraph_parsed_once(sphinx_builder):
 def test_button_link_line_block_with_message_parsed_once(indent, sphinx_builder):
     """A line block whose inline markup reports a message is still lines, parsed once.
 
-    docutils puts the messages of a line's inline markup (here, an unknown role)
-    beside the line block (inside the block quote, for the markup of #156).
-    Falling back to inline text for that would parse the text twice: the
-    message reported twice, a spurious "Too many autonumbered footnote
-    references", the footnote reference left unresolved, and the bars kept.
+    A message of a line's inline markup (here, an unknown role) does not stop
+    the text being read as lines, and each line is parsed once: the message
+    is reported once, at its own line, there is no spurious "Too many
+    autonumbered footnote references", the footnote reference resolves, and
+    the bars are not kept.
     """
     rst = (
         "Heading\n=======\n\n.. button-link:: https://example.com\n    :expand:\n\n"
@@ -607,9 +607,8 @@ def test_button_link_line_block_latex(sphinx_builder):
 def test_button_link_line_block_gettext(sphinx_builder):
     """Each line is its own message, with no line break in it.
 
-    Before docutils 0.22 the parsed lines carry no source info, and sphinx
-    extracts no message from a node without a source, so the button gives
-    them the source of its content.
+    sphinx extracts no message from a node without a source, so each line's
+    message carries the source and line of that line, on every docutils.
     """
     builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "gettext")
     pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
