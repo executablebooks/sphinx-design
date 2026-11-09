@@ -69,7 +69,7 @@ Content 3
 ````
 `````
 
-The rail is as wide as its longest label, up to 35% of the set; a longer label wraps.
+The rail is as wide as its longest label, up to 35% of the set; a longer label wraps at its spaces.
 Below the `md` breakpoint (a viewport 768px wide) the set falls back to the horizontal layout, two columns being too narrow to read at that width.
 
 ## Synchronised Tabs
