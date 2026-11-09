@@ -19,7 +19,7 @@ The entire card can be clicked to navigate to <https://example.com>.
 
 :::{card} Clickable Card (external, new tab)
 :link: https://example.com
-:link-alt: example.com
+:link-alt: example.com (opens in a new tab)
 :link-new-tab:
 
 The entire card can be clicked to open <https://example.com> in a new tab.

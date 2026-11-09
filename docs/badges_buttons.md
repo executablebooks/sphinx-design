@@ -283,7 +283,7 @@ new-tab
   Works for both `button-link` and `button-ref`.
   Sphinx renders the `rel` attribute only from version 7.4;
   browsers already treat `target="_blank"` links as `noopener`.
-  It has no effect on output formats other than HTML.
+  It affects only HTML-based output (HTML, EPUB); other formats ignore it.
 
 tooltip
 : Add tooltip on hover

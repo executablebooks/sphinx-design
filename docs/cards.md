@@ -139,7 +139,7 @@ The entire card can be clicked to navigate to `https://example.com`.
 
 :::{card} Clickable Card (external, new tab)
 :link: https://example.com
-:link-alt: example.com
+:link-alt: example.com (opens in a new tab)
 :link-new-tab:
 
 The entire card can be clicked to open `https://example.com` in a new tab.
@@ -299,7 +299,7 @@ link-new-tab
   Works with all `link-type` values; has no effect without `link`.
   Sphinx renders the `rel` attribute only from version 7.4;
   browsers already treat `target="_blank"` links as `noopener`.
-  It has no effect on output formats other than HTML.
+  It affects only HTML-based output (HTML, EPUB); other formats ignore it.
   Tell readers the link opens a new tab, for example in `link-alt`.
   To open every external link in a new tab, site-wide,
   see the [sphinx-new-tab-link](https://pypi.org/project/sphinx-new-tab-link/) extension.

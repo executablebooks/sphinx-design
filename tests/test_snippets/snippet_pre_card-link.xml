@@ -55,7 +55,7 @@
                 <PassthroughTextElement sd_new_tab="True">
                     <reference classes="sd-stretched-link sd-hide-link-text" refuri="https://example.com">
                         <inline>
-                            example.com
+                            example.com (opens in a new tab)
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
