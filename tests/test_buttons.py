@@ -721,3 +721,62 @@ def test_line_block_lines(content, expected):
     docutils; after a blank line it starts a block quote, which is not a line.
     """
     assert _line_block_lines(content) == expected
+
+
+INLINE_LINES_RST = """\
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    top one
+    top :notarole:`x`
+
+.. dropdown:: Drop
+
+    para
+
+    .. button-link:: https://example.com
+
+        in one
+        in :notarole:`y`
+
+.. include:: inc.txt
+"""
+
+INLINE_LINES_INC = """\
+.. button-link:: https://example.com
+
+    inc one
+    inc :notarole:`z`
+"""
+
+
+def test_button_link_inline_text_lines(sphinx_builder):
+    """Button text is located at its first content line, in its own file.
+
+    ``content_offset`` is the offset of the content in the whole input, so
+    adding it to the directive's line counted the lines before the directive
+    twice: messages and gettext locations named a later line, past the end of
+    the file inside a nested directive, and the included file's line plus the
+    offset into the including one. As for a paragraph, docutils reports the
+    messages of the inline markup at the text's first line.
+    """
+    builder = sphinx_builder("gettext", conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(INLINE_LINES_RST, encoding="utf8")
+    builder.src_path.joinpath("inc.txt").write_text(INLINE_LINES_INC, encoding="utf8")
+    builder.build(assert_pass=False)
+    reported = re.findall(
+        r"(\w+\.(?:rst|txt)):(\d+): ERROR: Unknown interpreted text role",
+        builder.warnings,
+    )
+    assert reported == [("index.rst", "6"), ("index.rst", "15"), ("inc.txt", "3")], (
+        builder.warnings
+    )
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    for location, msgid in [
+        ("index.rst:6", "top one top :notarole:`x`"),
+        ("index.rst:15", "in one in :notarole:`y`"),
+        ("inc.txt:3", "inc one inc :notarole:`z`"),
+    ]:
+        assert f'{location}\nmsgid "{msgid}"' in pot, pot

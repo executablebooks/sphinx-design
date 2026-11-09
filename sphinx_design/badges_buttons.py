@@ -463,14 +463,20 @@ class _ButtonDirective(SdDirective):
                 # (RemoveTranslatableInline): give each line its own parent
                 pieces.append(nodes.inline("", "", translatable))
             return pieces
-        textnodes, _ = self.state.inline_text(
-            "\n".join(self.content), self.lineno + self.content_offset
-        )
+        if isinstance(self.state, RSTState):
+            # content_offset is the (0-based) offset of the first content line
+            # in the input, so it already counts the lines before the directive
+            lineno = self.content_offset + 1
+        else:
+            # MyST: content_offset counts the lines from the directive's line
+            lineno = self.lineno + self.content_offset
+        textnodes, _ = self.state.inline_text("\n".join(self.content), lineno)
         # make link text translatable -
         # target gettext to the content lines, not the outer directive
         translatable = nodes.inline("", "", *textnodes, translatable=True)
-        self.set_source_info(translatable)
-        translatable.line += self.content_offset
+        translatable.source, translatable.line = self.state_machine.get_source_and_line(
+            lineno
+        )
         return [translatable]
 
     def run_with_defaults(self) -> list[nodes.Node]:
