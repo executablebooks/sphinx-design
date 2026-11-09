@@ -369,25 +369,25 @@ def _build_rst(sphinx_builder, rst, buildername="html", **files):
 
 
 LINE_BLOCK_CASES = {
-    "plain": ("    | hey\n    | new line\n", "hey<br>new line"),
+    "plain": ("    | hey\n    | new line\n", "hey<br />new line"),
     # the markup of #156: the bars are indented one column past the options,
     # so docutils parses a block quote around the line block
-    "indented-past-options": ("     | hey\n     | new line\n", "hey<br>new line"),
-    "blank-line-between": ("    | hey\n\n    | new line\n", "hey<br>new line"),
+    "indented-past-options": ("     | hey\n     | new line\n", "hey<br />new line"),
+    "blank-line-between": ("    | hey\n\n    | new line\n", "hey<br />new line"),
     "continuation-line": (
         "    | hey there\n      continued\n    | new line\n",
-        "hey there continued<br>new line",
+        "hey there continued<br />new line",
     ),
-    "nested": ("    | hey\n    |    indented\n", "hey<br>indented"),
+    "nested": ("    | hey\n    |    indented\n", "hey<br />indented"),
     "inline-markup": (
         "    | *hey*\n    | new :octicon:`heart` line\n",
-        "<em>hey</em><br>new",
+        "<em>hey</em><br />new",
     ),
     # the parsed nodes are moved into the button, not copied: docutils numbers
     # the footnote references it registered while parsing
     "footnote-reference": (
         "    | hey\n    | new line [#]_\n\n.. [#] A footnote.\n",
-        "hey<br>new line <a",
+        "hey<br />new line <a",
     ),
 }
 
@@ -424,7 +424,7 @@ Heading
     builder = _build_rst(sphinx_builder, rst, other="Other\n=====\n")
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert 'href="other.html"' in html
-    assert _button_texts(html) == ["hey<br>new line"]
+    assert _button_texts(html) == ["hey<br />new line"]
 
 
 NOT_A_LINE_BLOCK_RST = """\
@@ -480,3 +480,33 @@ def test_button_link_myst_bars_unchanged(sphinx_builder):
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     [text] = _button_texts(html)
     assert text.startswith("| hey | new"), text
+
+
+LINE_BLOCK_RST = """\
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    | hey
+    | new line
+"""
+
+
+def test_button_link_line_block_text(sphinx_builder):
+    """Builders without a line break separate the lines with a space."""
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "text")
+    text = (builder.out_path / "index.txt").read_text(encoding="utf8")
+    assert "hey new line" in text, text
+    doctree = builder.get_doctree("index", post_transforms=True)
+    [button] = [r for r in doctree.findall(nodes.reference) if "sd-btn" in r["classes"]]
+    assert button.astext() == "hey new line"
+
+
+def test_button_link_line_block_latex(sphinx_builder):
+    """LaTeX output breaks the line inside the link (``\\sphinxhref``)."""
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "latex")
+    [tex] = builder.out_path.glob("*.tex")
+    assert r"\sphinxhref{https://example.com}{hey\newline{}new line}" in tex.read_text(
+        encoding="utf8"
+    )

@@ -56,6 +56,15 @@ def setup_badges_and_buttons(app: Sphinx) -> None:
         texinfo=(_visit_sd_badge_passthrough, _depart_sd_badge_passthrough),
     )
 
+    app.add_node(
+        sd_line_break,
+        html=(visit_sd_line_break_html, None),
+        latex=(visit_sd_line_break_latex, None),
+        text=(_visit_sd_badge_passthrough, _depart_sd_badge_passthrough),
+        man=(_visit_sd_badge_passthrough, _depart_sd_badge_passthrough),
+        texinfo=(_visit_sd_badge_passthrough, _depart_sd_badge_passthrough),
+    )
+
     app.add_directive(DIRECTIVE_NAME_BUTTON_LINK, ButtonLinkDirective)
     app.add_directive(DIRECTIVE_NAME_BUTTON_REF, ButtonRefDirective)
     app.add_post_transform(ButtonRefContentStash)
@@ -173,6 +182,26 @@ def _visit_sd_badge_passthrough(self: Any, node: nodes.Element) -> None:
 
 def _depart_sd_badge_passthrough(self: Any, node: nodes.Element) -> None:
     """Counterpart to :func:`_visit_sd_badge_passthrough`."""
+
+
+class sd_line_break(nodes.inline):  # noqa: N801
+    """A line break between the lines of a multi-line button text.
+
+    It holds a single space, which the text, man and texinfo builders render
+    (as does ``astext()``), so that the lines are separated rather than joined.
+    """
+
+
+def visit_sd_line_break_html(self: Any, node: nodes.Element) -> None:
+    """Emit an HTML line break instead of the space."""
+    self.body.append("<br />")
+    raise nodes.SkipNode
+
+
+def visit_sd_line_break_latex(self: Any, node: nodes.Element) -> None:
+    """Emit a LaTeX line break instead of the space."""
+    self.body.append(r"\newline{}")
+    raise nodes.SkipNode
 
 
 _EXPLICIT_TARGET_RE = re.compile(r"^(.+?)\s*(?<!\\)<(.*?)>$", re.DOTALL)
@@ -373,7 +402,7 @@ def _join_button_lines(lines: list[nodes.line]) -> list[nodes.Node]:
     pieces: list[nodes.Node] = []
     for index, line in enumerate(lines):
         if index:
-            pieces.append(nodes.raw("", "<br>", format="html"))
+            pieces.append(sd_line_break("", " "))
         # move (rather than copy) the parsed inline nodes: docutils registers
         # some of them (e.g. footnote and named references) on the document
         children = line.children[:]
