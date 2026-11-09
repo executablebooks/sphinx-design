@@ -296,7 +296,7 @@ link-alt
 link-new-tab
 : Flag. When set, the card link opens in a new browser tab
   (`target="_blank"`, `rel="noreferrer noopener"`).
-  Works with all `link-type` values.
+  Works with all `link-type` values; has no effect without `link`.
   Sphinx renders the `rel` attribute only from version 7.4;
   browsers already treat `target="_blank"` links as `noopener`.
 
