@@ -458,6 +458,30 @@ def test_button_link_bar_text_is_not_a_line_block(sphinx_builder):
     assert text.startswith("Download the notes"), text
 
 
+LEADING_BAR_CASES = {
+    # a leading "| " is a line-block marker, as anywhere else in RST: the
+    # label is a one-line line block, whose marker is consumed
+    "line-block": ("    | Docs | API |\n", "Docs | API |"),
+    # an escaped leading bar is not a marker, so it renders literally
+    "escaped": ("    \\| Docs | API |\n", "| Docs | API |"),
+}
+
+
+@pytest.mark.parametrize(
+    "body,expected", LEADING_BAR_CASES.values(), ids=LEADING_BAR_CASES.keys()
+)
+def test_button_link_leading_bar(body, expected, sphinx_builder):
+    """A single-line label starting with ``| `` reads as a line block.
+
+    Its leading ``| `` is consumed as the line-block marker, and only that one:
+    later bars are text. A literal leading bar is written ``\\|``.
+    """
+    rst = f"Heading\n=======\n\n.. button-link:: https://example.com\n\n{body}"
+    builder = _build_rst(sphinx_builder, rst)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _button_texts(html) == [expected]
+
+
 LINE_BLOCK_THEN_PARAGRAPH_RST = """\
 Heading
 =======

@@ -214,6 +214,9 @@ button text
 ```
 ````
 
+In reStructuredText, a label that itself starts with `| ` is read as a one-line
+line block, whose leading `| ` is not shown, so write a literal leading bar as `\|`.
+
 Reference targets may also contain spaces, for example the labels that
 `sphinx.ext.autosectionlabel` generates from section titles.
 
