@@ -71,6 +71,8 @@ Content 3
 
 The rail is as wide as its longest label, up to 35% of the set; a longer label wraps at its spaces.
 Below the `md` breakpoint (a viewport 768px wide) the set falls back to the horizontal layout, two columns being too narrow to read at that width.
+The breakpoint follows the viewport, not the set's container, so a vertical set in a narrow column (a grid cell, say) stays vertical on a wide screen.
+Themes that restyle the tab labels themselves, such as pydata-sphinx-theme and sphinx-book-theme, may draw them less neatly in the rail until they style `sd-tab-set-vertical` too.
 
 ## Synchronised Tabs
 
