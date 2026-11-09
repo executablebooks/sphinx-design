@@ -4,8 +4,8 @@ All colors used by sphinx-design are defined as [CSS variables](https://develope
 Therefore they can be overriden by adding a `.css` file in a `_static` folder in your projects source folder (see [the sphinx documentation](https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_css_files)):
 
 ```python
-html_static_path = ['_static']
-html_css_files = ['custom.css']
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
 ```
 
 For colors, there are nine semantic colors that can be defined.
