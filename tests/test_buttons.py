@@ -546,7 +546,12 @@ def test_button_link_line_block_latex(sphinx_builder):
 
 
 def test_button_link_line_block_gettext(sphinx_builder):
-    """Each line is its own message, with no line break in it."""
+    """Each line is its own message, with no line break in it.
+
+    Before docutils 0.22 the parsed lines carry no source info, and sphinx
+    extracts no message from a node without a source, so the button gives
+    them the source of its content.
+    """
     builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "gettext")
     pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
     assert 'msgid "hey"' in pot, pot

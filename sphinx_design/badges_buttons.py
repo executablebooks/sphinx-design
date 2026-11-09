@@ -410,11 +410,16 @@ def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
     return [line for block in children for line in block.findall(nodes.line)]
 
 
-def _join_button_lines(lines: list[nodes.line]) -> list[nodes.Node]:
+def _join_button_lines(
+    lines: list[nodes.line], source: str | None, lineno: int | None
+) -> list[nodes.Node]:
     """Return the content of ``lines``, with a line break between lines.
 
     Each line is a translatable message of its own (as in a normal line block),
     so a message never contains a line break.
+    A line that docutils gave no source info (before docutils 0.22) is given
+    ``source`` and ``lineno`` instead: sphinx extracts no message from a
+    translatable node without a source.
     """
     pieces: list[nodes.Node] = []
     for index, line in enumerate(lines):
@@ -427,7 +432,10 @@ def _join_button_lines(lines: list[nodes.line]) -> list[nodes.Node]:
         children = line.children[:]
         del line[:]
         translatable = nodes.inline(line.rawsource, "", *children, translatable=True)
-        translatable.source, translatable.line = line.source, line.line
+        if line.source is None:
+            translatable.source, translatable.line = source, lineno
+        else:
+            translatable.source, translatable.line = line.source, line.line
         # sphinx unwraps a translatable inline by appending its children to its
         # parent (RemoveTranslatableInline): give each line a parent of its own,
         # so that the lines keep their order
@@ -480,7 +488,11 @@ class _ButtonDirective(SdDirective):
             self.state.nested_parse(self.content, self.content_offset, container)
             lines = _line_block_lines(container)
             if lines is not None:
-                return _join_button_lines(lines)
+                # the first content line (content_offset is a 0-based offset)
+                source, lineno = self.state_machine.get_source_and_line(
+                    self.content_offset + 1
+                )
+                return _join_button_lines(lines, source, lineno)
         textnodes, _ = self.state.inline_text(
             "\n".join(self.content), self.lineno + self.content_offset
         )
