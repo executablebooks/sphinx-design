@@ -23,3 +23,8 @@ updates:
     groups:
       python-deps:
         patterns: ["*"]
+    ignore:
+      # pre-commit.ci owns the linters' versions (.pre-commit-config.yaml);
+      # the [dependency-groups] pins in pyproject.toml are synced to them by hand
+      - dependency-name: ruff
+      - dependency-name: mypy
