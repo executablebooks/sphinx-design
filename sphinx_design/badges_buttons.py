@@ -241,7 +241,7 @@ class _TooltipRoleMixin(SphinxRole):
     #: form is a target in which ``;`` is a legal character)
     tooltip_requires_explicit_target: bool = False
 
-    def __call__(  # noqa: PLR0913
+    def __call__(  # noqa: PLR0913, PLR0917
         self,
         name: str,
         rawtext: str,
