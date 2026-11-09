@@ -135,6 +135,47 @@ jobs:
         name: docs-pdf
         path: docs/_build/latex/sphinxdesign.pdf
 
+  build:
+
+    # builds with the project's own [build-system] backend pin, the same way a release does,
+    # so a packaging problem shows up on the PR rather than when a tag is pushed
+    name: Build distributions
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Install build tools
+      run: python -m pip install --upgrade build twine
+    - name: Build sdist and wheel
+      run: python -m build
+    - name: Check the distributions
+      run: python -m twine check --strict dist/*
+    - name: Check the tag matches the built version
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        python - <<'EOF'
+        import os, pathlib, sys
+        tag = os.environ["GITHUB_REF_NAME"].removeprefix("v")
+        dist = pathlib.Path("dist")
+        versions = {p.name.split("-")[1] for p in dist.glob("*.whl")}
+        versions |= {p.name.removesuffix(".tar.gz").rsplit("-", 1)[1] for p in dist.glob("*.tar.gz")}
+        if versions != {tag}:
+            sys.exit(f"tag v{tag} does not match the built version(s) {sorted(versions)}")
+        print(f"tag v{tag} matches the built version")
+        EOF
+    - name: Upload the distributions
+      uses: actions/upload-artifact@v7
+      with:
+        name: dist
+        path: dist/
+        retention-days: 7
+
   # https://github.com/marketplace/actions/alls-green#why
   check:  # This job does nothing and is only used for the branch protection
 
@@ -145,6 +186,7 @@ jobs:
     - tests
     - docs-build-format
     - docs-build-pdf
+    - build
 
     runs-on: ubuntu-latest
 
