@@ -376,8 +376,10 @@ def _line_block_lines(content: Sequence[str]) -> list[tuple[int, str]] | None:
     (``|`` and a space, or a bare ``|``); a deeper line directly after a
     non-blank line continues the previous line. Anything else is not a line
     block. The check is purely textual, so the text is parsed exactly once.
+    A line's text is as docutils gives it: its continuation lines keep their
+    indent relative to each other, and a bare bar's empty first line is dropped.
     """
-    result: list[tuple[int, str]] = []
+    found: list[tuple[int, list[str]]] = []
     indent: int | None = None
     previous_blank = True
     for offset, raw in enumerate(content):
@@ -390,13 +392,19 @@ def _line_block_lines(content: Sequence[str]) -> list[tuple[int, str]] | None:
             indent = depth
         match = _LINE_BLOCK_START.match(text) if depth == indent else None
         if match is not None:
-            result.append((offset, text[match.end() :].strip()))
-        elif depth > indent and result and not previous_blank:
-            line_offset, line_text = result[-1]
-            result[-1] = (line_offset, f"{line_text}\n{text}")
+            found.append((offset, [text[match.end() :].strip()]))
+        elif depth > indent and found and not previous_blank:
+            found[-1][1].append(raw)
         else:
             return None
         previous_blank = False
+    result: list[tuple[int, str]] = []
+    for offset, (first, *more) in found:
+        # as docutils' ``get_first_known_indented``: strip only the common
+        # indent of the continuation lines, and drop an empty first line
+        cut = min((len(m) - len(m.lstrip()) for m in more), default=0)
+        parts = [first, *(m[cut:] for m in more)]
+        result.append((offset, "\n".join(parts if first else parts[1:])))
     return result or None
 
 

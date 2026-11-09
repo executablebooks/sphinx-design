@@ -725,6 +725,10 @@ SPLIT_CASES = {
     "blank-between": (["| a", "", "| b"], [(0, "a"), (2, "b")]),
     "bare-bar": (["| a", "|", "| b"], [(0, "a"), (1, ""), (2, "b")]),
     "continuation": (["| a", "  more", "| b"], [(0, "a\nmore"), (2, "b")]),
+    # docutils strips only the common indent of the continuation lines
+    "continuation-relative-indent": (["| a", "    b", "  c"], [(0, "a\n  b\nc")]),
+    # docutils drops the empty first line of a bare bar with a continuation
+    "bare-bar-continuation": (["|", "  x"], [(0, "x")]),
     "nested": (["| a", "|    b"], [(0, "a"), (1, "b")]),
     "empty": ([], None),
     "substitution-first": (["|sub| a"], None),
