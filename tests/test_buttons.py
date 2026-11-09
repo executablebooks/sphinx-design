@@ -488,6 +488,36 @@ def test_button_link_line_block_then_paragraph_parsed_once(sphinx_builder):
     assert 'class="footnote-reference' in text, text
 
 
+@pytest.mark.parametrize(
+    "indent", ["    ", "     "], ids=["plain", "indented-past-options"]
+)
+def test_button_link_line_block_with_message_parsed_once(indent, sphinx_builder):
+    """A line block whose inline markup reports a message is still lines, parsed once.
+
+    docutils puts the messages of a line's inline markup (here, an unknown role)
+    beside the line block (inside the block quote, for the markup of #156).
+    Falling back to inline text for that would parse the text twice: the
+    message reported twice, a spurious "Too many autonumbered footnote
+    references", the footnote reference left unresolved, and the bars kept.
+    """
+    rst = (
+        "Heading\n=======\n\n.. button-link:: https://example.com\n    :expand:\n\n"
+        f"{indent}| hey\n{indent}| there :notarole:`x` [#]_\n\n.. [#] A footnote.\n"
+    )
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(rst, encoding="utf8")
+    builder.build(assert_pass=False)
+    assert builder.warnings.count('Unknown interpreted text role "notarole"') == 1, (
+        builder.warnings
+    )
+    assert "Too many autonumbered" not in builder.warnings, builder.warnings
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith("hey<br />there <a"), text
+    assert 'class="footnote-reference' in html
+    assert "[#]" not in html
+
+
 @pytest.mark.skipif(not MYST_INSTALLED, reason="myst-parser not installed")
 def test_button_link_myst_bars_unchanged(sphinx_builder):
     """Line blocks are RST syntax: MyST button text keeps its bars, parsed once.

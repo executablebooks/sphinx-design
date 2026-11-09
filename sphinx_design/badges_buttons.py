@@ -394,6 +394,11 @@ def _is_line_block_text(content: Sequence[str]) -> bool:
     )
 
 
+def _non_messages(node: nodes.Element) -> list[nodes.Node]:
+    """Return the children of ``node`` that are not system messages."""
+    return [c for c in node.children if not isinstance(c, nodes.system_message)]
+
+
 def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
     """Return the lines of the line blocks in ``node``, if it contains nothing else.
 
@@ -401,10 +406,13 @@ def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
     a block quote whose only child is the line block, so such block quotes are
     unwrapped. Line blocks separated by a blank line, and nested line blocks,
     contribute their lines in document order.
+    System messages are ignored: docutils places those of the inline markup in
+    a line (e.g. an unknown role) beside the line block, and has already
+    reported them, so falling back to inline text would parse it twice.
     """
-    children = node.children
+    children = _non_messages(node)
     while len(children) == 1 and isinstance(children[0], nodes.block_quote):
-        children = children[0].children
+        children = _non_messages(children[0])
     if not children or not all(isinstance(c, nodes.line_block) for c in children):
         return None
     return [line for block in children for line in block.findall(nodes.line)]
