@@ -398,16 +398,27 @@ def _line_block_lines(node: nodes.Element) -> list[nodes.line] | None:
 
 
 def _join_button_lines(lines: list[nodes.line]) -> list[nodes.Node]:
-    """Return the inline content of ``lines``, with a line break between lines."""
+    """Return the content of ``lines``, with a line break between lines.
+
+    Each line is a translatable message of its own (as in a normal line block),
+    so a message never contains a line break.
+    """
     pieces: list[nodes.Node] = []
     for index, line in enumerate(lines):
         if index:
             pieces.append(sd_line_break("", " "))
+        if not line.children:
+            continue
         # move (rather than copy) the parsed inline nodes: docutils registers
         # some of them (e.g. footnote and named references) on the document
         children = line.children[:]
         del line[:]
-        pieces.extend(children)
+        translatable = nodes.inline(line.rawsource, "", *children, translatable=True)
+        translatable.source, translatable.line = line.source, line.line
+        # sphinx unwraps a translatable inline by appending its children to its
+        # parent (RemoveTranslatableInline): give each line a parent of its own,
+        # so that the lines keep their order
+        pieces.append(nodes.inline("", "", translatable))
     return pieces
 
 
@@ -444,8 +455,8 @@ class _ButtonDirective(SdDirective):
         """Create the reference node."""
         raise NotImplementedError
 
-    def _content_text_nodes(self) -> list[nodes.Node]:
-        """Parse the button text.
+    def _content_nodes(self) -> list[nodes.Node]:
+        """Parse the button text into translatable inline nodes.
 
         The text is inline markup, except that an RST line block renders as
         separate lines (#156): ``inline_text`` knows no block markup, so it
@@ -460,7 +471,12 @@ class _ButtonDirective(SdDirective):
         textnodes, _ = self.state.inline_text(
             "\n".join(self.content), self.lineno + self.content_offset
         )
-        return textnodes
+        # make link text translatable -
+        # target gettext to the content lines, not the outer directive
+        translatable = nodes.inline("", "", *textnodes, translatable=True)
+        self.set_source_info(translatable)
+        translatable.line += self.content_offset
+        return [translatable]
 
     def run_with_defaults(self) -> list[nodes.Node]:
         rawtext = self.arguments[0]
@@ -486,17 +502,11 @@ class _ButtonDirective(SdDirective):
             node["reftitle"] = self.options["tooltip"]
 
         if self.content:
-            textnodes = self._content_text_nodes()
-            # make link text translatable -
-            # target gettext to the content lines, not the outer directive
-            translatable = nodes.inline("", "", *textnodes, translatable=True)
-            self.set_source_info(translatable)
-            translatable.line += self.content_offset
-            # the translatable inline is a placeholder that sphinx unwraps
+            # a translatable inline is a placeholder that sphinx unwraps
             # after translation (RemoveTranslatableInline); keep a plain outer
             # inline so the reference always retains an element child
             # (an unresolved xref otherwise crashes on replacement)
-            content = nodes.inline("", "", translatable)
+            content = nodes.inline("", "", *self._content_nodes())
         else:
             content = nodes.inline(target, target)
         node.append(content)

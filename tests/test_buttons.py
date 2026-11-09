@@ -16,6 +16,8 @@ Covers:
 
 import re
 
+from babel.messages.catalog import Catalog
+from babel.messages.mofile import write_mo
 from docutils import nodes
 import pytest
 
@@ -510,3 +512,35 @@ def test_button_link_line_block_latex(sphinx_builder):
     assert r"\sphinxhref{https://example.com}{hey\newline{}new line}" in tex.read_text(
         encoding="utf8"
     )
+
+
+def test_button_link_line_block_gettext(sphinx_builder):
+    """Each line is its own message, with no line break in it."""
+    builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "gettext")
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    assert 'msgid "hey"' in pot, pot
+    assert 'msgid "new line"' in pot, pot
+    assert "hey new line" not in pot, pot
+    assert "<br" not in pot, pot
+
+
+def test_button_link_line_block_translated(sphinx_builder):
+    """The lines are translated one by one, and keep their order."""
+    builder = sphinx_builder(
+        conf_kwargs={
+            "extensions": ["sphinx_design"],
+            "language": "de",
+            "locale_dirs": ["locales"],
+        }
+    )
+    builder.src_path.joinpath("index.rst").write_text(LINE_BLOCK_RST, encoding="utf8")
+    catalog = Catalog(locale="de", domain="index")
+    catalog.add("hey", "hallo")
+    catalog.add("new line", "*neue* Zeile")
+    mo_dir = builder.src_path / "locales" / "de" / "LC_MESSAGES"
+    mo_dir.mkdir(parents=True)
+    with (mo_dir / "index.mo").open("wb") as handle:
+        write_mo(handle, catalog)
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _button_texts(html) == ["hallo<br /><em>neue</em> Zeile"]
