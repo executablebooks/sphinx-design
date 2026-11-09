@@ -16,7 +16,11 @@
   (planned to become the default at 1.0). One behaviour change: an *empty*
   `card-header` / `card-footer` directive now errors (`Content block expected`),
   where an empty legacy chunk produced an empty slot. See the cards
-  documentation for the mechanical migration ({pr}`294`)
+  documentation for the mechanical migration ({pr}`294`).
+  **Upgrade note**: the deprecation warning is on by default, so a `-W`
+  (fail-on-warning) build that still uses `^^^` / `+++` fails until you either
+  migrate those cards to the `card-header` / `card-footer` directives, or add
+  `suppress_warnings = ["design.card_legacy"]` to your `conf.py`
 - ♻️ REFACTOR: The private `CardDirective._create_component` helper is renamed
   to `_create_slot`; a back-compatible alias is kept for one release for
   downstream extensions that call it ({pr}`294`)

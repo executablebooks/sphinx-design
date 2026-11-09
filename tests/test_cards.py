@@ -183,6 +183,10 @@ Heading
     # (count the unique message body, since Sphinx may also append the subtype)
     assert builder.warnings.count("card header/footer separators are deprecated") == 1
     assert "[design.card_legacy]" in builder.warnings
+    # the warning is on by default (it fails ``-W`` builds), so it must name
+    # both remedies: migrating to the directives, or suppressing it
+    assert "'card-header'/'card-footer' directives" in builder.warnings
+    assert 'suppress_warnings=["design.card_legacy"]' in builder.warnings
 
 
 def test_card_legacy_warning_suppressible(sphinx_builder):

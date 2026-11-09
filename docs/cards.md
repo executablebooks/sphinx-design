@@ -460,7 +460,17 @@ before flipping:
 - in reStructuredText, a `^^^` / `++++` line can raise a docutils `CRITICAL`
   "Unexpected section title or transition" error.
 
-To keep the legacy syntax on but silence the deprecation warning, add
-`"design.card_legacy"` to the Sphinx `suppress_warnings` list.
+:::{note} Builds that treat warnings as errors
+The deprecation warning is **on by default**, so a build run with `-W`
+(or `--fail-on-warning`) fails on the first document that still uses `^^^` /
+`+++`. There are two remedies:
+
+1. migrate those cards to the `card-header` / `card-footer` directives (above); or
+2. keep the legacy syntax for now and silence the warning in your `conf.py`:
+
+   ```python
+   suppress_warnings = ["design.card_legacy"]
+   ```
+:::
 
 **Timeline**: deprecated now (default on) → default off at `1.0` → removed at `2.0`.
