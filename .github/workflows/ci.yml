@@ -7,6 +7,9 @@ on:
       - 'v*'
   pull_request:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -198,23 +201,23 @@ jobs:
 
   publish:
 
-    name: Publish to PyPi
-    needs: [pre-commit, tests]
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    # PyPI trusted publishing: the PyPI publisher is registered for this workflow file (ci.yml)
+    # and the `pypi` environment, so do not rename either
+    name: Publish to PyPI
+    needs: [pre-commit, tests, docs-build-format, docs-build-pdf, build]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/sphinx-design
+    permissions:
+      id-token: write  # the only permission this job has
     steps:
-    - name: Checkout source
-      uses: actions/checkout@v7
-    - name: Set up Python
-      uses: actions/setup-python@v6
+    - name: Download the distributions
+      uses: actions/download-artifact@v8
       with:
-        python-version: "3.11"
-    - name: install flit
-      run: |
-        pip install flit~=3.4
-    - name: Build and publish
-      run: |
-        flit publish
-      env:
-        FLIT_USERNAME: __token__
-        FLIT_PASSWORD: ${{ secrets.PYPI_KEY }}
+        name: dist
+        path: dist/
+    # uploads attestations by default
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
