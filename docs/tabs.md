@@ -31,10 +31,12 @@ Content 2
 
 See the [Material Design](https://material.io/components/tabs) description for further details.
 
+(tabs-vertical)=
+
 ## Vertical Tabs
 
-::::{versionadded} 0.7.0
-Add `:orientation: vertical` to a `tab-set` or `tab-set-code` to stack the labels down a rail on the left, with the selected content beside them.
+::::{versionadded} 0.8.0
+Add `:orientation: vertical` to a `tab-set` or `tab-set-code` to stack the labels down a rail on the left (on the right on right-to-left pages), with the selected content beside them.
 This suits sets holding more labels than fit on one line, where the horizontal layout wraps them into a strip that is hard to scan.
 ::::
 
@@ -67,7 +69,8 @@ Content 3
 ````
 `````
 
-Below the `md` breakpoint the set falls back to the horizontal layout, two columns being too narrow to read at that width.
+The rail is as wide as its longest label, up to 35% of the set; a longer label wraps.
+Below the `md` breakpoint (a viewport 768px wide) the set falls back to the horizontal layout, two columns being too narrow to read at that width.
 
 ## Synchronised Tabs
 
@@ -293,6 +296,9 @@ Content 2
 
 ## `tab-set` options
 
+orientation
+: `horizontal` (default) or `vertical`, see {ref}`tabs-vertical`.
+
 sync-group
 : A group name for synchronised tab sets (default `tab`).
 
@@ -303,6 +309,9 @@ class
 
 no-sync
 : Disable synchronisation of tabs.
+
+orientation
+: `horizontal` (default) or `vertical`, see {ref}`tabs-vertical`.
 
 sync-group
 : A group name for synchronised tab sets (default `code`).
