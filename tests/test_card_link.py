@@ -16,6 +16,7 @@ import re
 
 from docutils.parsers.rst import directives
 import pytest
+import sphinx
 
 from sphinx_design.cards import CardDirective
 
@@ -279,6 +280,28 @@ def test_card_ref_unresolved_warns(sphinx_builder):
 # link-new-tab tests
 # ---------------------------------------------------------------------------
 
+# Sphinx's HTML writer renders a reference's ``rel`` attribute only from 7.4;
+# ``target`` is rendered on every supported version.
+# Browsers imply ``noopener`` for ``target="_blank"`` anyway.
+RENDERS_REL = sphinx.version_info >= (7, 4)
+
+
+def _stretched_link_tags(html):
+    """Return the opening ``<a ...>`` tag of every card ``sd-stretched-link``."""
+    return re.findall(r"<a [^>]*\bsd-stretched-link\b[^>]*>", html)
+
+
+def _assert_opens_in_new_tab(html):
+    """The card's only stretched link opens in a new tab."""
+    tags = _stretched_link_tags(html)
+    assert len(tags) == 1, tags
+    assert 'target="_blank"' in tags[0], tags[0]
+    if RENDERS_REL:
+        assert 'rel="noreferrer noopener"' in tags[0], tags[0]
+    else:
+        assert "rel=" not in tags[0], tags[0]
+
+
 NEW_TAB_URL_RST = """
 Heading
 =======
@@ -310,12 +333,7 @@ def test_card_url_new_tab(fmt, sphinx_builder):
     builder = _build(sphinx_builder, fmt, NEW_TAB_URL_RST, NEW_TAB_URL_MYST)
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert _stretched_link_hrefs(html) == ["https://example.com"]
-    assert re.search(r'<a [^>]*sd-stretched-link[^>]*target="_blank"', html), (
-        "target=_blank not found on stretched-link anchor"
-    )
-    assert re.search(
-        r'<a [^>]*sd-stretched-link[^>]*rel="noreferrer noopener"', html
-    ), "rel=noreferrer noopener not found on stretched-link anchor"
+    _assert_opens_in_new_tab(html)
 
 
 NEW_TAB_REF_RST = """
@@ -362,13 +380,41 @@ def test_card_ref_new_tab(fmt, sphinx_builder):
     """
     builder = _build(sphinx_builder, fmt, NEW_TAB_REF_RST, NEW_TAB_REF_MYST)
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
-    assert "#my-section" in _stretched_link_hrefs(html)
-    assert re.search(r'<a [^>]*sd-stretched-link[^>]*target="_blank"', html), (
-        "target=_blank not found on resolved ref anchor"
-    )
-    assert re.search(
-        r'<a [^>]*sd-stretched-link[^>]*rel="noreferrer noopener"', html
-    ), "rel=noreferrer noopener not found on resolved ref anchor"
+    assert _stretched_link_hrefs(html) == ["#my-section"]
+    _assert_opens_in_new_tab(html)
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_doc_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` applies to a ``link-type: doc`` card linking to another page."""
+    if fmt == "rst":
+        builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+        index = (
+            "Heading\n=======\n\n"
+            ".. toctree::\n\n    other\n\n"
+            ".. card:: New-tab doc card\n"
+            "    :link: other\n    :link-type: doc\n    :link-new-tab:\n\n"
+            "    Card body\n"
+        )
+        builder.src_path.joinpath("index.rst").write_text(index, encoding="utf8")
+        builder.src_path.joinpath("other.rst").write_text(
+            "Other\n=====\n", encoding="utf8"
+        )
+    else:
+        builder = sphinx_builder()
+        index = (
+            "# Heading\n\n"
+            "```{toctree}\nother\n```\n\n"
+            ":::{card} New-tab doc card\n"
+            ":link: other\n:link-type: doc\n:link-new-tab:\n\n"
+            "Card body\n:::\n"
+        )
+        builder.src_path.joinpath("index.md").write_text(index, encoding="utf8")
+        builder.src_path.joinpath("other.md").write_text("# Other\n", encoding="utf8")
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["other.html"]
+    _assert_opens_in_new_tab(html)
 
 
 NEW_TAB_GRID_RST = """
@@ -406,6 +452,54 @@ def test_grid_item_card_new_tab(fmt, sphinx_builder):
     builder = _build(sphinx_builder, fmt, NEW_TAB_GRID_RST, NEW_TAB_GRID_MYST)
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert _stretched_link_hrefs(html) == ["https://example.com"]
-    assert re.search(r'<a [^>]*sd-stretched-link[^>]*target="_blank"', html), (
-        "target=_blank not found on grid-item-card stretched-link anchor"
-    )
+    _assert_opens_in_new_tab(html)
+
+
+NO_NEW_TAB_RST = """
+Heading
+=======
+
+My Section
+----------
+
+.. card:: URL card
+    :link: https://example.com
+
+    Card body
+
+.. card:: Internal card
+    :link: my section
+    :link-type: ref
+
+    Card body
+"""
+
+NO_NEW_TAB_MYST = """
+# Heading
+
+## My Section
+
+:::{card} URL card
+:link: https://example.com
+
+Card body
+:::
+
+:::{card} Internal card
+:link: my section
+:link-type: ref
+
+Card body
+:::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_link_without_new_tab(fmt, sphinx_builder):
+    """Without ``link-new-tab``, card links keep opening in the same tab."""
+    builder = _build(sphinx_builder, fmt, NO_NEW_TAB_RST, NO_NEW_TAB_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["https://example.com", "#my-section"]
+    for tag in _stretched_link_tags(html):
+        assert "target=" not in tag, tag
+        assert "rel=" not in tag, tag
