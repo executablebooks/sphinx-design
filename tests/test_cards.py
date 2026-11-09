@@ -187,6 +187,11 @@ Heading
     # both remedies: migrating to the directives, or suppressing it
     assert "'card-header'/'card-footer' directives" in builder.warnings
     assert 'suppress_warnings=["design.card_legacy"]' in builder.warnings
+    # the flag is only offered as the step after migration: disabling it while
+    # cards still use the separators silently drops their header/footer slots
+    assert "once every card is migrated, set sd_card_legacy_separators=False" in (
+        builder.warnings
+    )
 
 
 def test_card_legacy_warning_suppressible(sphinx_builder):

@@ -462,8 +462,8 @@ before flipping:
 
 :::{note} Builds that treat warnings as errors
 The deprecation warning is **on by default**, so a build run with `-W`
-(or `--fail-on-warning`) fails on the first document that still uses `^^^` /
-`+++`. There are two remedies:
+(or `--fail-on-warning`) fails while any document still uses `^^^` / `+++`.
+There are two remedies:
 
 1. migrate those cards to the `card-header` / `card-footer` directives (above); or
 2. keep the legacy syntax for now and silence the warning in your `conf.py`:

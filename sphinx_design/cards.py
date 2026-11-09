@@ -423,8 +423,9 @@ class CardDirective(SdDirective):
                 "The '^^^'/'+++' card header/footer separators are deprecated; "
                 "use the 'card-header'/'card-footer' directives instead "
                 f"(see {LEGACY_MIGRATION_URL}; silence with "
-                'suppress_warnings=["design.card_legacy"] or disable with '
-                f"sd_card_legacy_separators=False) [{WARNING_TYPE}.card_legacy]",
+                'suppress_warnings=["design.card_legacy"]; once every card is '
+                "migrated, set sd_card_legacy_separators=False) "
+                f"[{WARNING_TYPE}.card_legacy]",
                 location=(inst.env.docname, inst.lineno),
                 type=WARNING_TYPE,
                 subtype="card_legacy",
