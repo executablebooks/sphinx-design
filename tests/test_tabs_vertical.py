@@ -7,8 +7,9 @@ These tests pin both halves:
 * the class is emitted for ``vertical`` on both directives, is absent for
   ``horizontal`` or no option, and an unknown value is reported;
 * the stylesheet applies the vertical rules only from the ``md`` breakpoint up,
-  and uses no physical left/right properties, which would break right-to-left
-  pages.
+  bounds the label rail at 35%, and sets no left or right side physically
+  (no ``-left``/``-right`` property or value, x-offset box-shadow or
+  four-value box shorthand), which would break right-to-left pages.
 
 The ``tab-set`` + ``vertical`` doctree is also covered by the
 ``tab-vertical`` snippet fixtures in ``test_snippets.py``.
@@ -171,7 +172,8 @@ def test_vertical_css_is_mobile_first():
 def test_vertical_css_is_direction_agnostic():
     """The vertical rules use logical properties, so right-to-left pages mirror.
 
-    A physical ``left``/``right`` property (or an x-offset box-shadow) would
+    A physical ``left``/``right`` property (or an x-offset box-shadow, or a
+    four-value shorthand such as ``padding: 0 0 0 1.5rem``) would
     put the rail's border and the pane's rule on the wrong side under
     ``dir="rtl"``.
     """
@@ -182,3 +184,22 @@ def test_vertical_css_is_direction_agnostic():
         assert not re.search(r"-(left|right)\s*:", declarations), declarations
         assert not re.search(r":\s*(left|right)\b", declarations), declarations
         assert not re.search(r"box-shadow:\s*-?[.\d]", declarations), declarations
+        # a four-value box shorthand sets the left and right sides separately
+        assert not re.search(
+            r"(?:^|;)\s*(?:padding|margin|inset|border-(?:width|style|color)"
+            r"|border-radius)\s*:\s*\S+\s+\S+\s+\S+\s+\S+",
+            declarations,
+        ), declarations
+
+
+def test_vertical_css_bounds_the_rail():
+    """The label rail is bounded at 35% of the set, so a long label wraps.
+
+    An unbounded rail (``max-content``) lets one long label squeeze the
+    selected content into a sliver.
+    """
+    css = COMPILED_CSS.read_text(encoding="utf8")
+    columns = re.findall(
+        r"\.sd-tab-set-vertical\{[^}]*grid-template-columns:([^;}]*)", css
+    )
+    assert columns == ["fit-content(35%) minmax(0,1fr)"]
