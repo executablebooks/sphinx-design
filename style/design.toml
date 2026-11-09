@@ -31,7 +31,8 @@ root_fixed = [
   # unselected tab render in exactly the selected tab's colour, so it read as a
   # second active tab. Derived from -label-active at 80% opacity, so a theme
   # that overrides -label-active (at :root) gets a matching hover colour. The
-  # static value first is the same colour, for engines without color-mix().
+  # static value first is the same colour, kept alongside as the -highlight
+  # tokens are; the color-mix() declaration is the one that applies.
   ["--sd-color-tabs-label-hover", "hsla(231, 99%, 66%, 0.8)"],
   ["--sd-color-tabs-label-hover", "color-mix(in srgb, var(--sd-color-tabs-label-active) 80%, transparent)"],
   ["--sd-color-tabs-label-inactive", "hsl(0, 0%, 66%)"],

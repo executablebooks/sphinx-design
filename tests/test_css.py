@@ -102,7 +102,7 @@ def test_tab_label_hover_differs_from_active():
 
     The hover token was once the same literal as the active token, so hovering
     an unselected tab rendered it in the selected tab's colour. It is now the
-    active colour at 80% opacity: a static fallback, then a ``color-mix()`` of
+    active colour at 80% opacity: a static value, then a ``color-mix()`` of
     ``var(--sd-color-tabs-label-active)``, so a theme that overrides the active
     colour also moves the hover colour.
     """
