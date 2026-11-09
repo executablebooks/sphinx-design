@@ -228,6 +228,35 @@ Use the `click-parent` option to make the button's parent container also clickab
 
 :::
 
+Use the `new-tab` option to open the button's link in a new browser tab.
+Since this changes what the reader expects a link to do,
+say so in the button text:
+
+```{button-link} https://example.com
+:color: primary
+:new-tab:
+
+example.com (opens in a new tab)
+```
+
+````{tab-set-code}
+```markdown
+:::{button-link} https://example.com
+:color: primary
+:new-tab:
+
+example.com (opens in a new tab)
+:::
+```
+```rst
+.. button-link:: https://example.com
+    :color: primary
+    :new-tab:
+
+    example.com (opens in a new tab)
+```
+````
+
 ### `button-link` and `button-ref` options
 
 ref-type (`button-ref` only)
@@ -248,6 +277,13 @@ expand
 
 click-parent
 : Make parent container also clickable
+
+new-tab
+: Open the link in a new browser tab (`target="_blank"`, `rel="noreferrer noopener"`).
+  Works for both `button-link` and `button-ref`.
+  Sphinx renders the `rel` attribute only from version 7.4;
+  browsers already treat `target="_blank"` links as `noopener`.
+  It has no effect on output formats other than HTML.
 
 tooltip
 : Add tooltip on hover

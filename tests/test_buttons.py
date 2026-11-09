@@ -12,6 +12,8 @@ Covers:
   warning and still build (no traceback).
 * #156 - a button whose RST content is a line block renders its lines as
   separate lines, rather than keeping the literal ``|`` markers.
+* #170 - the ``new-tab`` flag opens the link of either button in a new tab,
+  in HTML only.
 """
 
 import re
@@ -19,13 +21,18 @@ import re
 from babel.messages.catalog import Catalog
 from babel.messages.mofile import write_mo
 from docutils import nodes
+from docutils.frontend import get_default_settings
+from docutils.parsers.rst import Parser
+from docutils.utils import new_document
 import pytest
+import sphinx
 
 from sphinx_design.badges_buttons import (
     _BUTTON_REF_MARKER_PREFIX,
     ButtonLinkDirective,
     ButtonRefDirective,
 )
+from sphinx_design.extension import _resolve_new_tab_refs
 from sphinx_design.icons import sd_icon
 
 try:
@@ -610,3 +617,213 @@ def test_button_link_line_block_translated(sphinx_builder):
     builder.build()
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert _button_texts(html) == ["hallo<br /><em>neue</em> Zeile"]
+
+
+# ---------------------------------------------------------------------------
+# new-tab tests (#170)
+# ---------------------------------------------------------------------------
+
+# Sphinx's HTML writer renders a reference's ``rel`` attribute only from 7.4;
+# ``target`` is rendered on every supported version.
+RENDERS_REL = sphinx.version_info >= (7, 4)
+
+_BUTTON_TAG_RE = re.compile(r'<a [^>]*class="[^"]*\bsd-btn\b[^"]*"[^>]*>')
+
+
+def _button_tags(html: str) -> list[str]:
+    """Return the opening ``<a ...>`` tag of every button."""
+    return _BUTTON_TAG_RE.findall(html)
+
+
+def _opens_in_new_tab(tag: str) -> bool:
+    """Return whether a button's opening tag opens its link in a new tab.
+
+    The ``rel`` value is checked exactly where Sphinx renders it,
+    and checked absent where it does not.
+    """
+    rel_ok = 'rel="noreferrer noopener"' in tag if RENDERS_REL else "rel=" not in tag
+    return 'target="_blank"' in tag and rel_ok
+
+
+NEW_TAB = {
+    "rst": """
+Heading
+=======
+
+.. _target-section:
+
+Target Section
+--------------
+
+.. button-link:: https://example.com
+    :new-tab:
+
+    Link new tab
+
+.. button-ref:: target-section
+    :ref-type: ref
+    :new-tab:
+
+    Ref *new* tab
+
+.. button-ref:: target-section
+    :new-tab:
+    :expand:
+    :click-parent:
+
+.. button-link:: https://example.org
+
+    Link same tab
+
+.. button-ref:: target-section
+    :ref-type: ref
+
+    Ref same tab
+
+A plain https://example.net link.
+""",
+    "myst": """
+# Heading
+
+(target-section)=
+
+## Target Section
+
+```{button-link} https://example.com
+:new-tab:
+
+Link new tab
+```
+
+```{button-ref} target-section
+:ref-type: ref
+:new-tab:
+
+Ref *new* tab
+```
+
+```{button-ref} target-section
+:new-tab:
+:expand:
+:click-parent:
+```
+
+```{button-link} https://example.org
+Link same tab
+```
+
+```{button-ref} target-section
+:ref-type: ref
+
+Ref same tab
+```
+
+A plain <https://example.net> link.
+""",
+}
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_button_new_tab(fmt, sphinx_builder):
+    """``new-tab`` opens a ``button-link`` or ``button-ref`` in a new tab.
+
+    The ``button-ref`` is a ``pending_xref`` that resolution replaces
+    (and whose rich content the stash/graft post-transforms restore),
+    so the marker sits on the button's container, and the attributes are
+    set on the resolved reference; ``expand`` wraps the reference in one
+    more element, which must not hide it.
+    Buttons without the flag, and other links, are left alone.
+    """
+    builder = _build(sphinx_builder, fmt, NEW_TAB["rst"], NEW_TAB["myst"])
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    tags = _button_tags(html)
+    assert len(tags) == 5, tags
+    hrefs = [re.search(r'href="([^"]*)"', tag).group(1) for tag in tags]
+    assert hrefs == [
+        "https://example.com",
+        "#target-section",
+        "#target-section",
+        "https://example.org",
+        "#target-section",
+    ]
+    assert [_opens_in_new_tab(tag) for tag in tags] == [True, True, True, False, False]
+    for tag in tags[3:]:
+        assert "target=" not in tag, tag
+        assert "rel=" not in tag, tag
+    # the rich content of the new-tab ``button-ref`` survives resolution
+    assert "<em>new</em>" in html
+    # the plain link outside any button is untouched
+    [plain] = re.findall(r'<a [^>]*href="https://example.net"[^>]*>', html)
+    assert "target=" not in plain, plain
+    # the marker itself never reaches the output
+    assert "sd_new_tab" not in html
+
+
+NEW_TAB_NON_HTML_RST = """
+Heading
+=======
+
+.. _target-section:
+
+Target Section
+--------------
+
+.. button-link:: https://example.com
+    :new-tab:
+
+    Link new tab
+
+.. button-ref:: target-section
+    :ref-type: ref
+    :new-tab:
+
+    Ref new tab
+
+.. card:: Card new tab
+    :link: https://example.org
+    :link-new-tab:
+
+    Card body
+"""
+
+
+@pytest.mark.parametrize(
+    ("buildername", "pattern"), [("latex", "*.tex"), ("text", "index.txt")]
+)
+def test_new_tab_non_html(buildername, pattern, sphinx_builder):
+    """``new-tab`` / ``link-new-tab`` build without warnings for other formats,
+    which do not render ``target`` or ``rel``.
+    """
+    builder = _build_rst(sphinx_builder, NEW_TAB_NON_HTML_RST, buildername)
+    [output] = builder.out_path.glob(pattern)
+    text = output.read_text(encoding="utf8")
+    assert "Link new tab" in text
+    assert "_blank" not in text
+    assert "noreferrer" not in text
+    if buildername == "latex":
+        assert r"\sphinxhref{https://example.com}{Link new tab}" in text
+
+
+def _new_tab_doctree() -> nodes.document:
+    """Return a document with one reference in each kind of container."""
+    document = new_document("test", get_default_settings(Parser))
+    for marked in (True, False):
+        paragraph = nodes.paragraph()
+        if marked:
+            paragraph["sd_new_tab"] = True
+        paragraph += nodes.inline("", "", nodes.reference("", "x", refuri="a"))
+        document += paragraph
+    return document
+
+
+def test_resolve_new_tab_refs_any_marked_element():
+    """The handler sets ``target``/``rel`` inside any marked element,
+    including on nested references, and nowhere else.
+    """
+    document = _new_tab_doctree()
+    _resolve_new_tab_refs(None, document, "test")
+    marked, unmarked = document.findall(nodes.reference)
+    assert marked["target"] == "_blank"
+    assert marked["rel"] == "noreferrer noopener"
+    assert "target" not in unmarked
+    assert "rel" not in unmarked

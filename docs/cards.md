@@ -299,6 +299,10 @@ link-new-tab
   Works with all `link-type` values; has no effect without `link`.
   Sphinx renders the `rel` attribute only from version 7.4;
   browsers already treat `target="_blank"` links as `noopener`.
+  It has no effect on output formats other than HTML.
+  Tell readers the link opens a new tab, for example in `link-alt`.
+  To open every external link in a new tab, site-wide,
+  see the [sphinx-new-tab-link](https://pypi.org/project/sphinx-new-tab-link/) extension.
 
 shadow
 : The size of the shadow below the card: `none`, `sm` (default), `md`, `lg`.

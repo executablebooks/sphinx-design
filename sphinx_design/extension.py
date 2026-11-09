@@ -74,16 +74,23 @@ def capture_directives(app: Sphinx):
     app.add_directive = add_directive  # type: ignore[method-assign]
 
 
-def _resolve_new_tab_refs(app: Sphinx, doctree: nodes.document, docname: str) -> None:
-    """Set ``target`` and ``rel`` on card link references that request a new tab.
+def _has_new_tab_marker(node: nodes.Node) -> bool:
+    """Return whether ``node`` is an element marked to open its links in a new tab."""
+    return isinstance(node, nodes.Element) and bool(node.get("sd_new_tab"))
 
+
+def _resolve_new_tab_refs(app: Sphinx, doctree: nodes.document, docname: str) -> None:
+    """Set ``target`` and ``rel`` on the link references that request a new tab.
+
+    A component that opens in a new tab (a card with ``link-new-tab``,
+    a button with ``new-tab``) marks the element containing its reference
+    with ``sd_new_tab``.
     Cross-references are resolved to ``nodes.reference`` during the write
     phase, before ``doctree-resolved`` fires, so we can safely walk the tree
-    here for both URL and internal-link cards.
+    here for both URL and internal links.
+    Writers other than HTML ignore both attributes.
     """
-    for container in doctree.findall(PassthroughTextElement):
-        if not container.get("sd_new_tab"):
-            continue
+    for container in doctree.findall(_has_new_tab_marker):
         for ref in container.findall(nodes.reference):
             ref["target"] = "_blank"
             ref["rel"] = "noreferrer noopener"

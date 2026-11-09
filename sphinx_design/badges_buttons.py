@@ -466,6 +466,8 @@ class _ButtonDirective(SdDirective):
         "expand": directives.flag,
         # make parent also clickable
         "click-parent": directives.flag,
+        # open the link in a new browser tab
+        "new-tab": directives.flag,
         "tooltip": directives.unchanged_required,
         "shadow": directives.flag,
         # ref button only
@@ -527,7 +529,6 @@ class _ButtonDirective(SdDirective):
         if "class" in self.options:
             classes.extend(self.options["class"])
         node = self.create_ref_node(rawtext, target, bool(self.content), classes)
-        # TODO open in new tab
         self.set_source_info(node)
         if "tooltip" in self.options:
             # ``reftitle`` is rendered as the HTML ``title`` attribute, whose
@@ -554,6 +555,11 @@ class _ButtonDirective(SdDirective):
         container = nodes.paragraph(
             classes=self.options.get("align", []), translatable=False
         )
+        if "new-tab" in self.options:
+            # the reference itself may be a ``pending_xref``, replaced on
+            # resolution, so mark the container: ``target``/``rel`` are set on
+            # the resolved reference by the ``doctree-resolved`` handler
+            container["sd_new_tab"] = True
         self.set_source_info(container)
         container += node
 
