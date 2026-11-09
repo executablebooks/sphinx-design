@@ -204,7 +204,9 @@ jobs:
     # PyPI trusted publishing: the PyPI publisher is registered for this workflow file (ci.yml)
     # and the `pypi` environment, so do not rename either
     name: Publish to PyPI
-    needs: [pre-commit, tests, docs-build-format, docs-build-pdf, build]
+    # `check` fails when any job it needs fails, so every job gating a merge also gates a release;
+    # `build` is listed too because it produces the `dist` artifact this job uploads
+    needs: [check, build]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment:
