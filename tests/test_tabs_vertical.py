@@ -58,7 +58,8 @@ def _source(fmt: str, directive: str, option: str | None) -> str:
         body = ":::{tab-item} A\nA content\n:::\n:::{tab-item} B\nB content\n:::\n"
     else:
         body = "```python\na = 1\n```\n```javascript\na = 1;\n```\n"
-    return f"# Heading\n\n::::{{{directive}}}\n{opts}{body}::::\n"
+    # the blank line keeps MyST 4 from reading a `:::` fence as an option line
+    return f"# Heading\n\n::::{{{directive}}}\n{opts}\n{body}::::\n"
 
 
 def _build(fmt, directive, option, sphinx_builder, assert_pass=True):
