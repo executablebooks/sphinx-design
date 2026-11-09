@@ -7,6 +7,9 @@ on:
       - 'v*'
   pull_request:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -135,6 +138,55 @@ jobs:
         name: docs-pdf
         path: docs/_build/latex/sphinxdesign.pdf
 
+  build:
+
+    # builds with the project's own [build-system] backend pin, the same way a release does,
+    # so a packaging problem shows up on the PR rather than when a tag is pushed
+    name: Build distributions
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Install build tools
+      run: python -m pip install --upgrade build twine
+    - name: Build sdist and wheel
+      run: python -m build
+    - name: Check the distributions
+      run: python -m twine check --strict dist/*
+    - name: Check the tag matches the built version
+      if: startsWith(github.ref, 'refs/tags/v')
+      # compares parsed versions, so a tag such as v0.8.0-rc1 matches the normalized 0.8.0rc1;
+      # packaging is installed with build and twine
+      shell: python
+      run: |
+        import os, pathlib, sys
+        from packaging.version import InvalidVersion, Version
+
+        ref = os.environ["GITHUB_REF_NAME"]
+        try:
+            tag = Version(ref.removeprefix("v"))
+        except InvalidVersion:
+            sys.exit(f"tag {ref} is not a valid version")
+        dist = pathlib.Path("dist")
+        versions = {p.name.split("-")[1] for p in dist.glob("*.whl")}
+        versions |= {p.name.removesuffix(".tar.gz").rsplit("-", 1)[1] for p in dist.glob("*.tar.gz")}
+        if not versions or {Version(v) for v in versions} != {tag}:
+            sys.exit(f"tag {ref} does not match the built version(s) {sorted(versions)}")
+        print(f"tag {ref} matches the built version(s) {sorted(versions)}")
+    - name: Upload the distributions
+      uses: actions/upload-artifact@v7
+      with:
+        name: dist
+        path: dist/
+        if-no-files-found: error
+        retention-days: 7
+
   # https://github.com/marketplace/actions/alls-green#why
   check:  # This job does nothing and is only used for the branch protection
 
@@ -145,6 +197,7 @@ jobs:
     - tests
     - docs-build-format
     - docs-build-pdf
+    - build
 
     runs-on: ubuntu-latest
 
@@ -156,23 +209,25 @@ jobs:
 
   publish:
 
-    name: Publish to PyPi
-    needs: [pre-commit, tests]
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    # PyPI trusted publishing: the PyPI publisher is registered for this workflow file (ci.yml)
+    # and the `pypi` environment, so do not rename either
+    name: Publish to PyPI
+    # `check` fails when any job it needs fails, so every job gating a merge also gates a release;
+    # `build` is listed too because it produces the `dist` artifact this job uploads
+    needs: [check, build]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/sphinx-design
+    permissions:
+      id-token: write  # the only permission this job has
     steps:
-    - name: Checkout source
-      uses: actions/checkout@v7
-    - name: Set up Python
-      uses: actions/setup-python@v6
+    - name: Download the distributions
+      uses: actions/download-artifact@v8
       with:
-        python-version: "3.11"
-    - name: install flit
-      run: |
-        pip install flit~=3.4
-    - name: Build and publish
-      run: |
-        flit publish
-      env:
-        FLIT_USERNAME: __token__
-        FLIT_PASSWORD: ${{ secrets.PYPI_KEY }}
+        name: dist
+        path: dist/
+    # uploads attestations by default
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1

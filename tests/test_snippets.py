@@ -3,6 +3,7 @@
 from collections.abc import Callable
 from pathlib import Path
 
+from docutils import nodes
 import pytest
 
 from .conftest import SphinxBuilder
@@ -23,6 +24,21 @@ I18N_GLOB_MYST = [
     for p in SNIPPETS_GLOB_MYST
     if (EXPECTED_PATH / f"snippet_i18n_{p.stem}.pot").exists()
 ]
+
+
+def sort_ids(doctree: nodes.document) -> nodes.document:
+    """Sort the ``ids`` of every element, in place.
+
+    The order of an element's ids is a parser detail, not sphinx-design output:
+    for a section with an explicit target, docutils lists the title slug first,
+    while MyST-Parser's heading-anchor rework (executablebooks/MyST-Parser#1158)
+    lists the explicit target first. Sorting keeps the RST and MyST snippets
+    comparing against the same fixture, and still checks the full set of ids.
+    """
+    for node in doctree.findall(nodes.Element):
+        if len(node["ids"]) > 1:
+            node["ids"] = sorted(node["ids"])
+    return doctree
 
 
 def write_assets(src_path: Path):
@@ -50,7 +66,7 @@ def test_snippets_rst(
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
-    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree = sort_ids(builder.get_doctree("index", post_transforms=False))
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         normalize_doctree_xml(doctree.pformat()),
@@ -78,7 +94,7 @@ def test_snippets_myst(
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
-    doctree = builder.get_doctree("index", post_transforms=False)
+    doctree = sort_ids(builder.get_doctree("index", post_transforms=False))
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         normalize_doctree_xml(doctree.pformat()),
@@ -105,7 +121,7 @@ def test_snippets_rst_post(
     builder.src_path.joinpath("index.rst").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
-    doctree = builder.get_doctree("index", post_transforms=True)
+    doctree = sort_ids(builder.get_doctree("index", post_transforms=True))
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         normalize_doctree_xml(doctree.pformat()),
@@ -133,7 +149,7 @@ def test_snippets_myst_post(
     builder.src_path.joinpath("index.md").write_text(content, encoding="utf8")
     write_assets(builder.src_path)
     builder.build()
-    doctree = builder.get_doctree("index", post_transforms=True)
+    doctree = sort_ids(builder.get_doctree("index", post_transforms=True))
     doctree.attributes.pop("translation_progress", None)  # added in sphinx 7.1
     file_regression.check(
         normalize_doctree_xml(doctree.pformat()),
