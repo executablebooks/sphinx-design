@@ -57,6 +57,7 @@ _BOOL_ATTRIBUTES: tuple[str, ...] = (
     "opened",
     "refexplicit",
     "refwarn",
+    "sd_new_tab",
     "selected",
     "translatable",
     "translated",

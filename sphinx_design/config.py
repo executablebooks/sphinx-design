@@ -262,6 +262,16 @@ class SdConfig:
             ),
         },
     )
+    card_legacy_separators: bool = dc.field(
+        default=True,
+        metadata={
+            "validator": instance_of(bool),
+            "help": (
+                "Honour the legacy '^^^'/'+++' card header/footer separators "
+                "(deprecated; prefer the 'card-header'/'card-footer' directives)"
+            ),
+        },
+    )
 
     def __post_init__(self) -> None:
         validate_fields(self)

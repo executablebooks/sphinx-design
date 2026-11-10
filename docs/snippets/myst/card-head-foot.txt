@@ -1,7 +1,12 @@
-:::{card} Card Title
+::::{card} Card Title
+
+:::{card-header}
 Header
-^^^
+:::
+
 Card content
-+++
+
+:::{card-footer}
 Footer
 :::
+::::
