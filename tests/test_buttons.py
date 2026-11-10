@@ -31,6 +31,7 @@ from sphinx_design.badges_buttons import (
     _BUTTON_REF_MARKER_PREFIX,
     ButtonLinkDirective,
     ButtonRefDirective,
+    _line_block_lines,
 )
 from sphinx_design.extension import _resolve_new_tab_refs
 from sphinx_design.icons import sd_icon
@@ -392,8 +393,8 @@ LINE_BLOCK_CASES = {
         "    | *hey*\n    | new :octicon:`heart` line\n",
         "<em>hey</em><br />new",
     ),
-    # the parsed nodes are moved into the button, not copied: docutils numbers
-    # the footnote references it registered while parsing
+    # the text is parsed once, so the autonumbered footnote reference is
+    # registered once, and numbered and resolved as in a paragraph
     "footnote-reference": (
         "    | hey\n    | new line [#]_\n\n.. [#] A footnote.\n",
         "hey<br />new line <a",
@@ -412,6 +413,28 @@ def test_button_link_line_block(body, expected, sphinx_builder):
     [text] = _button_texts(html)
     assert text.startswith(expected), text
     assert "|" not in text
+
+
+def test_button_link_line_block_exact_html(sphinx_builder):
+    """The exact HTML of a line block, which ``_button_texts`` normalises away.
+
+    A bare bar is an empty line, so it adds a break and no empty element.
+    The whitespace after a bar is kept as docutils keeps it, so a no-break or
+    ideographic space can indent a line's text (the nesting is flattened).
+    """
+    rst = (
+        "Heading\n=======\n\n"
+        ".. button-link:: https://example.com\n\n"
+        "    | hey\n    |\n    | new line\n\n"
+        ".. button-link:: https://example.com\n\n"
+        "    | \xa0hey\n    | \u3000new line\n"
+    )
+    builder = _build_rst(sphinx_builder, rst)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _BUTTON_RE.findall(html) == [
+        "<span><span>hey</span><br /><br /><span>new line</span></span>",
+        "<span><span>\xa0hey</span><br /><span>\u3000new line</span></span>",
+    ]
 
 
 def test_button_ref_line_block(sphinx_builder):
@@ -464,6 +487,30 @@ def test_button_link_bar_text_is_not_a_line_block(sphinx_builder):
     assert text.startswith("Download the notes"), text
 
 
+LEADING_BAR_CASES = {
+    # a leading "| " is a line-block marker, as anywhere else in RST: the
+    # label is a one-line line block, whose marker is consumed
+    "line-block": ("    | Docs | API |\n", "Docs | API |"),
+    # an escaped leading bar is not a marker, so it renders literally
+    "escaped": ("    \\| Docs | API |\n", "| Docs | API |"),
+}
+
+
+@pytest.mark.parametrize(
+    "body,expected", LEADING_BAR_CASES.values(), ids=LEADING_BAR_CASES.keys()
+)
+def test_button_link_leading_bar(body, expected, sphinx_builder):
+    """A single-line label starting with ``| `` reads as a line block.
+
+    Its leading ``| `` is consumed as the line-block marker, and only that one:
+    later bars are text. A literal leading bar is written ``\\|``.
+    """
+    rst = f"Heading\n=======\n\n.. button-link:: https://example.com\n\n{body}"
+    builder = _build_rst(sphinx_builder, rst)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _button_texts(html) == [expected]
+
+
 LINE_BLOCK_THEN_PARAGRAPH_RST = """\
 Heading
 =======
@@ -501,11 +548,11 @@ def test_button_link_line_block_then_paragraph_parsed_once(sphinx_builder):
 def test_button_link_line_block_with_message_parsed_once(indent, sphinx_builder):
     """A line block whose inline markup reports a message is still lines, parsed once.
 
-    docutils puts the messages of a line's inline markup (here, an unknown role)
-    beside the line block (inside the block quote, for the markup of #156).
-    Falling back to inline text for that would parse the text twice: the
-    message reported twice, a spurious "Too many autonumbered footnote
-    references", the footnote reference left unresolved, and the bars kept.
+    A message of a line's inline markup (here, an unknown role) does not stop
+    the text being read as lines, and each line is parsed once: the message
+    is reported once, at its own line, there is no spurious "Too many
+    autonumbered footnote references", the footnote reference resolves, and
+    the bars are not kept.
     """
     rst = (
         "Heading\n=======\n\n.. button-link:: https://example.com\n    :expand:\n\n"
@@ -517,6 +564,10 @@ def test_button_link_line_block_with_message_parsed_once(indent, sphinx_builder)
     assert builder.warnings.count('Unknown interpreted text role "notarole"') == 1, (
         builder.warnings
     )
+    # reported at the line it is on, the second line of the line block
+    assert re.search(
+        r"index\.rst:8: ERROR: Unknown interpreted text role", builder.warnings
+    ), builder.warnings
     assert "Too many autonumbered" not in builder.warnings, builder.warnings
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     [text] = _button_texts(html)
@@ -585,16 +636,29 @@ def test_button_link_line_block_latex(sphinx_builder):
 def test_button_link_line_block_gettext(sphinx_builder):
     """Each line is its own message, with no line break in it.
 
-    Before docutils 0.22 the parsed lines carry no source info, and sphinx
-    extracts no message from a node without a source, so the button gives
-    them the source of its content.
+    sphinx extracts no message from a node without a source, so each line's
+    message carries the source and line of that line, on every docutils.
     """
     builder = _build_rst(sphinx_builder, LINE_BLOCK_RST, "gettext")
     pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
-    assert 'msgid "hey"' in pot, pot
-    assert 'msgid "new line"' in pot, pot
+    # each message is located at its own line, not at the first line's
+    assert 'index.rst:6\nmsgid "hey"' in pot, pot
+    assert 'index.rst:7\nmsgid "new line"' in pot, pot
     assert "hey new line" not in pot, pot
     assert "<br" not in pot, pot
+
+
+def test_button_link_line_block_gettext_markup(sphinx_builder):
+    """A line's message keeps its inline markup, for the translator to keep.
+
+    The message is the line's source text, as a paragraph's is,
+    not the text that its markup renders.
+    """
+    rst = LINE_BLOCK_RST.replace("| hey", "| **hey** there")
+    builder = _build_rst(sphinx_builder, rst, "gettext")
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    assert 'index.rst:6\nmsgid "**hey** there"' in pot, pot
+    assert 'msgid "hey there"' not in pot, pot
 
 
 def test_button_link_line_block_translated(sphinx_builder):
@@ -845,3 +909,220 @@ def test_resolve_new_tab_refs_keeps_authored_target():
     assert stamped["rel"] == "noreferrer noopener"
     assert authored["target"] == "_self"
     assert authored["rel"] == "me"
+
+
+# Bodies that look like a line block at their outermost indent, but are not
+# only line-block lines. Each must be parsed once, as inline text, exactly as
+# before #156 was fixed: ``(body, expected button text, expected warnings)``.
+NOT_ONLY_LINE_BLOCK_CASES = {
+    # docutils: a line block, then a block quote holding another line block
+    "blank-then-deeper-bar": (
+        "    | a [#]_\n\n        | b\n",
+        "| a <a",
+        [],
+    ),
+    # docutils: a line block, then a block quote holding a paragraph
+    "blank-then-deeper-paragraph": (
+        "    | a [#]_\n\n        b\n",
+        "| a <a",
+        [],
+    ),
+    # docutils: a block quote that ends without a blank line, then a line block
+    "first-line-deeper": (
+        "      | a [#]_\n    | b\n",
+        "| a <a",
+        [],
+    ),
+    # a second parse would register the target twice (a "Duplicate explicit
+    # target name" warning, and the target's id renamed)
+    "blank-then-deeper-paragraph-target": (
+        "    | _`tgt` a [#]_\n\n        b\n",
+        "| tgt a <a",
+        [],
+    ),
+    # docutils: a line block, then a block quote holding a directive
+    "blank-then-deeper-directive": (
+        "    | a [#]_\n\n        .. note:: x\n",
+        "| a <a",
+        [],
+    ),
+    # a block parse would define ``zz`` in the document; as inline text,
+    # ``|zz|`` is a reference to an undefined substitution, as before
+    "blank-then-deeper-substitution-definition": (
+        "    | a [#]_\n\n        .. |zz| replace:: Z\n",
+        "| a <a",
+        ['Undefined substitution referenced: "zz"'],
+    ),
+}
+
+
+@pytest.mark.parametrize(
+    "body,expected,warnings",
+    NOT_ONLY_LINE_BLOCK_CASES.values(),
+    ids=NOT_ONLY_LINE_BLOCK_CASES.keys(),
+)
+def test_button_link_not_only_line_block_parsed_once(
+    body, expected, warnings, sphinx_builder
+):
+    """Text that is not only line-block lines is parsed once, as inline text.
+
+    The line-block check is textual and the text is never block-parsed, so a
+    body that docutils would parse as a line block plus something else keeps
+    its bars, and shows none of the side effects of a second parse: a spurious
+    "Too many autonumbered footnote references" (and the reference left
+    unresolved), a duplicate explicit target, a "Block quote ends without a
+    blank line" warning, or a substitution definition leaking into the page.
+    """
+    rst = (
+        "Heading\n=======\n\n.. button-link:: https://example.com\n\n"
+        f"{body}\nAfter.\n\n.. [#] A footnote.\n"
+    )
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(rst, encoding="utf8")
+    builder.build(assert_pass=False)
+    reported = [line for line in builder.warnings.splitlines() if line.strip()]
+    assert len(reported) == len(warnings), builder.warnings
+    for line, warning in zip(reported, warnings, strict=True):
+        assert warning in line, builder.warnings
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    [text] = _button_texts(html)
+    assert text.startswith(expected), text
+    assert "[#]" not in html
+    assert "<br" not in text, text
+    if "_`tgt`" in body:
+        assert '<span class="target" id="tgt">' in html
+
+
+SPLIT_CASES = {
+    "plain": (["| a", "| b"], [(0, "a"), (1, "b")]),
+    "indented": ([" | a", " | b"], [(0, "a"), (1, "b")]),
+    "blank-between": (["| a", "", "| b"], [(0, "a"), (2, "b")]),
+    "bare-bar": (["| a", "|", "| b"], [(0, "a"), (1, ""), (2, "b")]),
+    "continuation": (["| a", "  more", "| b"], [(0, "a\nmore"), (2, "b")]),
+    # docutils strips only the common indent of the continuation lines
+    "continuation-relative-indent": (["| a", "    b", "  c"], [(0, "a\n  b\nc")]),
+    # docutils drops the empty first line of a bare bar with a continuation
+    "bare-bar-continuation": (["|", "  x"], [(0, "x")]),
+    "nested": (["| a", "|    b"], [(0, "a"), (1, "b")]),
+    # docutils keeps the text after the bar as is, other whitespace included
+    "nbsp-after-bar": (["| \xa0a"], [(0, "\xa0a")]),
+    "ideographic-space-after-bar": (["| \u3000a"], [(0, "\u3000a")]),
+    # only spaces indent a line: a no-break space before a bar is text
+    "nbsp-indent": (["| a", "\xa0| b"], None),
+    "nbsp-first-line": (["\xa0| a"], None),
+    "empty": ([], None),
+    "substitution-first": (["|sub| a"], None),
+    # a line at the bar's indent with no bar is not a continuation, even
+    # directly after a bar (docutils: "Line block ends without a blank line")
+    "paragraph-directly-after": (["| a", "b"], None),
+    "paragraph-after": (["| a", "", "b"], None),
+    "deeper-after-blank": (["| a", "", "  | b"], None),
+    "first-line-deeper": (["  | a", "| b"], None),
+    "deeper-first-line-only": (["  | a"], [(0, "a")]),
+}
+
+
+@pytest.mark.parametrize(
+    "content,expected", SPLIT_CASES.values(), ids=SPLIT_CASES.keys()
+)
+def test_line_block_lines(content, expected):
+    """The text is split into line-block lines, or rejected, without parsing it.
+
+    A deeper line continues the previous line only directly after it, as in
+    docutils; after a blank line it starts a block quote, which is not a line.
+    """
+    assert _line_block_lines(content) == expected
+
+
+INLINE_LINES_RST = """\
+Heading
+=======
+
+.. button-link:: https://example.com
+
+    top one
+    top :notarole:`x`
+
+.. dropdown:: Drop
+
+    para
+
+    .. button-link:: https://example.com
+
+        in one
+        in :notarole:`y`
+
+.. include:: inc.txt
+"""
+
+INLINE_LINES_INC = """\
+.. button-link:: https://example.com
+
+    inc one
+    inc :notarole:`z`
+"""
+
+
+def test_button_link_inline_text_lines(sphinx_builder):
+    """Button text is located at its first content line, in its own file.
+
+    ``content_offset`` is the offset of the content in the whole input, so
+    adding it to the directive's line counted the lines before the directive
+    twice: messages and gettext locations named a later line, past the end of
+    the file inside a nested directive, and the included file's line plus the
+    offset into the including one. As for a paragraph, docutils reports the
+    messages of the inline markup at the text's first line.
+    """
+    builder = sphinx_builder("gettext", conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(INLINE_LINES_RST, encoding="utf8")
+    builder.src_path.joinpath("inc.txt").write_text(INLINE_LINES_INC, encoding="utf8")
+    builder.build(assert_pass=False)
+    reported = re.findall(
+        r"(\w+\.(?:rst|txt)):(\d+): ERROR: Unknown interpreted text role",
+        builder.warnings,
+    )
+    assert reported == [("index.rst", "6"), ("index.rst", "15"), ("inc.txt", "3")], (
+        builder.warnings
+    )
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    for location, msgid in [
+        ("index.rst:6", "top one top :notarole:`x`"),
+        ("index.rst:15", "in one in :notarole:`y`"),
+        ("inc.txt:3", "inc one inc :notarole:`z`"),
+    ]:
+        assert f'{location}\nmsgid "{msgid}"' in pot, pot
+
+
+LINE_BLOCK_LINES_INC = """\
+Included
+--------
+
+.. button-link:: https://example.com
+
+    | inc one
+    | inc :notarole:`z`
+"""
+
+
+def test_button_link_line_block_lines(sphinx_builder):
+    """Each line of a line block is located at its own line, in its own file.
+
+    A message of a line's inline markup is reported at that line, and the
+    line's gettext message is located there, also in an included file.
+    """
+    builder = sphinx_builder("gettext", conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        "Heading\n=======\n\n.. include:: inc.txt\n", encoding="utf8"
+    )
+    builder.src_path.joinpath("inc.txt").write_text(
+        LINE_BLOCK_LINES_INC, encoding="utf8"
+    )
+    builder.build(assert_pass=False)
+    reported = re.findall(
+        r"(\w+\.(?:rst|txt)):(\d+): ERROR: Unknown interpreted text role",
+        builder.warnings,
+    )
+    assert reported == [("inc.txt", "7")], builder.warnings
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    assert 'inc.txt:6\nmsgid "inc one"' in pot, pot
+    assert 'inc.txt:7\nmsgid "inc :notarole:`z`"' in pot, pot

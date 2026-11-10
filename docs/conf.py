@@ -18,7 +18,9 @@ extensions = [
 ]
 
 # suppresses the warning for builders with no fontawesome support (e.g. man)
-suppress_warnings = ["design.fa-build"]
+# "design.card_legacy" is suppressed because the cards page intentionally
+# demonstrates the deprecated ^^^/+++ separator syntax in its migration section
+suppress_warnings = ["design.fa-build", "design.card_legacy"]
 sd_fontawesome_latex = "fontawesome5"
 # pdflatex errors on emoji (e.g. in the changelog); xelatex only warns for
 # missing glyphs. makeindex replaces xindy, which CI TeX images lack.
@@ -40,6 +42,14 @@ sd_custom_directives = {
             "icon": "code",
         },
     }
+}
+sd_custom_roles = {
+    "bdg-stable": {
+        "inherit": "bdg-success",
+        "tooltip": "A released, supported version",
+    },
+    "bdg-beta": {"inherit": "bdg-warning", "tooltip": "Interface may change"},
+    "bdg-deprecated": {"inherit": "bdg-danger", "tooltip": "Scheduled for removal"},
 }
 
 extlinks = {

@@ -60,6 +60,8 @@ sd_hide_title: true
 :::
 ::::
 
+(sd-custom-directives)=
+
 ### Creating custom directives
 
 :::{versionadded} 0.6.0
@@ -85,6 +87,10 @@ The key is the new directive name to add, and the value is a dictionary with the
 - `inherit`: The directive to inherit from (e.g. `dropdown`)
 - `argument`: The default argument (optional, only for directives that take a single argument)
 - `options`: A dictionary of default options for the directive (optional)
+
+The same idea is available for roles: `sd_custom_roles` defines reusable badge
+roles (e.g. status badges), inheriting a built-in badge role and optionally
+baking in a tooltip. See {ref}`Custom badge roles <sd-custom-badge-roles>`.
 
 ## Supported browsers
 

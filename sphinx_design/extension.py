@@ -7,8 +7,10 @@ from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.transforms import SphinxTransform
 
+from .accordion import setup_accordion
 from .article_info import setup_article_info
-from .badges_buttons import setup_badges_and_buttons
+from .aside import setup_aside
+from .badges_buttons import setup_badges_and_buttons, setup_custom_roles
 from .cards import setup_cards
 from .config import get_sd_config, setup_sd_config
 from .dropdown import setup_dropdown
@@ -20,6 +22,7 @@ from .shared import (
     create_component,
     setup_custom_directives,
 )
+from .steps import setup_steps
 from .tabs import setup_tabs
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -49,14 +52,18 @@ def setup_extension(app: Sphinx) -> None:
         setup_cards(app)
         setup_grids(app)
         setup_dropdown(app)
+        setup_accordion(app)
         setup_icons(app)
         setup_tabs(app)
+        setup_steps(app)
         setup_article_info(app)
+        setup_aside(app)
 
     app.connect(
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)
     )
     app.connect("doctree-resolved", _resolve_new_tab_refs)
+    app.connect("config-inited", setup_custom_roles)
 
 
 @contextmanager

@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: "3.11"
     - uses: pre-commit/action@v3.0.1
@@ -58,7 +58,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
         cache: pip
@@ -70,14 +70,15 @@ jobs:
       run: |
         pytest --cov=sphinx_design --cov-report=xml --cov-report=term-missing
     - name: Upload to Codecov
-      if: (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && matrix.python-version == '3.13' && matrix.sphinx-version == '~=8.0' && matrix.os == 'ubuntu-latest'
+      if: (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && github.actor != 'dependabot[bot]' && matrix.python-version == '3.13' && matrix.sphinx-version == '~=8.0' && matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         name: pytests
         flags: pytests
         files: ./coverage.xml
-        fail_ci_if_error: true
+        # coverage is informational: an upload failure must not fail CI
+        fail_ci_if_error: false
 
   docs-build-format:
 
@@ -89,7 +90,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: pip
@@ -112,7 +113,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: "3.11"
         cache: pip
@@ -133,7 +134,7 @@ jobs:
         working_directory: docs/_build/latex
         root_file: sphinxdesign.tex
     - name: Upload PDF
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: docs-pdf
         path: docs/_build/latex/sphinxdesign.pdf

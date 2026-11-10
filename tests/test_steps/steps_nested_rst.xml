@@ -1,0 +1,11 @@
+<document source="index">
+    <section ids="heading" names="heading">
+        <title>
+            Heading
+        <steps_list classes="sd-steps" design_component="steps" enumtype="arabic" prefix="" suffix=".">
+            <list_item classes="sd-step" design_component="step">
+                <rubric classes="sd-step-title">
+                    Setup
+                <container classes="sd-step-content" design_component="step-content" is_div="True">
+                    <literal_block force="False" highlight_args="{}" language="python" xml:space="preserve">
+                        a = 1
