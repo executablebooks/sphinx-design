@@ -43,6 +43,14 @@ sd_custom_directives = {
         },
     }
 }
+sd_custom_roles = {
+    "bdg-stable": {
+        "inherit": "bdg-success",
+        "tooltip": "A released, supported version",
+    },
+    "bdg-beta": {"inherit": "bdg-warning", "tooltip": "Interface may change"},
+    "bdg-deprecated": {"inherit": "bdg-danger", "tooltip": "Scheduled for removal"},
+}
 
 extlinks = {
     "pr": ("https://github.com/executablebooks/sphinx-design/pull/%s", "PR #%s"),
@@ -155,7 +163,8 @@ def _sd_config_options_table() -> str:
             if field.default_factory is not dc.MISSING
             else field.default
         )
-        type_str = field.metadata.get("doc_type", field.type)
+        # escape "|" so a union type does not split the markdown table cell
+        type_str = str(field.metadata.get("doc_type", field.type)).replace("|", r"\|")
         rows.append(
             f"| `sd_{field.name}` | `{type_str}` | `{default!r}` "
             f"| {field.metadata.get('help', '')} |"

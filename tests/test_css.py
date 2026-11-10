@@ -97,6 +97,26 @@ def _parse_errors(css: str) -> list:
     return errors
 
 
+def test_tab_label_hover_differs_from_active():
+    """A hovered unselected tab must not look like the selected one (#301).
+
+    The hover token was once the same literal as the active token, so hovering
+    an unselected tab rendered it in the selected tab's colour. It is now the
+    active colour at 80% opacity: a static value, then a ``color-mix()`` of
+    ``var(--sd-color-tabs-label-active)``, so a theme that overrides the active
+    colour also moves the hover colour.
+    """
+    css = ARTIFACT.read_text(encoding="utf8")
+    active = re.findall(r"--sd-color-tabs-label-active:([^;}]+)", css)
+    hover = re.findall(r"--sd-color-tabs-label-hover:([^;}]+)", css)
+    assert len(active) == 1
+    assert active[0] not in hover
+    assert hover == [
+        "hsla(231,99%,66%,0.8)",
+        "color-mix(in srgb,var(--sd-color-tabs-label-active) 80%,transparent)",
+    ]
+
+
 def test_minify_output_parses_cleanly():
     """Minified (rcssmin) output of tricky-but-valid CSS must stay valid.
 
@@ -178,6 +198,8 @@ def test_generated_family_counts_match_design_toml():
         family = {template.format(name) for name in palette}
         assert sum(sel in family for sel in selectors) == n_colors, template
     assert count(r"\.sd-text-[a-z]+,\.sd-text-[a-z]+>p") == n_colors
+    # steps: one marker-colour variant rule per palette colour
+    assert count(r"\.sd-steps-[a-z]+") == n_colors
     # spacing scale: one all-sides padding/margin rule per step
     assert count(r"\.sd-p-\d+") == n_spacings
     assert count(r"\.sd-m-\d+") == n_spacings

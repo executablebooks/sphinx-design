@@ -2,28 +2,6 @@
 
 ## Unreleased
 
-- ✨ NEW: Card headers and footers now have dedicated, parser-portable
-  `card-header` / `card-footer` directives (plus inline `:header:` / `:footer:`
-  options for one-liners), which are hoisted into their slots. The whole card
-  body is parsed in a single pass, so error messages point at the right line.
-  The legacy `^^^` / `+++` separators — which scan the card's raw source lines
-  — remain on by default behind the new `sd_card_legacy_separators` option,
-  emitting a suppressible `design.card_legacy` deprecation warning once per
-  document; both syntaxes produce identical doctrees. Note that the single-parse
-  robustness — correct line numbers, and a stray `^^^` / `+++` (e.g. inside a
-  code block) no longer mis-splitting the card — is only fully realized once the
-  legacy separators are disabled with `sd_card_legacy_separators = False`
-  (planned to become the default at 1.0). One behaviour change: an *empty*
-  `card-header` / `card-footer` directive now errors (`Content block expected`),
-  where an empty legacy chunk produced an empty slot. See the cards
-  documentation for the mechanical migration.
-  **Upgrade note**: the deprecation warning is on by default, so a `-W`
-  (fail-on-warning) build that still uses `^^^` / `+++` fails until you either
-  migrate those cards to the `card-header` / `card-footer` directives, or add
-  `suppress_warnings = ["design.card_legacy"]` to your `conf.py` ({pr}`294`)
-- ♻️ REFACTOR: The private `CardDirective._create_component` helper is renamed
-  to `_create_slot`; a back-compatible alias is kept for one release for
-  downstream extensions that call it ({pr}`294`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
@@ -142,14 +120,14 @@ You can use the `sd_custom_directives` configuration option in your `conf.py` to
 
 ```python
 sd_custom_directives = {
-  "dropdown-syntax": {
-    "inherit": "dropdown",
-    "argument": "Syntax",
-    "options": {
-      "color": "primary",
-      "icon": "code",
-    },
-  }
+    "dropdown-syntax": {
+        "inherit": "dropdown",
+        "argument": "Syntax",
+        "options": {
+            "color": "primary",
+            "icon": "code",
+        },
+    }
 }
 ```
 
