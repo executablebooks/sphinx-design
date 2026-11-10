@@ -89,14 +89,14 @@ The key is the new directive name to add, and the value is a dictionary with the
 - `options`: A dictionary of default options for the directive (optional)
 
 :::{tip}
-For project-defined directive presets, we recommend the
-[sphinx-ub-directives](https://sphinx-ub-directives.readthedocs.io) package,
-from the [sphinx-needs](https://github.com/useblocks/sphinx-needs) project.
-Its directive presets already accept sphinx-design directives (such as `dropdown`) as a base,
-can be configured in `conf.py` or `ubproject.toml`,
-and also work in [ubCode](https://ubcode.useblocks.com/).
-Role presets are planned there; until then, a badge role can be preset with
-its {ref}`tooltip role option <sd-badge-tooltip-option>`.
+For presets beyond default option values,
+see the [sphinx-ub-directives](https://sphinx-ub-directives.readthedocs.io) package,
+from the [sphinx-needs](https://github.com/useblocks/sphinx-needs) project,
+whose directive presets accept sphinx-design directives (such as `dropdown`) as a base.
+It adds appended and forced option values, need-type bases (with sphinx-needs), and template directives,
+and its presets can also be configured in `ubproject.toml`,
+which [ubCode](https://ubcode.useblocks.com/) reads.
+To preset a badge's tooltip, see the badge roles' {ref}`tooltip role option <sd-badge-tooltip-option>`.
 :::
 
 ## Supported browsers

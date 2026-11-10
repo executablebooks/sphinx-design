@@ -90,15 +90,22 @@ tooltip to a link/ref badge, use the explicit form:
 `` {bdg-link-primary}`docs <https://example.com> ; Opens the docs` ``.
 A `bdg-ref` tooltip overrides the reference's automatic title.
 
+```{warning}
+`title` tooltips are **not** accessible to keyboard or touch users, and are
+not surfaced by all screen readers. Do not put essential information in a
+tooltip alone -- keep it in the visible badge text (or nearby prose) as well.
+```
+
 (sd-badge-tooltip-option)=
 
 #### The `tooltip` role option
 
-When the same badge recurs throughout your documentation, such as a status label
-whose colour and tooltip never change, it can be defined once instead.
+When the same badge recurs, such as a status label whose colour and tooltip never change,
+its tooltip can be given once rather than in every use.
 Every badge role accepts a `tooltip` role option, which is the badge's tooltip
 when its text has no `; tooltip` suffix (a suffix still overrides it).
-In reStructuredText, set it with the `role` directive, which defines a new role based on a badge role:
+In reStructuredText, set it with the `role` directive, which defines a new role based on a badge role
+for the document it appears in:
 
 ```rst
 .. role:: bdg-stable(bdg-success)
@@ -114,28 +121,39 @@ In reStructuredText, set it with the `role` directive, which defines a new role 
 :bdg-stable:`v2.1` :bdg-stable:`v2.2 ; Long-term support release`
 ```
 
+To use such a role in every reStructuredText document,
+put the `role` directive in [`rst_prolog`](https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-rst_prolog)
+in your `conf.py`, which is read at the start of each reStructuredText document
+(Markdown documents parsed by MyST do not read it):
+
+```python
+rst_prolog = """
+.. role:: bdg-stable(bdg-success)
+   :tooltip: A released, supported version
+"""
+```
+
+Defining the role in only one document is not enough for the others:
+a document that uses a role defined elsewhere can fail with an "Unknown interpreted text role" error,
+for example in an incremental or parallel build.
+
 The option also applies to the bare `<target>` form of the link and reference badges,
 where the `; tooltip` suffix is not recognised.
 
 For extension authors: the badge roles follow the docutils convention for role functions.
-Their option specification is the role's `options` attribute (`{"tooltip": ...}`),
+Their option specification is the role's `options` attribute (`{"tooltip": ...}`;
+docutils also adds `class` when the role is registered, which badges accept and ignore),
 and the option is read from the `options` dictionary passed to each call,
 so an extension that presets a badge role passes `options={"tooltip": "..."}`.
 
 :::{tip}
-To define such presets in your project configuration rather than in each document,
-we recommend the [sphinx-ub-directives](https://sphinx-ub-directives.readthedocs.io) package,
-from the [sphinx-needs](https://github.com/useblocks/sphinx-needs) project.
-Its directive presets already accept sphinx-design directives as a base
-and also work in [ubCode](https://ubcode.useblocks.com/);
-role presets are planned there.
+Role presets in the project configuration are planned for the
+[sphinx-ub-directives](https://sphinx-ub-directives.readthedocs.io) package,
+from the [sphinx-needs](https://github.com/useblocks/sphinx-needs) project,
+whose directive presets already accept sphinx-design directives as a base
+and also work in [ubCode](https://ubcode.useblocks.com/).
+Until then, use `rst_prolog` as above.
 :::
-
-```{warning}
-`title` tooltips are **not** accessible to keyboard or touch users, and are
-not surfaced by all screen readers. Do not put essential information in a
-tooltip alone -- keep it in the visible badge text (or nearby prose) as well.
-```
 
 See [Bootstrap badges](https://getbootstrap.com/docs/5.0/components/badge/) for more information, and related [Material Design chips](https://material.io/components/chip).
 
