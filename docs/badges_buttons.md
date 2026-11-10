@@ -182,7 +182,11 @@ and icons), which is rendered in the button, just as it is for `button-link`:
 
 To break the text of a button over several lines, write it as a line block in
 reStructuredText (one `|` per line), or end each line but the last with a
-backslash (`\`, a hard line break) in MyST Markdown:
+backslash (`\`, a hard line break) in MyST Markdown.
+The MyST hard line break only breaks the line in HTML and LaTeX output:
+other builders join the lines (text) or print the raw break markup (texinfo),
+and the gettext message contains that markup too, so translated projects should
+use the reStructuredText line block (in MyST, inside an `eval-rst` block):
 
 ```{eval-rst}
 .. button-link:: https://example.com
@@ -209,6 +213,10 @@ button text
     | button text
 ```
 ````
+
+In reStructuredText, a one-line label that starts with `| ` (or is a bare `|`) is read
+as a one-line line block, whose leading bar is not shown, so write a literal leading
+bar as `\|`.
 
 Reference targets may also contain spaces, for example the labels that
 `sphinx.ext.autosectionlabel` generates from section titles.
