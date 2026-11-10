@@ -84,6 +84,8 @@ ASSEMBLY: list[str | tuple[str, str]] = [
     "dropdown.css",
     "accordion.css",
     "tabs.css",
+    "steps.css",
+    ("gen", "steps"),
     "aside.css",
     "overrides.css",
     ("gen", "root_variables"),
@@ -410,6 +412,21 @@ def gen_grids(data: dict) -> str:
     return "\n".join(lines)
 
 
+def gen_steps(data: dict) -> str:
+    """Semantic ``.sd-steps-<colour>`` step-marker colour families.
+
+    Each variant only overrides the two custom properties the hand-authored
+    ``style/steps.css`` reads for the marker (its default, when no variant class
+    is present, is the ``var(..., var(--sd-color-primary))`` fallback there).
+    """
+    return "\n".join(
+        f".sd-steps-{color} "
+        f"{{--sd-steps-marker-bg:var(--sd-color-{color});"
+        f"--sd-steps-marker-text:var(--sd-color-{color}-text)}}"
+        for color in (c["name"] for c in data["colors"])
+    )
+
+
 def gen_root_variables(data: dict) -> str:
     """The ``:root`` custom-property block (colours + fixed design tokens)."""
     decls: list[str] = []
@@ -449,6 +466,7 @@ GENERATORS = {
     "card_cols": gen_card_cols,
     "container_media": gen_container_media,
     "grids": gen_grids,
+    "steps": gen_steps,
     "root_variables": gen_root_variables,
 }
 

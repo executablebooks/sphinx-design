@@ -69,6 +69,7 @@ cards
 dropdowns
 accordions
 tabs
+steps
 asides
 badges_buttons
 additional
@@ -140,6 +141,13 @@ Group dropdowns into an exclusive set.
 :link-type: doc
 
 Synchronisable, tabbed content sets.
+:::
+
+:::{grid-item-card} {octicon}`list-ordered` Steps
+:link: steps
+:link-type: doc
+
+Numbered, visually-connected procedures.
 :::
 
 :::{grid-item-card} {octicon}`quote` Asides
