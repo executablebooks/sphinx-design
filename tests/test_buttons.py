@@ -641,6 +641,19 @@ def test_button_link_line_block_gettext(sphinx_builder):
     assert "<br" not in pot, pot
 
 
+def test_button_link_line_block_gettext_markup(sphinx_builder):
+    """A line's message keeps its inline markup, for the translator to keep.
+
+    The message is the line's source text, as a paragraph's is,
+    not the text that its markup renders.
+    """
+    rst = LINE_BLOCK_RST.replace("| hey", "| **hey** there")
+    builder = _build_rst(sphinx_builder, rst, "gettext")
+    pot = (builder.out_path / "index.pot").read_text(encoding="utf8")
+    assert 'index.rst:6\nmsgid "**hey** there"' in pot, pot
+    assert 'msgid "hey there"' not in pot, pot
+
+
 def test_button_link_line_block_translated(sphinx_builder):
     """The lines are translated one by one, and keep their order."""
     builder = sphinx_builder(
@@ -764,6 +777,9 @@ SPLIT_CASES = {
     "nbsp-first-line": (["\xa0| a"], None),
     "empty": ([], None),
     "substitution-first": (["|sub| a"], None),
+    # a line at the bar's indent with no bar is not a continuation, even
+    # directly after a bar (docutils: "Line block ends without a blank line")
+    "paragraph-directly-after": (["| a", "b"], None),
     "paragraph-after": (["| a", "", "b"], None),
     "deeper-after-blank": (["| a", "", "  | b"], None),
     "first-line-deeper": (["  | a", "| b"], None),
