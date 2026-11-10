@@ -97,6 +97,26 @@ def _parse_errors(css: str) -> list:
     return errors
 
 
+def test_tab_label_hover_differs_from_active():
+    """A hovered unselected tab must not look like the selected one (#301).
+
+    The hover token was once the same literal as the active token, so hovering
+    an unselected tab rendered it in the selected tab's colour. It is now the
+    active colour at 80% opacity: a static value, then a ``color-mix()`` of
+    ``var(--sd-color-tabs-label-active)``, so a theme that overrides the active
+    colour also moves the hover colour.
+    """
+    css = ARTIFACT.read_text(encoding="utf8")
+    active = re.findall(r"--sd-color-tabs-label-active:([^;}]+)", css)
+    hover = re.findall(r"--sd-color-tabs-label-hover:([^;}]+)", css)
+    assert len(active) == 1
+    assert active[0] not in hover
+    assert hover == [
+        "hsla(231,99%,66%,0.8)",
+        "color-mix(in srgb,var(--sd-color-tabs-label-active) 80%,transparent)",
+    ]
+
+
 def test_minify_output_parses_cleanly():
     """Minified (rcssmin) output of tricky-but-valid CSS must stay valid.
 
