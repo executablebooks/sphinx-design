@@ -84,6 +84,7 @@ ASSEMBLY: list[str | tuple[str, str]] = [
     "dropdown.css",
     "accordion.css",
     "tabs.css",
+    "aside.css",
     "overrides.css",
     ("gen", "root_variables"),
 ]
