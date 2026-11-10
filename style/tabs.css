@@ -90,3 +90,64 @@ html .sd-tab-set > label:hover {
 .sd-tab-content > .sd-tab-set {
   margin: 0;
 }
+
+/* Vertical orientation, opted into with the tab-set's `:orientation: vertical`.
+
+   The labels, their radio inputs and the panes are flat siblings, so the visual
+   order cannot come from the source order. Grid placement supplies it instead:
+   every label is assigned the first column, and the one pane that is not
+   `display: none` takes the second across every row. No separate HTML structure
+   is needed for this mode.
+
+   Everything below is the horizontal layout turned a quarter turn: the label's
+   underline becomes a border on its inline-end edge, and the pane's overline
+   becomes a single rule down its inline-start edge, which the active label's
+   border merges into. Logical properties keep that true on right-to-left pages,
+   where the rail sits on the right.
+
+   Mobile first: below the `md` breakpoint (768px, `style/design.toml`) none of
+   this applies, so a narrow screen gets the plain horizontal layout and nothing
+   has to be restated or undone. */
+@media (min-width: 768px) {
+  .sd-tab-set-vertical {
+    display: grid;
+    /* The rail is as wide as its longest label, up to 35% of the set: a longer
+       label wraps rather than squeezing the pane. */
+    grid-template-columns: fit-content(35%) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  /* The rail and the pane share an edge, so the active label's border lands on
+     the pane's rule instead of being held away from it by a column gap. Padding
+     opens the space between the two columns. */
+  .sd-tab-set-vertical > label {
+    grid-column: 1;
+    border-bottom: none;
+    border-inline-end: .125rem solid var(--sd-color-tabs-underline-inactive);
+    padding-inline-end: 1rem;
+    text-align: start;
+  }
+
+  .sd-tab-set-vertical > .sd-tab-content {
+    grid-column: 2;
+    /* Span every row rather than the first one alone, whose height the pane
+       would otherwise set, pushing the labels below it off the rail. `1 / -1`
+       cannot say this here: `-1` counts back from the last explicit row, and
+       this grid declares columns only. The span overshoots any real tab count
+       instead. When the pane is taller than the label stack, the extra height
+       goes to the empty rows after the last label, so the labels stay packed at
+       the top. (Labels after the 99th would sit below the pane.) */
+    grid-row: 1 / span 99;
+    /* Stretch across those rows, or the rule runs only as deep as the pane's own
+       content instead of the full rail. */
+    align-self: stretch;
+    /* A border rather than the horizontal box-shadow, which has no logical
+       (direction-aware) form; the negative margin tucks it under the label's
+       border, which is drawn above it. */
+    box-shadow: none;
+    border-inline-start: .0625rem solid var(--sd-color-tabs-overline);
+    margin-inline-start: -.0625rem;
+    padding: 0;
+    padding-inline-start: 1.5rem;
+  }
+}

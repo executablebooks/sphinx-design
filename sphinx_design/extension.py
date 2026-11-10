@@ -7,8 +7,10 @@ from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.transforms import SphinxTransform
 
+from .accordion import setup_accordion
 from .article_info import setup_article_info
-from .badges_buttons import setup_badges_and_buttons
+from .aside import setup_aside
+from .badges_buttons import setup_badges_and_buttons, setup_custom_roles
 from .cards import setup_cards
 from .config import get_sd_config, setup_sd_config
 from .dropdown import setup_dropdown
@@ -20,6 +22,7 @@ from .shared import (
     create_component,
     setup_custom_directives,
 )
+from .steps import setup_steps
 from .tabs import setup_tabs
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -49,13 +52,18 @@ def setup_extension(app: Sphinx) -> None:
         setup_cards(app)
         setup_grids(app)
         setup_dropdown(app)
+        setup_accordion(app)
         setup_icons(app)
         setup_tabs(app)
+        setup_steps(app)
         setup_article_info(app)
+        setup_aside(app)
 
     app.connect(
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)
     )
+    app.connect("doctree-resolved", _resolve_new_tab_refs)
+    app.connect("config-inited", setup_custom_roles)
 
 
 @contextmanager
@@ -71,6 +79,32 @@ def capture_directives(app: Sphinx):
     app.add_directive = _add_directive  # type: ignore[assignment,method-assign]
     yield directive_map
     app.add_directive = add_directive  # type: ignore[method-assign]
+
+
+def _has_new_tab_marker(node: nodes.Node) -> bool:
+    """Return whether ``node`` is an element marked to open its links in a new tab."""
+    return isinstance(node, nodes.Element) and bool(node.get("sd_new_tab"))
+
+
+def _resolve_new_tab_refs(app: Sphinx, doctree: nodes.document, docname: str) -> None:
+    """Set ``target`` and ``rel`` on the link references that request a new tab.
+
+    A component that opens in a new tab (a card with ``link-new-tab``,
+    a button with ``new-tab``) marks the element containing its reference
+    with ``sd_new_tab``.
+    Cross-references are resolved to ``nodes.reference`` during the write
+    phase, before ``doctree-resolved`` fires, so we can safely walk the tree
+    here for both URL and internal links.
+    A reference that already has a ``target`` (for example a link nested in
+    a button's text, given its own attributes) is left as authored.
+    Writers other than HTML ignore both attributes.
+    """
+    for container in doctree.findall(_has_new_tab_marker):
+        for ref in container.findall(nodes.reference):
+            if "target" in ref:
+                continue
+            ref["target"] = "_blank"
+            ref["rel"] = "noreferrer noopener"
 
 
 def add_static_assets(app: Sphinx) -> None:

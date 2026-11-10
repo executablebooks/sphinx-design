@@ -3,7 +3,7 @@
         <title>
             Heading
         <target refid="cards-clickable">
-        <section ids="clickable-cards cards-clickable" names="clickable\ cards cards-clickable">
+        <section ids="cards-clickable clickable-cards" names="clickable\ cards cards-clickable">
             <title>
                 Clickable cards
             <paragraph>
@@ -42,6 +42,20 @@
                     <reference classes="sd-stretched-link sd-hide-link-text" refuri="https://example.com">
                         <inline>
                             example.com
+            <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
+                <container classes="sd-card-body" design_component="card-body" is_div="True">
+                    <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">
+                        <PassthroughTextElement>
+                            Clickable Card (external, new tab)
+                    <paragraph classes="sd-card-text">
+                        The entire card can be clicked to open 
+                        <reference refuri="https://example.com">
+                            https://example.com
+                         in a new tab.
+                <PassthroughTextElement sd_new_tab="True">
+                    <reference classes="sd-stretched-link sd-hide-link-text" refuri="https://example.com">
+                        <inline>
+                            example.com (opens in a new tab)
             <container classes="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm sd-card-hover" design_component="card" is_div="True">
                 <container classes="sd-card-body" design_component="card-body" is_div="True">
                     <container classes="sd-card-title sd-font-weight-bold" design_component="card-title" is_div="True">

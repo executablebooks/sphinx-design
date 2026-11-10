@@ -2,10 +2,6 @@
 
 ## Unreleased
 
-- ⬆️ UPGRADE: Octicons to v19.42.0 (from v19.8.0), adding 81 icon names like
-  `agent`, `library`, `release` and `sparkle`, redrawing 46 icons and giving
-  37 an extra size. `commit`, which Primer renamed `git-commit`, stays
-  available ({pr}`309`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
@@ -124,14 +120,14 @@ You can use the `sd_custom_directives` configuration option in your `conf.py` to
 
 ```python
 sd_custom_directives = {
-  "dropdown-syntax": {
-    "inherit": "dropdown",
-    "argument": "Syntax",
-    "options": {
-      "color": "primary",
-      "icon": "code",
-    },
-  }
+    "dropdown-syntax": {
+        "inherit": "dropdown",
+        "argument": "Syntax",
+        "options": {
+            "color": "primary",
+            "icon": "code",
+        },
+    }
 }
 ```
 

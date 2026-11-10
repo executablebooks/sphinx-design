@@ -16,6 +16,7 @@ import re
 
 from docutils.parsers.rst import directives
 import pytest
+import sphinx
 
 from sphinx_design.cards import CardDirective
 
@@ -273,3 +274,232 @@ def test_card_ref_unresolved_warns(sphinx_builder):
     # build completed and the content survives, just without a resolved link
     assert "Card body" in html
     assert _stretched_link_hrefs(html) == []
+
+
+# ---------------------------------------------------------------------------
+# link-new-tab tests
+# ---------------------------------------------------------------------------
+
+# Sphinx's HTML writer renders a reference's ``rel`` attribute only from 7.4;
+# ``target`` is rendered on every supported version.
+# Browsers imply ``noopener`` for ``target="_blank"`` anyway.
+RENDERS_REL = sphinx.version_info >= (7, 4)
+
+
+def _stretched_link_tags(html):
+    """Return the opening ``<a ...>`` tag of every card ``sd-stretched-link``."""
+    return re.findall(r"<a [^>]*\bsd-stretched-link\b[^>]*>", html)
+
+
+def _assert_opens_in_new_tab(html):
+    """The card's only stretched link opens in a new tab."""
+    tags = _stretched_link_tags(html)
+    assert len(tags) == 1, tags
+    assert 'target="_blank"' in tags[0], tags[0]
+    if RENDERS_REL:
+        assert 'rel="noreferrer noopener"' in tags[0], tags[0]
+    else:
+        assert "rel=" not in tags[0], tags[0]
+
+
+NEW_TAB_URL_RST = """
+Heading
+=======
+
+.. card:: New-tab URL card
+    :link: https://example.com
+    :link-new-tab:
+
+    Card body
+"""
+
+NEW_TAB_URL_MYST = """
+# Heading
+
+:::{card} New-tab URL card
+:link: https://example.com
+:link-new-tab:
+
+Card body
+:::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_url_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` adds ``target="_blank"`` and ``rel="noreferrer noopener"``
+    to a URL card link.
+    """
+    builder = _build(sphinx_builder, fmt, NEW_TAB_URL_RST, NEW_TAB_URL_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["https://example.com"]
+    _assert_opens_in_new_tab(html)
+
+
+NEW_TAB_REF_RST = """
+Heading
+=======
+
+My Section
+----------
+
+Some content.
+
+.. card:: New-tab internal card
+    :link: my section
+    :link-type: ref
+    :link-new-tab:
+
+    Card body
+"""
+
+NEW_TAB_REF_MYST = """
+# Heading
+
+## My Section
+
+Some content.
+
+:::{card} New-tab internal card
+:link: my section
+:link-type: ref
+:link-new-tab:
+
+Card body
+:::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_ref_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` also applies to internal cross-reference cards.
+
+    ``pending_xref`` is resolved to ``nodes.reference`` before
+    ``doctree-resolved`` fires, so the event handler can stamp the
+    ``target`` and ``rel`` attributes onto the real anchor.
+    """
+    builder = _build(sphinx_builder, fmt, NEW_TAB_REF_RST, NEW_TAB_REF_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["#my-section"]
+    _assert_opens_in_new_tab(html)
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_doc_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` applies to a ``link-type: doc`` card linking to another page."""
+    if fmt == "rst":
+        builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+        index = (
+            "Heading\n=======\n\n"
+            ".. toctree::\n\n    other\n\n"
+            ".. card:: New-tab doc card\n"
+            "    :link: other\n    :link-type: doc\n    :link-new-tab:\n\n"
+            "    Card body\n"
+        )
+        builder.src_path.joinpath("index.rst").write_text(index, encoding="utf8")
+        builder.src_path.joinpath("other.rst").write_text(
+            "Other\n=====\n", encoding="utf8"
+        )
+    else:
+        builder = sphinx_builder()
+        index = (
+            "# Heading\n\n"
+            "```{toctree}\nother\n```\n\n"
+            ":::{card} New-tab doc card\n"
+            ":link: other\n:link-type: doc\n:link-new-tab:\n\n"
+            "Card body\n:::\n"
+        )
+        builder.src_path.joinpath("index.md").write_text(index, encoding="utf8")
+        builder.src_path.joinpath("other.md").write_text("# Other\n", encoding="utf8")
+    builder.build()
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["other.html"]
+    _assert_opens_in_new_tab(html)
+
+
+NEW_TAB_GRID_RST = """
+Heading
+=======
+
+.. grid:: 1
+
+    .. grid-item-card:: New-tab grid card
+        :link: https://example.com
+        :link-new-tab:
+
+        Grid card body
+"""
+
+NEW_TAB_GRID_MYST = """
+# Heading
+
+::::{grid} 1
+
+:::{grid-item-card} New-tab grid card
+:link: https://example.com
+:link-new-tab:
+
+Grid card body
+:::
+
+::::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_grid_item_card_new_tab(fmt, sphinx_builder):
+    """``link-new-tab`` works on ``grid-item-card`` (synced ``option_spec``)."""
+    builder = _build(sphinx_builder, fmt, NEW_TAB_GRID_RST, NEW_TAB_GRID_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["https://example.com"]
+    _assert_opens_in_new_tab(html)
+
+
+NO_NEW_TAB_RST = """
+Heading
+=======
+
+My Section
+----------
+
+.. card:: URL card
+    :link: https://example.com
+
+    Card body
+
+.. card:: Internal card
+    :link: my section
+    :link-type: ref
+
+    Card body
+"""
+
+NO_NEW_TAB_MYST = """
+# Heading
+
+## My Section
+
+:::{card} URL card
+:link: https://example.com
+
+Card body
+:::
+
+:::{card} Internal card
+:link: my section
+:link-type: ref
+
+Card body
+:::
+"""
+
+
+@pytest.mark.parametrize("fmt", ["rst", MYST_PARAM])
+def test_card_link_without_new_tab(fmt, sphinx_builder):
+    """Without ``link-new-tab``, card links keep opening in the same tab."""
+    builder = _build(sphinx_builder, fmt, NO_NEW_TAB_RST, NO_NEW_TAB_MYST)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _stretched_link_hrefs(html) == ["https://example.com", "#my-section"]
+    for tag in _stretched_link_tags(html):
+        assert "target=" not in tag, tag
+        assert "rel=" not in tag, tag
