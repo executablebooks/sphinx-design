@@ -67,6 +67,7 @@ get_started
 grids
 cards
 dropdowns
+accordions
 tabs
 asides
 badges_buttons
@@ -125,6 +126,13 @@ Flexible and extensible content containers.
 :link-type: doc
 
 Hide content in expandable containers.
+:::
+
+:::{grid-item-card} {octicon}`fold-down` Accordions
+:link: accordions
+:link-type: doc
+
+Group dropdowns into an exclusive set.
 :::
 
 :::{grid-item-card} {octicon}`duplicate` Tabs

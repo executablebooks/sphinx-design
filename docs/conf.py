@@ -153,7 +153,8 @@ def _sd_config_options_table() -> str:
             if field.default_factory is not dc.MISSING
             else field.default
         )
-        type_str = field.metadata.get("doc_type", field.type)
+        # escape "|" so a union type does not split the markdown table cell
+        type_str = str(field.metadata.get("doc_type", field.type)).replace("|", r"\|")
         rows.append(
             f"| `sd_{field.name}` | `{type_str}` | `{default!r}` "
             f"| {field.metadata.get('help', '')} |"

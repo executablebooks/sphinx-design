@@ -2,14 +2,6 @@
 
 ## Unreleased
 
-- ✨ NEW: `aside` directive: a CSS-only floated call-out box that the
-  surrounding text wraps around, for pull-outs, margin notes and side comments.
-  Supports `align` (`left`/`right`), `width` (`25%`/`33%`/`50%`), `margin`,
-  `name` and `class`/`class-title`/`class-body`. It renders as a semantic HTML
-  `<aside>` element and collapses to a full-width block below the `md`
-  breakpoint (with a `.sd-clear-both` utility to stop the wrap); non-HTML
-  outputs degrade to a plain titled block. Zero JavaScript
-  ({pr}`292`, {issue}`97`)
 - ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
   generator (`tools/generate_css.py` driven by `style/design.toml` and
   hand-authored `style/*.css`); `package.json` is gone. The compiled
@@ -128,14 +120,14 @@ You can use the `sd_custom_directives` configuration option in your `conf.py` to
 
 ```python
 sd_custom_directives = {
-  "dropdown-syntax": {
-    "inherit": "dropdown",
-    "argument": "Syntax",
-    "options": {
-      "color": "primary",
-      "icon": "code",
-    },
-  }
+    "dropdown-syntax": {
+        "inherit": "dropdown",
+        "argument": "Syntax",
+        "options": {
+            "color": "primary",
+            "icon": "code",
+        },
+    }
 }
 ```
 

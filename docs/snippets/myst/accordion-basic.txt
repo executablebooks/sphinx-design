@@ -1,0 +1,16 @@
+::::{accordion}
+
+:::{dropdown} First item
+Opening another item closes this one.
+:::
+
+:::{dropdown} Second item
+:open:
+
+Content of the second item.
+:::
+
+:::{dropdown} Third item
+Content of the third item.
+:::
+::::

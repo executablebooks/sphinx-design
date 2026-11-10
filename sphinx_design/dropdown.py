@@ -35,10 +35,14 @@ class dropdown_title(nodes.TextElement, nodes.General):  # noqa: N801
 
 
 def visit_dropdown_main(self, node):
+    attributes = {}
+    if node.get("details_name"):
+        # a shared name makes sibling <details> mutually exclusive (the
+        # native, JS-free basis of the ``accordion`` component)
+        attributes["name"] = node["details_name"]
     if node.get("opened"):
-        self.body.append(self.starttag(node, "details", open="open"))
-    else:
-        self.body.append(self.starttag(node, "details"))
+        attributes["open"] = "open"
+    self.body.append(self.starttag(node, "details", **attributes))
 
 
 def depart_dropdown_main(self, node):
@@ -176,6 +180,9 @@ class DropdownHtmlTransform(SphinxPostTransform):
                 + (["sd-card"] if use_card else ["sd-d-flex-column"])
                 + node["container_classes"],
             )
+            if node.get("details_name"):
+                # propagate the accordion group name onto the <details> element
+                newnode["details_name"] = node["details_name"]
 
             if node["has_title"]:
                 title_text_children = node[0].children
