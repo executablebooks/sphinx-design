@@ -85,6 +85,7 @@ class CardDirective(SdDirective):
         "link": directives.unchanged_required,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
+        "link-new-tab": directives.flag,
         "shadow": make_choice(["none", "sm", "md", "lg"]),
         # inline one-liner slots (compose with the body content);
         # mutually exclusive with the card-header/card-footer sub-directives
@@ -103,7 +104,7 @@ class CardDirective(SdDirective):
         return [self.create_card(self, self.arguments, self.options)]
 
     @classmethod
-    def create_card(  # noqa: PLR0915
+    def create_card(
         cls, inst: SphinxDirective, arguments: list | None, options: dict
     ) -> nodes.Node:
         """Run the directive."""
@@ -196,40 +197,55 @@ class CardDirective(SdDirective):
             container.append(image_bottom)
 
         if "link" in options:
-            link_container = PassthroughTextElement()
-            _classes = ["sd-stretched-link", "sd-hide-link-text"]
-            link_type = options.get("link-type", "url")
-            # the raw (un-normalised) target, kept for user-visible fallback text
-            link_raw = options["link"]
-            link_target = cls.get_link_target(link_raw, link_type)
-            _rawtext = options.get("link-alt") or link_raw
-            if link_type == "url":
-                link = nodes.reference(
-                    _rawtext,
-                    "",
-                    nodes.inline(_rawtext, _rawtext),
-                    refuri=link_target,
-                    classes=_classes,
-                )
-            else:
-                ref_options = {
-                    # TODO the presence of classes raises an error if the link cannot be found
-                    "classes": _classes,
-                    "reftarget": link_target,
-                    "refdoc": inst.env.docname,
-                    "refdomain": "" if link_type == "any" else "std",
-                    "reftype": link_type,
-                    "refexplicit": "link-alt" in options,
-                    "refwarn": True,
-                }
-                link = addnodes.pending_xref(
-                    _rawtext, nodes.inline(_rawtext, _rawtext), **ref_options
-                )
-            inst.set_source_info(link)
-            link_container += link
-            container.append(link_container)
+            container.append(cls._create_link(inst, options))
 
         return card
+
+    @classmethod
+    def _create_link(
+        cls, inst: SphinxDirective, options: dict
+    ) -> PassthroughTextElement:
+        """Create the stretched link that makes the whole card clickable.
+
+        With ``link-new-tab``, the container is marked ``sd_new_tab``;
+        the ``doctree-resolved`` handler then sets ``target``/``rel``
+        on the reference, once any cross-reference has been resolved.
+        """
+        link_container = PassthroughTextElement()
+        _classes = ["sd-stretched-link", "sd-hide-link-text"]
+        link_type = options.get("link-type", "url")
+        # the raw (un-normalised) target, kept for user-visible fallback text
+        link_raw = options["link"]
+        link_target = cls.get_link_target(link_raw, link_type)
+        _rawtext = options.get("link-alt") or link_raw
+        link: nodes.Element
+        if link_type == "url":
+            link = nodes.reference(
+                _rawtext,
+                "",
+                nodes.inline(_rawtext, _rawtext),
+                refuri=link_target,
+                classes=_classes,
+            )
+        else:
+            ref_options = {
+                # TODO the presence of classes raises an error if the link cannot be found
+                "classes": _classes,
+                "reftarget": link_target,
+                "refdoc": inst.env.docname,
+                "refdomain": "" if link_type == "any" else "std",
+                "reftype": link_type,
+                "refexplicit": "link-alt" in options,
+                "refwarn": True,
+            }
+            link = addnodes.pending_xref(
+                _rawtext, nodes.inline(_rawtext, _rawtext), **ref_options
+            )
+        inst.set_source_info(link)
+        if "link-new-tab" in options:
+            link_container["sd_new_tab"] = True
+        link_container += link
+        return link_container
 
     @staticmethod
     def get_link_target(target: str, link_type: str) -> str:

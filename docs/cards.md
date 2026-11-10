@@ -174,6 +174,14 @@ Try hovering over then clicking on the cards below:
 The entire card can be clicked to navigate to `https://example.com`.
 :::
 
+:::{card} Clickable Card (external, new tab)
+:link: https://example.com
+:link-alt: example.com (opens in a new tab)
+:link-new-tab:
+
+The entire card can be clicked to open `https://example.com` in a new tab.
+:::
+
 :::{card} Clickable Card (internal)
 :link: cards-clickable
 :link-type: ref
@@ -321,6 +329,17 @@ link-type
 
 link-alt
 : Alternative text for the link (that will be used by screen-readers).
+
+link-new-tab
+: Flag. When set, the card link opens in a new browser tab
+  (`target="_blank"`, `rel="noreferrer noopener"`).
+  Works with all `link-type` values; has no effect without `link`.
+  Sphinx renders the `rel` attribute only from version 7.4;
+  browsers already treat `target="_blank"` links as `noopener`.
+  It affects only HTML-based output (HTML, EPUB); other formats ignore it.
+  Tell readers the link opens a new tab, for example in `link-alt`.
+  To open every external link in a new tab, site-wide,
+  see the [sphinx-new-tab-link](https://pypi.org/project/sphinx-new-tab-link/) extension.
 
 shadow
 : The size of the shadow below the card: `none`, `sm` (default), `md`, `lg`.

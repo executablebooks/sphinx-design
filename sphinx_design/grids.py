@@ -228,6 +228,7 @@ class GridItemCardDirective(SdDirective):
         "link": directives.unchanged_required,
         "link-type": make_choice(["url", "any", "ref", "doc"]),
         "link-alt": directives.unchanged,
+        "link-new-tab": directives.flag,
         "shadow": make_choice(["none", "sm", "md", "lg"]),
         # inline one-liner slots (see CardDirective)
         "header": directives.unchanged,
@@ -274,6 +275,7 @@ class GridItemCardDirective(SdDirective):
                 "link",
                 "link-type",
                 "link-alt",
+                "link-new-tab",
                 "shadow",
                 "header",
                 "footer",
