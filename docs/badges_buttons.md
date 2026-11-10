@@ -214,7 +214,7 @@ button text
 ```
 ````
 
-In reStructuredText, a label that itself starts with `| ` (or is a bare `|`) is read
+In reStructuredText, a one-line label that starts with `| ` (or is a bare `|`) is read
 as a one-line line block, whose leading bar is not shown, so write a literal leading
 bar as `\|`.
 
