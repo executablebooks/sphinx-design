@@ -82,9 +82,11 @@ ASSEMBLY: list[str | tuple[str, str]] = [
     "grids.css",
     ("gen", "grids"),
     "dropdown.css",
+    "accordion.css",
     "tabs.css",
     "steps.css",
     ("gen", "steps"),
+    "aside.css",
     "overrides.css",
     ("gen", "root_variables"),
 ]
@@ -132,29 +134,45 @@ def gen_color_variants(data: dict) -> str:
         lines += [
             f".sd-bg-{c} {{background-color:var(--sd-color-{c}) !important}}",
             f".sd-bg-text-{c} {{color:var(--sd-color-{c}-text) !important}}",
-            f"button.sd-bg-{c}:focus,button.sd-bg-{c}:hover "
-            f"{{background-color:var(--sd-color-{c}-highlight) !important}}",
-            f"button.sd-bg-{c}:focus-visible "
-            f"{{outline-color:var(--sd-color-{c}-highlight) !important}}",
-            f"a.sd-bg-{c}:focus,a.sd-bg-{c}:hover "
-            f"{{background-color:var(--sd-color-{c}-highlight) !important}}",
-            f"a.sd-bg-{c}:focus-visible "
-            f"{{outline-color:var(--sd-color-{c}-highlight) !important}}",
+            (
+                f"button.sd-bg-{c}:focus,button.sd-bg-{c}:hover "
+                f"{{background-color:var(--sd-color-{c}-highlight) !important}}"
+            ),
+            (
+                f"button.sd-bg-{c}:focus-visible "
+                f"{{outline-color:var(--sd-color-{c}-highlight) !important}}"
+            ),
+            (
+                f"a.sd-bg-{c}:focus,a.sd-bg-{c}:hover "
+                f"{{background-color:var(--sd-color-{c}-highlight) !important}}"
+            ),
+            (
+                f"a.sd-bg-{c}:focus-visible "
+                f"{{outline-color:var(--sd-color-{c}-highlight) !important}}"
+            ),
         ]
     for c in colors:
         lines += [
             f".sd-text-{c},.sd-text-{c}>p {{color:var(--sd-color-{c}) !important}}",
-            f"a.sd-text-{c}:focus,a.sd-text-{c}:hover "
-            f"{{color:var(--sd-color-{c}-highlight) !important}}",
+            (
+                f"a.sd-text-{c}:focus,a.sd-text-{c}:hover "
+                f"{{color:var(--sd-color-{c}-highlight) !important}}"
+            ),
         ]
     for c in colors:
         lines += [
-            f".sd-outline-{c} {{border-color:var(--sd-color-{c}) !important;"
-            f"border-style:solid !important;border-width:1px !important}}",
-            f"a.sd-outline-{c}:focus,a.sd-outline-{c}:hover "
-            f"{{border-color:var(--sd-color-{c}-highlight) !important}}",
-            f"a.sd-outline-{c}:focus-visible "
-            f"{{outline-color:var(--sd-color-{c}-highlight) !important}}",
+            (
+                f".sd-outline-{c} {{border-color:var(--sd-color-{c}) !important;"
+                f"border-style:solid !important;border-width:1px !important}}"
+            ),
+            (
+                f"a.sd-outline-{c}:focus,a.sd-outline-{c}:hover "
+                f"{{border-color:var(--sd-color-{c}-highlight) !important}}"
+            ),
+            (
+                f"a.sd-outline-{c}:focus-visible "
+                f"{{outline-color:var(--sd-color-{c}-highlight) !important}}"
+            ),
         ]
     return "\n".join(lines)
 
@@ -165,14 +183,22 @@ def _spacing_block(data: dict, prop: str, abbrev: str) -> str:
         value = strip_leading_zero(raw)
         lines += [
             f".sd-{abbrev}-{idx} {{{prop}:{value} !important}}",
-            f".sd-{abbrev}t-{idx},.sd-{abbrev}y-{idx} "
-            f"{{{prop}-top:{value} !important}}",
-            f".sd-{abbrev}r-{idx},.sd-{abbrev}x-{idx} "
-            f"{{{prop}-right:{value} !important}}",
-            f".sd-{abbrev}b-{idx},.sd-{abbrev}y-{idx} "
-            f"{{{prop}-bottom:{value} !important}}",
-            f".sd-{abbrev}l-{idx},.sd-{abbrev}x-{idx} "
-            f"{{{prop}-left:{value} !important}}",
+            (
+                f".sd-{abbrev}t-{idx},.sd-{abbrev}y-{idx} "
+                f"{{{prop}-top:{value} !important}}"
+            ),
+            (
+                f".sd-{abbrev}r-{idx},.sd-{abbrev}x-{idx} "
+                f"{{{prop}-right:{value} !important}}"
+            ),
+            (
+                f".sd-{abbrev}b-{idx},.sd-{abbrev}y-{idx} "
+                f"{{{prop}-bottom:{value} !important}}"
+            ),
+            (
+                f".sd-{abbrev}l-{idx},.sd-{abbrev}x-{idx} "
+                f"{{{prop}-left:{value} !important}}"
+            ),
         ]
     return "\n".join(lines)
 
@@ -248,25 +274,35 @@ def gen_buttons(data: dict) -> str:
     lines: list[str] = []
     for color in (c["name"] for c in data["colors"]):
         lines += [
-            f".sd-btn-{color},.sd-btn-outline-{color}:hover,"
-            f".sd-btn-outline-{color}:focus "
-            f"{{color:var(--sd-color-{color}-text) !important;"
-            f"background-color:var(--sd-color-{color}) !important;"
-            f"border-color:var(--sd-color-{color}) !important;"
-            f"border-width:1px !important;border-style:solid !important}}",
-            f".sd-btn-{color}:hover,.sd-btn-{color}:focus "
-            f"{{color:var(--sd-color-{color}-text) !important;"
-            f"background-color:var(--sd-color-{color}-highlight) !important;"
-            f"border-color:var(--sd-color-{color}-highlight) !important;"
-            f"border-width:1px !important;border-style:solid !important}}",
-            f".sd-btn-outline-{color} "
-            f"{{color:var(--sd-color-{color}) !important;"
-            f"border-color:var(--sd-color-{color}) !important;"
-            f"border-width:1px !important;border-style:solid !important}}",
-            f".sd-btn-{color}:focus-visible "
-            f"{{outline-color:var(--sd-color-{color}) !important}}",
-            f".sd-btn-{color}:focus-visible::after "
-            f"{{outline-color:var(--sd-color-{color}) !important}}",
+            (
+                f".sd-btn-{color},.sd-btn-outline-{color}:hover,"
+                f".sd-btn-outline-{color}:focus "
+                f"{{color:var(--sd-color-{color}-text) !important;"
+                f"background-color:var(--sd-color-{color}) !important;"
+                f"border-color:var(--sd-color-{color}) !important;"
+                f"border-width:1px !important;border-style:solid !important}}"
+            ),
+            (
+                f".sd-btn-{color}:hover,.sd-btn-{color}:focus "
+                f"{{color:var(--sd-color-{color}-text) !important;"
+                f"background-color:var(--sd-color-{color}-highlight) !important;"
+                f"border-color:var(--sd-color-{color}-highlight) !important;"
+                f"border-width:1px !important;border-style:solid !important}}"
+            ),
+            (
+                f".sd-btn-outline-{color} "
+                f"{{color:var(--sd-color-{color}) !important;"
+                f"border-color:var(--sd-color-{color}) !important;"
+                f"border-width:1px !important;border-style:solid !important}}"
+            ),
+            (
+                f".sd-btn-{color}:focus-visible "
+                f"{{outline-color:var(--sd-color-{color}) !important}}"
+            ),
+            (
+                f".sd-btn-{color}:focus-visible::after "
+                f"{{outline-color:var(--sd-color-{color}) !important}}"
+            ),
         ]
     return "\n".join(lines)
 

@@ -31,6 +31,49 @@ Content 2
 
 See the [Material Design](https://material.io/components/tabs) description for further details.
 
+(tabs-vertical)=
+
+## Vertical Tabs
+
+::::{versionadded} 0.8.0
+Add `:orientation: vertical` to a `tab-set` or `tab-set-code` to stack the labels down a rail on the left (on the right on right-to-left pages), with the selected content beside them.
+This suits sets holding more labels than fit on one line, where the horizontal layout wraps them into a strip that is hard to scan.
+::::
+
+::::{tab-set}
+:orientation: vertical
+
+:::{tab-item} Label1
+Content 1
+:::
+
+:::{tab-item} Label2
+Content 2
+:::
+
+:::{tab-item} A longer label
+Content 3
+:::
+
+::::
+
+`````{dropdown-syntax}
+
+````{tab-set-code}
+```{literalinclude} ./snippets/myst/tab-vertical.txt
+:language: markdown
+```
+```{literalinclude} ./snippets/rst/tab-vertical.txt
+:language: rst
+```
+````
+`````
+
+The rail is as wide as its longest label, up to 35% of the set; a longer label wraps at its spaces.
+Below the `md` breakpoint (a viewport 768px wide) the set falls back to the horizontal layout, two columns being too narrow to read at that width.
+The breakpoint follows the viewport, not the set's container, so a vertical set in a narrow column (a grid cell, say) stays vertical on a wide screen.
+Themes that restyle the tab labels themselves, such as pydata-sphinx-theme and sphinx-book-theme, may draw them less neatly in the rail until they style `sd-tab-set-vertical` too.
+
 ## Synchronised Tabs
 
 The Selection of tab items can be synchronised across multiple tab-sets.
@@ -255,6 +298,9 @@ Content 2
 
 ## `tab-set` options
 
+orientation
+: `horizontal` (default) or `vertical`, see {ref}`tabs-vertical`.
+
 sync-group
 : A group name for synchronised tab sets (default `tab`).
 
@@ -265,6 +311,9 @@ class
 
 no-sync
 : Disable synchronisation of tabs.
+
+orientation
+: `horizontal` (default) or `vertical`, see {ref}`tabs-vertical`.
 
 sync-group
 : A group name for synchronised tab sets (default `code`).

@@ -67,8 +67,10 @@ get_started
 grids
 cards
 dropdowns
+accordions
 tabs
 steps
+asides
 badges_buttons
 additional
 ```
@@ -127,6 +129,13 @@ Flexible and extensible content containers.
 Hide content in expandable containers.
 :::
 
+:::{grid-item-card} {octicon}`fold-down` Accordions
+:link: accordions
+:link-type: doc
+
+Group dropdowns into an exclusive set.
+:::
+
 :::{grid-item-card} {octicon}`duplicate` Tabs
 :link: tabs
 :link-type: doc
@@ -139,6 +148,13 @@ Synchronisable, tabbed content sets.
 :link-type: doc
 
 Numbered, visually-connected procedures.
+:::
+
+:::{grid-item-card} {octicon}`quote` Asides
+:link: asides
+:link-type: doc
+
+Floated call-outs that text wraps around.
 :::
 
 :::{grid-item-card} {octicon}`plus-circle` Badges, Buttons & Icons

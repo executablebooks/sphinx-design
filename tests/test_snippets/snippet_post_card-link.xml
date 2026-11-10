@@ -3,7 +3,7 @@
         <title>
             Heading
         <target refid="cards-clickable">
-        <section ids="clickable-cards cards-clickable" names="clickable\ cards cards-clickable">
+        <section ids="cards-clickable clickable-cards" names="clickable\ cards cards-clickable">
             <title>
                 Clickable cards
             <paragraph>
