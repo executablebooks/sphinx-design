@@ -88,9 +88,16 @@ The key is the new directive name to add, and the value is a dictionary with the
 - `argument`: The default argument (optional, only for directives that take a single argument)
 - `options`: A dictionary of default options for the directive (optional)
 
-The same idea is available for roles: `sd_custom_roles` defines reusable badge
-roles (e.g. status badges), inheriting a built-in badge role and optionally
-baking in a tooltip. See {ref}`Custom badge roles <sd-custom-badge-roles>`.
+:::{tip}
+For presets beyond default option values,
+see the [sphinx-ub-directives](https://sphinx-ub-directives.readthedocs.io) package,
+from the [sphinx-needs](https://github.com/useblocks/sphinx-needs) project,
+whose directive presets accept sphinx-design directives (such as `dropdown`) as a base.
+It adds appended and forced option values, need-type bases (with sphinx-needs), and template directives,
+and its presets can also be configured in `ubproject.toml`,
+which [ubCode](https://ubcode.useblocks.com/) reads.
+To preset a badge's tooltip, see the badge roles' {ref}`tooltip role option <sd-badge-tooltip-option>`.
+:::
 
 ## Supported browsers
 
