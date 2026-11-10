@@ -23,7 +23,7 @@ and Octicons v19.42.0. Sphinx 7.2 or later is now required.
 - **Tab selections persist in `localStorage`** instead of `sessionStorage`, so a chosen tab is remembered
   across browsing sessions as well as across pages.
   The storage key prefix is set by the new `sd_tabs_storage_prefix` option;
-  set it to an empty string to disable persistence ({pr}`284`).
+  set it to an empty string to disable persistence ({pr}`284`, {issue}`103`).
 - **Static assets are served through Sphinx's `html_static_path`**, only for HTML-format builders.
   A `_sphinx_design_static` directory left in an existing build directory by an earlier version is unused
   and can be deleted ({pr}`276`).
@@ -108,13 +108,13 @@ and Octicons v19.42.0. Sphinx 7.2 or later is now required.
 - 🐛 `button-ref` keeps whitespace in reference targets (so multi-word labels, such as those from
   `autosectionlabel`, resolve; `ref` targets are lowercased like the `:ref:` role), and renders nested inline content
   like `button-link` by {user}`chrisjsewell` in {pr}`281` ({issue}`110`, {issue}`228`)
-- 🐛 The card and grid-item-card `:link:` option keeps whitespace in reference targets
-  by {user}`chrisjsewell` in {pr}`282` ({issue}`110`)
+- 🐛 The card and grid-item-card `:link:` option keeps whitespace in reference targets,
+  and lowercases `ref` targets like the `:ref:` role by {user}`chrisjsewell` in {pr}`282` ({issue}`110`)
 - 🐛 Messages and gettext locations for button text name its first content line in reStructuredText
   (they named a later line, or the including page for a button in an included file)
   by {user}`chrisjsewell` in {pr}`315`
 - 🐛 Icon roles no longer leak SVG markup into toctree labels and the search index,
-  and `article-info` icons regain their `sd-pr-2` spacing by {user}`chrisjsewell` in {pr}`279` ({issue}`99`)
+  and `article-info` icons regain their `sd-pr-2` spacing by {user}`chrisjsewell` in {pr}`279` ({issue}`99`, {issue}`117`)
 - 🐛 Dropdowns no longer overwrite user classes on their paragraphs with `sd-card-text`
   by {user}`chrisjsewell` in {pr}`278` ({issue}`40`)
 - 🐛 Non-HTML builds no longer gain a spurious `_sphinx_design_static` directory
