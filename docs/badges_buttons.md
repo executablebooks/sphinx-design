@@ -53,11 +53,83 @@ The syntax is the same as for the `ref` role.
 ````
 `````
 
+(sd-custom-badge-roles)=
+
+### Custom badge roles
+
+When the **same** badge recurs throughout your documentation — status labels
+such as *stable*, *beta* or *deprecated* whose colour and tooltip never change —
+define it **once** as a custom role via the `sd_custom_roles` configuration
+option, rather than retyping the colour and tooltip at every use site. This is
+the recommended pattern for such repeated, semantic badges:
+
+```python
+sd_custom_roles = {
+    "bdg-stable": {
+        "inherit": "bdg-success",
+        "tooltip": "A released, supported version",
+    },
+    "bdg-beta": {"inherit": "bdg-warning", "tooltip": "Interface may change"},
+    "bdg-deprecated": {"inherit": "bdg-danger", "tooltip": "Scheduled for removal"},
+}
+```
+
+Each key is the new role name to register; the value is a dictionary with:
+
+- `inherit` (required): the built-in badge role to inherit from — any of the
+  `bdg`, `bdg-<color>`, `bdg-<color>-line`, `bdg-link-*` or `bdg-ref-*` roles.
+- `tooltip` (optional): a default tooltip, applied as the HTML `title` whenever
+  the role is used *without* a per-instance `; tooltip` suffix. For a
+  `bdg-link-*`/`bdg-ref-*` role the baked tooltip applies even to the bare
+  form (`` {bdg-link-*}`<target>` ``), where the suffix grammar deliberately
+  refuses to split, and it overrides a reference's automatic title.
+
+Give custom roles a distinguishing prefix (the `bdg-` convention used here is a
+good choice): a name that collides with a docutils built-in (`code`, `math`,
+`strong`, …) or another extension's role is skipped, so `bdg-`-prefixed names
+keep you clear of every such clash.
+
+The new role then behaves exactly like the role it inherits (same rendering,
+links and references), with its tooltip baked in:
+
+{bdg-stable}`v2.1` {bdg-beta}`v3.0rc1` {bdg-deprecated}`v1.0`
+
+````{tab-set-code}
+```markdown
+{bdg-stable}`v2.1` {bdg-beta}`v3.0rc1` {bdg-deprecated}`v1.0`
+```
+```rst
+:bdg-stable:`v2.1` :bdg-beta:`v3.0rc1` :bdg-deprecated:`v1.0`
+```
+````
+
+A baked `tooltip` is only the *default*: a per-instance `; tooltip` suffix on an
+individual badge **overrides** it, so a config-defined role covers the common
+case while the suffix stays available for the occasional one-off:
+
+{bdg-stable}`v2.1 ; Long-term support release`
+
+````{tab-set-code}
+```markdown
+{bdg-stable}`v2.1 ; Long-term support release`
+```
+```rst
+:bdg-stable:`v2.1 ; Long-term support release`
+```
+````
+
+Custom roles are the badge analogue of
+{ref}`custom directives <sd-custom-directives>`. Inheritance is limited to the
+badge family listed above; a role whose `inherit` names an unknown badge role,
+or whose own name clashes with an existing role, is skipped with a warning.
+Editing an entry (or removing it) is picked up on the next build.
+
 ### Badge tooltips
 
-Any badge can be given a tooltip (shown on hover, via the HTML `title`
-attribute) by appending a `; tooltip` suffix to its text.
-This works for every badge family:
+For a **one-off** tooltip (shown on hover, via the HTML `title` attribute) —
+rather than a repeated one better served by a
+{ref}`custom badge role <sd-custom-badge-roles>` — append a `; tooltip` suffix
+to any badge's text. This works for every badge family:
 
 {bdg-primary}`stable ; A released, supported version`
 {bdg-link-info}`docs <https://example.com> ; Opens the documentation`
