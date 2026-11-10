@@ -1,94 +1,155 @@
 # Change Log
 
-## Unreleased
+## 0.8.0 - 2026-11-10
 
-- ♻️ IMPROVE: Replace the Sass/Node build with a dependency-free Python CSS
-  generator (`tools/generate_css.py` driven by `style/design.toml` and
-  hand-authored `style/*.css`); `package.json` is gone. The compiled
-  `sphinx-design.min.css` is a rule-set no-op apart from two deliberate
-  changes. Hover/focus shades now use runtime `color-mix()` (behind a static
-  fallback), so overriding a `--sd-color-*` variable now flows through to its
-  `-highlight` shade instead of the shade being frozen at build time. Also
-  purges ~150 dead vendor prefixes (IE `-ms-flex*`, and `-moz-`/`-webkit-`
-  animation, box-sizing and user-select duplicates) that no supported browser
-  needs. The migration was verified rule-for-rule *and* cascade-order-faithful
-  against the previous stylesheet, and the new build fails loudly on
-  unregistered style files, malformed token data, or a stale/unparsable
-  artifact — see the new "Design: the CSS pipeline" documentation page
-  ({pr}`290`)
-- 📚 DOCS: Document the browser support policy as
-  [Baseline Widely Available](https://web.dev/baseline) (evergreen
-  Chrome/Edge/Firefox/Safari, no Internet Explorer), replacing the stale 2021
-  Bootstrap browserslist mirror ({pr}`290`)
-- 🔧 MAINTAIN: CI now compiles the documentation's LaTeX output to PDF
-  (exercising the `sd_fontawesome_latex="fontawesome5"` icon path, which the
-  docs now use), and the fa-build hint recommends `"fontawesome5"` over the
-  legacy FontAwesome 4 package ({pr}`289`)
-- ✨ NEW: `sd_fontawesome_version` makes icon role names version-agnostic:
-  any spelling (`fas`, `fa-solid`, ...) can emit the FontAwesome `"4"`, `"5"`
-  or `"6"` class scheme, so upgrading FontAwesome is a one-line `conf.py`
-  change; the default `"as-named"` keeps emitting the role name verbatim
-  ({pr}`288`, {issue}`174`)
-- ✨ NEW: Badge roles accept a trailing `` ; tooltip `` suffix, rendered as a
-  native HTML `title` tooltip on all `bdg-*` families; for the link/ref badges
-  the suffix applies only after the explicit `text <target>` form (semicolons
-  are valid in URLs and reference targets), and a literal `;` in badge text is
-  escaped as `` \; `` ({pr}`286`, {issue}`81`)
-- ✨ NEW: FontAwesome v6 roles (`fa-solid`/`fa-brands`/`fa-regular`) and
-  declarative CSS loading via the new `sd_fontawesome_source` /
-  `sd_fontawesome_cdn_url` options (the supported path for FontAwesome Pro
-  kits) ({pr}`285`, {issue}`174`)
-- 👌 IMPROVE: `sd_fontawesome_latex` now also accepts `"fontawesome5"` (adding
-  `fontawesome5.sty` and emitting `\faIcon{...}`), resolving package clashes
-  with themes that load `fontawesome5`; `True`/`False` keep working unchanged
-  ({pr}`285`, {issue}`242`)
-- 🐛 FIX: Synced tabs stay in sync when activated by click-and-drag or keyboard,
-  by syncing on the radio input's `change` event rather than a label click
-  ({pr}`284`, {issue}`46`)
-- ✨ NEW: A URL fragment that targets a tab (e.g. `page.html#tab-name`), or an
-  element inside a tab panel, now opens that tab (both on load and on
-  `hashchange`) ({pr}`284`, {issue}`239`)
-- 👌 IMPROVE: Tab selections now persist across browsing sessions, via
-  `localStorage` instead of `sessionStorage` (a behaviour change), and the
-  storage key prefix is configurable with the new `sd_tabs_storage_prefix`
-  option (set it to an empty string to disable persistence) ({pr}`284`,
-  {issue}`103`)
-- 👌 IMPROVE: Restore keyboard focus rings on tab labels, dropdown summaries,
-  buttons and stretched-link cards, using `:focus-visible` so they are visible
-  for keyboard users but not shown on mouse click, thanks to {user}`gabalafou`
-  in {pr}`230` (carried in {pr}`283`)
-- 👌 IMPROVE: Each tab label now carries an `aria-controls` attribute
-  referencing its content panel's id, establishing the programmatic
-  relationship in the accessibility tree (note: this is not a full WAI-ARIA
-  tabs pattern; assistive-technology support for `aria-controls` varies)
-  ({pr}`283`, {issue}`30`)
-- 🐛 FIX: `card`/`grid-item-card` `:link:` no longer strips whitespace from reference targets (and lowercases them for `link-type: ref`, matching the `:ref:` role), completing the fix for {issue}`110` ({pr}`282`)
-- 🐛 FIX: `button-ref` no longer strips whitespace from reference targets, so
-  multi-word labels (e.g. from `autosectionlabel`) resolve correctly
-  ({pr}`281`, {issue}`110`)
-- 🐛 FIX: `button-ref` now renders rich/nested inline content (emphasis, icons,
-  etc.) identically to `button-link`, instead of flattening it to plain text
-  during cross-reference resolution ({pr}`281`, {issue}`228`)
-- 🐛 FIX: Inline icon roles no longer leak SVG markup into toctree labels and the search index ({pr}`279`, {issue}`99`)
-- 🐛 FIX: `article-info` octicons regain their `sd-pr-2` spacing class (previously silently dropped by the HTML writer) ({pr}`279`)
-- 🐛 FIX: Paragraphs inside dropdowns no longer have user classes overwritten by `sd-card-text`, and card/dropdown body styling is applied only to direct child paragraphs, not nested content ({pr}`278`, {issue}`40`)
-- ✨ NEW: `sphinx_design.testing` module with the `normalize_doctree_xml` helper, for downstream extensions' doctree regression tests ({pr}`277`, {issue}`260`)
-- ♻️ IMPROVE: Static assets (CSS/JS) are now served via Sphinx's standard
-  `html_static_path` mechanism, rather than being written directly into the
-  build output; non-HTML builds no longer gain a spurious
-  `_sphinx_design_static` directory ({pr}`276`, {issue}`200`, {issue}`235`).
-  A stale `_sphinx_design_static` directory left in an existing HTML build
-  directory by previous versions is unused and can safely be deleted.
-- ⬆️ UPGRADE: Sphinx `>=7.2` is now required ({pr}`276`)
-- 🗑️ REMOVE: The private `sphinx_design._compat.findall` helper has been
-  removed (docutils `Element.findall` is guaranteed by the Sphinx floor);
-  any code importing it should call `node.findall(...)` directly ({pr}`276`)
-- 🐛 FIX: buttons are no longer destroyed by gettext translation:
-  translated `button-link`/`button-ref` keep their styling and links
-  (gettext now targets only the button text), thanks to {user}`sneakers-the-rat`
-  in {pr}`264` ({issue}`96`, {issue}`44`, {issue}`263`)
+New components (accordion, aside, steps, vertical tab sets, and explicit card header and footer directives),
+links that open in a new tab, badge tooltips, a plain-CSS build with no Sass,
+tab selections that persist across pages and visits, accessibility fixes, FontAwesome v6 support,
+and Octicons v19.42.0. Sphinx 7.2 or later is now required.
 
-## 0.7.0 - 2025-01-19
+### Upgrade notes
+
+- **Sphinx `>=7.2` is required** (Sphinx 7.0 and 7.1 are no longer supported); Python stays at `>=3.11` ({pr}`276`).
+- **The `^^^` and `+++` card separators are deprecated and warn by default.**
+  They still render as before, but the first card in a document that uses them emits one
+  `design.card_legacy` warning, so a build run with `-W` fails until you do one of two things:
+  - move the header and footer into the new `card-header` and `card-footer` directives
+    (or the one-line `:header:` and `:footer:` options), which need sphinx-design 0.8.0 or later; or
+  - add `"design.card_legacy"` to `suppress_warnings` in your `conf.py`.
+
+  Once every card is migrated, set `sd_card_legacy_separators = False` to stop scanning for the separators.
+  The plan is to turn the separators off by default in 1.0 and remove them in 2.0;
+  the cards page has a migration table ({pr}`294`).
+- **Tab selections persist in `localStorage`** instead of `sessionStorage`, so a chosen tab is remembered
+  across browsing sessions as well as across pages.
+  The storage key prefix is set by the new `sd_tabs_storage_prefix` option;
+  set it to an empty string to disable persistence ({pr}`284`).
+- **Static assets are served through Sphinx's `html_static_path`**, only for HTML-format builders.
+  A `_sphinx_design_static` directory left in an existing build directory by an earlier version is unused
+  and can be deleted ({pr}`276`).
+- **The stylesheet is plain CSS**, generated without Sass.
+  The `--sd-color-*-highlight` hover and focus shades are now derived at runtime with `color-mix()`
+  (behind the old value as a static fallback), so overriding a `--sd-color-*` variable now also changes its hover shade ({pr}`290`).
+- **The private `sphinx_design._compat.findall` helper is removed**; call `node.findall(...)` directly ({pr}`276`).
+  The private `CardDirective._create_component` method is renamed `_create_slot`;
+  the old name stays as an alias for one release ({pr}`294`).
+- **`sd-card-text` is added only to the direct child paragraphs** of a card or dropdown body, and is added to
+  a paragraph's classes instead of replacing them; paragraphs nested deeper (in admonitions, lists, nested tab sets)
+  no longer get it ({pr}`278`).
+
+### New
+
+- ✨ `accordion` directive: groups `dropdown`s so that opening one closes the others,
+  using the browser's native `<details name>` behaviour with no JavaScript; `:flush:` renders it edge to edge
+  by {user}`chrisjsewell` in {pr}`291`
+- ✨ `aside` directive: a call-out box floated beside the body text (`:align:`, `:width:`),
+  rendered as a semantic `<aside>` in HTML and a plain titled container elsewhere
+  by {user}`chrisjsewell` in {pr}`292` ({issue}`97`)
+- ✨ `steps` and `step` directives for numbered procedures, with CSS-only number markers on an ordered list,
+  `:start:` and `:color:` options by {user}`chrisjsewell` in {pr}`293`
+- ✨ `card-header` and `card-footer` directives, and `:header:` and `:footer:` options,
+  for card and grid-item-card headers and footers: the card body is parsed once as ordinary content,
+  and errors in a header or footer report their own line (see the upgrade notes for the legacy separators)
+  by {user}`chrisjsewell` in {pr}`294`
+- ✨ Vertical tab sets: `tab-set` and `tab-set-code` take `:orientation: vertical`, which stacks the labels
+  in a rail beside the selected panel from the `md` breakpoint up
+  by {user}`kdeldycke` in {pr}`304` ({issue}`219`)
+- ✨ Open links in a new tab: the `link-new-tab` flag on `card` and `grid-item-card`, and `new-tab` on
+  `button-link` and `button-ref`, for URLs and internal references alike
+  by {user}`dipinknair` in {pr}`298` ({issue}`170`)
+- ✨ Badge tooltips: badge roles accept a trailing `` ; tooltip `` suffix, rendered as a native HTML `title`;
+  for link and ref badges it applies after the explicit `text <target>` form, and `` \; `` escapes a literal semicolon
+  by {user}`chrisjsewell` in {pr}`286` ({issue}`81`)
+- ✨ Every badge role (plain, line, link and ref, in every colour) accepts a `tooltip` role option,
+  so a reStructuredText custom role (`.. role:: bdg-stable(bdg-success)` with `:tooltip:`) or an extension
+  can preset a tooltip; a `; tooltip` suffix still takes precedence
+  by {user}`chrisjsewell` in {pr}`316`
+- ✨ A line block in `button-link` or `button-ref` text renders as separate lines
+  (`<br />` in HTML, `\newline{}` in LaTeX), each line its own gettext message
+  by {user}`Cherith1222` in {pr}`308` and {user}`chrisjsewell` in {pr}`315` ({issue}`156`)
+- ✨ A URL fragment that targets a tab (e.g. `page.html#tab-name`), or an element inside a tab panel,
+  opens that tab, on load and on `hashchange` by {user}`chrisjsewell` in {pr}`284` ({issue}`239`)
+- ✨ FontAwesome v6 roles (`fa-solid`, `fa-brands`, `fa-regular`), and CSS loading via the new
+  `sd_fontawesome_source` and `sd_fontawesome_cdn_url` options (the supported path for FontAwesome Pro kits)
+  by {user}`chrisjsewell` in {pr}`285` ({issue}`174`)
+- ✨ `sd_fontawesome_version` makes icon role names version-agnostic: any spelling (`fas`, `fa-solid`, ...)
+  can emit the FontAwesome `"4"`, `"5"` or `"6"` class scheme, so upgrading FontAwesome is a one-line `conf.py` change;
+  the default `"as-named"` keeps emitting the role name as before by {user}`chrisjsewell` in {pr}`288` ({issue}`174`)
+- ✨ `sphinx_design.testing` module with the `normalize_doctree_xml` helper, for downstream extensions'
+  doctree regression tests by {user}`chrisjsewell` in {pr}`277` ({issue}`260`)
+
+### Improve
+
+- 👌 Keyboard focus rings restored on tab labels, dropdown summaries, buttons and stretched-link cards
+  (with `:focus-visible`, so they do not show on mouse click) by {user}`gabalafou` in {pr}`230`, carried in {pr}`283`
+- 👌 Each tab label carries an `aria-controls` attribute naming its panel
+  (this is not the full WAI-ARIA tabs pattern) by {user}`chrisjsewell` in {pr}`283` ({issue}`30`)
+- 👌 The tab hover colour is the active colour at 80% opacity, so a hovered tab no longer looks selected
+  by {user}`dchaudhari7177` in {pr}`303` ({issue}`301`)
+- 👌 `sd_fontawesome_latex` also accepts `"fontawesome5"` (loading `fontawesome5.sty` and emitting `\faIcon{...}`),
+  resolving package clashes with themes that load it; `True` and `False` work as before
+  by {user}`chrisjsewell` in {pr}`285` ({issue}`242`)
+- 👌 All `sd_*` settings are declared in one typed configuration, and an invalid value warns
+  (`design.config`) and falls back to the default by {user}`chrisjsewell` in {pr}`274`
+- 👌 Plain-CSS stylesheet generated by a dependency-free Python tool (no Sass or Node),
+  with the dead vendor-prefixed declarations removed by {user}`chrisjsewell` in {pr}`290`
+
+### Fix
+
+- 🐛 Synced tabs stay in sync when activated by keyboard or click-and-drag
+  by {user}`chrisjsewell` in {pr}`284` ({issue}`46`)
+- 🐛 A `tab-set` with children other than `tab-item` warns for each one and renders the valid tabs,
+  instead of crashing with a `ValueError` by {user}`chrisjsewell` in {pr}`258` ({issue}`243`)
+- 🐛 Comments, hyperlink targets and system messages inside `grid`, `card-carousel`, `tab-set` and `tab-set-code`
+  no longer warn as invalid children, and targets are kept so references to them resolve,
+  including anchors to targets inside tabs by {user}`chrisjsewell` in {pr}`271` and {pr}`275` ({issue}`86`)
+- 🐛 Buttons survive gettext translation: translated `button-link` and `button-ref` keep their styling and links
+  by {user}`sneakers-the-rat` in {pr}`264`, carried in {pr}`270` ({issue}`96`, {issue}`44`, {issue}`263`)
+- 🐛 `button-ref` keeps whitespace in reference targets (so multi-word labels, such as those from
+  `autosectionlabel`, resolve; `ref` targets are lowercased like the `:ref:` role), and renders nested inline content
+  like `button-link` by {user}`chrisjsewell` in {pr}`281` ({issue}`110`, {issue}`228`)
+- 🐛 The card and grid-item-card `:link:` option keeps whitespace in reference targets
+  by {user}`chrisjsewell` in {pr}`282` ({issue}`110`)
+- 🐛 Messages and gettext locations for button text name its first content line in reStructuredText
+  (they named a later line, or the including page for a button in an included file)
+  by {user}`chrisjsewell` in {pr}`315`
+- 🐛 Icon roles no longer leak SVG markup into toctree labels and the search index,
+  and `article-info` icons regain their `sd-pr-2` spacing by {user}`chrisjsewell` in {pr}`279` ({issue}`99`)
+- 🐛 Dropdowns no longer overwrite user classes on their paragraphs with `sd-card-text`
+  by {user}`chrisjsewell` in {pr}`278` ({issue}`40`)
+- 🐛 Non-HTML builds no longer gain a spurious `_sphinx_design_static` directory
+  by {user}`chrisjsewell` in {pr}`276` ({issue}`200`, {issue}`235`)
+- 🐛 The `sd_fontawesome_latex` row of the global options table no longer splits into an extra cell
+  by {user}`yvonnefroehlich` in {pr}`297`
+
+### Dependencies
+
+- ⬆️ Sphinx `>=7.2,<10` by {user}`chrisjsewell` in {pr}`276`
+- ⬆️ Octicons v19.8.0 to v19.42.0: 81 new icons (such as `agent`, `library`, `release` and `sparkle`),
+  12 redrawn icons and 37 extra sizes; no icon is removed (`commit` stays available)
+  by {user}`kdeldycke` in {pr}`309`
+- ⬆️ Theme extras refreshed to current releases, including `pydata-sphinx-theme>=0.20,<0.25`,
+  by {user}`chrisjsewell` in {pr}`267` and {pr}`313`
+- ⬆️ The build backend allows `flit_core>=3.4,<5` by {user}`chrisjsewell` in {pr}`312`
+
+### Docs
+
+- 📚 Buttons are documented as links styled as buttons, with an accessibility note
+  by {user}`gabalafou` in {pr}`158`, carried in {pr}`287`
+- 📚 Sizing classes, multiple grid rows, links to synchronised tabs, and the MyST extensions the examples need
+  by {user}`chrisjsewell` in {pr}`273` ({issue}`172`, {issue}`122`, {issue}`184`, {issue}`247`)
+- 📚 A browser support policy (Baseline Widely Available) and a "Design: the CSS pipeline" page
+  by {user}`chrisjsewell` in {pr}`290`
+- 📚 Fix a typo in the get started page by {user}`stefmolin` in {pr}`229`
+
+### Internal
+
+- 🔧 Releases are published to PyPI with trusted publishing, and every pull request builds and checks the
+  distributions by {user}`chrisjsewell` in {pr}`311`
+- 🔧 CI compiles the documentation PDF by {user}`chrisjsewell` in {pr}`289`
+- ♻️ Remove the unused `OCTICON_VERSION` and `OCTICON_CSS` constants by {user}`ftnext` in {pr}`205`, carried in {pr}`266`
+
+## 0.7.0 - 2026-01-19
 
 ### Dependencies
 
