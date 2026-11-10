@@ -128,8 +128,8 @@ and Octicons v19.42.0. Sphinx 7.2 or later is now required.
 - ⬆️ Octicons v19.8.0 to v19.42.0: 81 new icons (such as `agent`, `library`, `release` and `sparkle`),
   12 redrawn icons and 37 extra sizes; no icon is removed (`commit` stays available)
   by {user}`kdeldycke` in {pr}`309`
-- ⬆️ Theme extras refreshed to current releases, including `pydata-sphinx-theme>=0.20,<0.25`,
-  by {user}`chrisjsewell` in {pr}`267` and {pr}`313`
+- ⬆️ Theme extras refreshed to current releases by {user}`chrisjsewell` in {pr}`267`,
+  and the `theme-pydata` extra allows `pydata-sphinx-theme<0.25` ({pr}`313`)
 - ⬆️ The build backend allows `flit_core>=3.4,<5` by {user}`chrisjsewell` in {pr}`312`
 
 ### Docs
