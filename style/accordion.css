@@ -1,0 +1,24 @@
+/* Accordion: a group of dropdowns behaving as one exclusive set -- opening an
+   item collapses its siblings, via a shared native `<details name>` attribute
+   and no JavaScript. Assembled directly after dropdown.css so these rules win
+   over the dropdown/card defaults at equal specificity. Browsers that ignore
+   `<details name>` keep each item independently collapsible; see
+   docs/accordions.md for the graceful-degradation note. */
+
+/* Collapse the margin *between* grouped items so they read as a single
+   connected stack. Each child dropdown carries a default sd-mb-3; the last
+   item keeps it, preserving the gap below the accordion as a whole. The
+   !important is required to override the sd-mb-3 utility (itself !important). */
+.sd-accordion > .sd-dropdown:not(:last-child) {
+  margin-bottom: 0 !important;
+}
+
+/* Flush variant (cf. Bootstrap's accordion-flush): drop the outer side borders
+   and corner rounding so the accordion sits edge-to-edge within its container.
+   !important beats the higher-specificity closed-state dropdown header rule. */
+.sd-accordion-flush > .sd-dropdown,
+.sd-accordion-flush > .sd-dropdown > .sd-card-header {
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+}
