@@ -378,12 +378,14 @@ def _line_block_lines(content: Sequence[str]) -> list[tuple[int, str]] | None:
     block. The check is purely textual, so the text is parsed exactly once.
     A line's text is as docutils gives it: its continuation lines keep their
     indent relative to each other, and a bare bar's empty first line is dropped.
+    As in docutils, only spaces indent a line, and the text after the bar is
+    kept as is, so other whitespace there (a no-break space) is not stripped.
     """
     found: list[tuple[int, list[str]]] = []
     indent: int | None = None
     previous_blank = True
     for offset, raw in enumerate(content):
-        text = raw.lstrip()
+        text = raw.lstrip(" ")
         if not text:
             previous_blank = True
             continue
@@ -392,7 +394,7 @@ def _line_block_lines(content: Sequence[str]) -> list[tuple[int, str]] | None:
             indent = depth
         match = _LINE_BLOCK_START.match(text) if depth == indent else None
         if match is not None:
-            found.append((offset, [text[match.end() :].strip()]))
+            found.append((offset, [text[match.end() :]]))
         elif depth > indent and found and not previous_blank:
             found[-1][1].append(raw)
         else:

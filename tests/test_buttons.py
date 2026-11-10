@@ -408,6 +408,28 @@ def test_button_link_line_block(body, expected, sphinx_builder):
     assert "|" not in text
 
 
+def test_button_link_line_block_exact_html(sphinx_builder):
+    """The exact HTML of a line block, which ``_button_texts`` normalises away.
+
+    A bare bar is an empty line, so it adds a break and no empty element.
+    The whitespace after a bar is kept as docutils keeps it, so a no-break or
+    ideographic space can indent a line's text (the nesting is flattened).
+    """
+    rst = (
+        "Heading\n=======\n\n"
+        ".. button-link:: https://example.com\n\n"
+        "    | hey\n    |\n    | new line\n\n"
+        ".. button-link:: https://example.com\n\n"
+        "    | \xa0hey\n    | \u3000new line\n"
+    )
+    builder = _build_rst(sphinx_builder, rst)
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert _BUTTON_RE.findall(html) == [
+        "<span><span>hey</span><br /><br /><span>new line</span></span>",
+        "<span><span>\xa0hey</span><br /><span>\u3000new line</span></span>",
+    ]
+
+
 def test_button_ref_line_block(sphinx_builder):
     """``button-ref`` shares the line-block path, including after resolution."""
     rst = """\
@@ -734,6 +756,12 @@ SPLIT_CASES = {
     # docutils drops the empty first line of a bare bar with a continuation
     "bare-bar-continuation": (["|", "  x"], [(0, "x")]),
     "nested": (["| a", "|    b"], [(0, "a"), (1, "b")]),
+    # docutils keeps the text after the bar as is, other whitespace included
+    "nbsp-after-bar": (["| \xa0a"], [(0, "\xa0a")]),
+    "ideographic-space-after-bar": (["| \u3000a"], [(0, "\u3000a")]),
+    # only spaces indent a line: a no-break space before a bar is text
+    "nbsp-indent": (["| a", "\xa0| b"], None),
+    "nbsp-first-line": (["\xa0| a"], None),
     "empty": ([], None),
     "substitution-first": (["|sub| a"], None),
     "paragraph-after": (["| a", "", "b"], None),
