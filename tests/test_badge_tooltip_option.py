@@ -16,6 +16,8 @@ the ``tooltip`` option, then the role constructor's default. It renders exactly
 like a suffix tooltip (an HTML ``title``), and leaves non-HTML output alone.
 """
 
+from unittest.mock import Mock
+
 from docutils import nodes
 from docutils.parsers.rst import roles
 import pytest
@@ -206,6 +208,7 @@ First :bdg-info:`a`, then :bdg-info:`b ; Suffix`.
 
 .. role:: bdg-later(bdg-info)
    :tooltip: Defined after use
+   :class: foo
 
 .. role:: bdg-bare(bdg-info)
 
@@ -218,7 +221,8 @@ def test_option_spec_survives_role_use(sphinx_builder):
 
     ``SphinxRole`` stores each call's options on the role instance, which would
     shadow the option spec docutils' ``role`` directive reads; the badge roles
-    drop them again after the call.
+    restore the spec after the call. The restored spec is the one docutils
+    registered, so it still includes the ``class`` option docutils added then.
     """
     builder = _build_rst(sphinx_builder, AFTER_USE)
     assert not builder.warnings
@@ -229,6 +233,22 @@ def test_option_spec_survives_role_use(sphinx_builder):
         "Defined after use",
         None,
     ]
+
+
+def test_option_spec_restored_when_the_role_raises(monkeypatch):
+    """The option spec is restored even when the base role raises."""
+    role = BadgeRole("info")
+    roles.set_implicit_options(role)
+    spec = role.options
+
+    def _raise(self):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(BadgeRole, "run", _raise)
+    with pytest.raises(RuntimeError, match="boom"):
+        role("bdg-info", ":bdg-info:`a`", "a", 1, Mock(), {"tooltip": "T"})
+    assert role.options is spec
+    assert set(role.options) == {"class", "tooltip"}
 
 
 EMPTY = """
