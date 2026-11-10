@@ -1,0 +1,20 @@
+:::{aside} Narrow, right-aligned
+:name: target
+:align: right
+:width: 25%
+:margin: 1
+:class: class-aside
+:class-title: class-title
+:class-body: class-body
+
+A 25% wide aside, floated right.
+:::
+
+:::{aside} Wide, left-aligned
+:align: left
+:width: 50%
+
+A 50% wide aside, floated left.
+:::
+
+{ref}`target`, {ref}`text <target>`

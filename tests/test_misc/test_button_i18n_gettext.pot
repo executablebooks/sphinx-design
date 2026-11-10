@@ -6,7 +6,7 @@ msgstr ""
 msgid "Target Section"
 msgstr ""
 
-#: ../../index.rst:19
+#: ../../index.rst:11
 msgid "Click me now"
 msgstr ""
 
