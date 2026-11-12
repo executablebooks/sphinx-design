@@ -9,7 +9,7 @@ import pytest
 from sphinx_design.config import SdConfig, get_sd_config
 from sphinx_design.icons import get_material_icon_data, get_octicon_data
 from sphinx_design.shared import is_component
-from sphinx_design.tabs import sd_tab_input
+from sphinx_design.tabs import sd_tab_input, sd_tab_label
 
 try:
     import myst_parser  # noqa: F401
@@ -405,6 +405,36 @@ def test_tab_set_code_with_target(sphinx_builder):
     refid = references[0]["refid"]
     html = (builder.out_path / "index.html").read_text(encoding="utf8")
     assert f'id="{refid}"' in html
+
+
+def test_tab_set_code_with_caption(sphinx_builder):
+    """A code block with a caption (wrapped in a container) should get a tab."""
+    builder = sphinx_builder(conf_kwargs={"extensions": ["sphinx_design"]})
+    builder.src_path.joinpath("index.rst").write_text(
+        """
+Test
+====
+
+.. tab-set-code::
+
+    .. code-block:: python
+        :caption: example.py
+
+        a = 1
+
+    .. code-block:: javascript
+
+        a = 1
+""",
+        encoding="utf8",
+    )
+    builder.build()  # asserts no warnings
+    doctree = builder.get_doctree("index", post_transforms=True)
+    labels = [label.astext() for label in doctree.findall(sd_tab_label)]
+    assert labels == ["PYTHON", "JAVASCRIPT"]
+    captions = list(doctree.findall(nodes.caption))
+    assert len(captions) == 1
+    assert captions[0].astext() == "example.py"
 
 
 I18N_INDEX_RST = """\
