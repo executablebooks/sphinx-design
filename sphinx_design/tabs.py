@@ -191,7 +191,11 @@ class TabSetCodeDirective(SdDirective):
                 if isinstance(item, nodes.target):
                     new_children.append(item)
                 continue
-            if not isinstance(item, nodes.literal_block):
+            code_block = item
+            if isinstance(item, nodes.container) and item.get("literal_block"):
+                # a code block with a caption is wrapped in a container
+                code_block = item.next_node(nodes.literal_block)
+            if not isinstance(code_block, nodes.literal_block):
                 LOGGER.warning(
                     f"All children of a 'tab-code-set' "
                     f"should be a 'literal_block' [{WARNING_TYPE}.tab_code]",
@@ -200,7 +204,7 @@ class TabSetCodeDirective(SdDirective):
                     subtype="tab_code",
                 )
                 continue
-            language = item.get("language", "unknown")
+            language = code_block.get("language", "unknown")
             tab_label = nodes.rubric(
                 language.upper(),
                 nodes.Text(language.upper()),
