@@ -117,6 +117,26 @@ def test_tab_label_hover_differs_from_active():
     ]
 
 
+def test_step_marker_outranks_theme_list_item_rules():
+    """A step shows only its own marker when a theme styles ``ol li``.
+
+    sphinx-rtd-theme sets ``list-style: decimal`` and ``margin-left`` on the
+    list items themselves, not on the list, so hiding the ``<ol>`` marker is
+    not enough: the step item rule must outrank the theme's item rule.
+    """
+    pytest.importorskip("tinycss2")
+    import check_css_equivalence  # noqa: PLC0415
+
+    css = ARTIFACT.read_text(encoding="utf8")
+    rules = re.findall(r"([^{}]*\.sd-step\b[^{}]*)\{([^{}]*)\}", css)
+    item_rules = [sel for sel, body in rules if "list-style:none" in body]
+    assert item_rules, "no rule hides the native marker on .sd-step"
+    rtd_item = ".rst-content .section ol.arabic li"
+    assert max(
+        check_css_equivalence._specificity_of_simple(sel) for sel in item_rules
+    ) > check_css_equivalence._specificity_of_simple(rtd_item)
+
+
 def test_minify_output_parses_cleanly():
     """Minified (rcssmin) output of tricky-but-valid CSS must stay valid.
 

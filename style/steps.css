@@ -25,6 +25,13 @@
   list-style: none;
 }
 
+/* Themes can style the items too (sphinx-rtd-theme: (0,3,2)); the doubled
+   classes outrank them. */
+.sd-steps.sd-steps > .sd-step.sd-step {
+  list-style: none;
+  margin-inline-start: 0;
+}
+
 .sd-step {
   position: relative;
   /* room for the marker + connecting rail on the inline-start side */
