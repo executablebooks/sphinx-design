@@ -71,9 +71,6 @@ ruff = ["ruff==0.17.4"]
 [tool.flit.sdist]
 exclude = [
     "docs/",
-    "style/",
-    "tests/",
-    "tools/",
 ]
 
 [tool.ruff.lint]
