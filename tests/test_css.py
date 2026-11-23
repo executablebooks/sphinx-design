@@ -22,7 +22,15 @@ import tomllib
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+TEST_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = next(
+    (
+        parent
+        for parent in (TEST_ROOT, *TEST_ROOT.parents)
+        if (parent / "tools" / "generate_css.py").is_file()
+    ),
+    TEST_ROOT,
+)
 TOOLS_DIR = REPO_ROOT / "tools"
 ARTIFACT = REPO_ROOT / "sphinx_design" / "static" / "sphinx-design.min.css"
 
