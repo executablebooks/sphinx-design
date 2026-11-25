@@ -37,6 +37,12 @@ and Octicons v19.42.0. Sphinx 7.2 or later is now required.
   a paragraph's classes instead of replacing them; paragraphs nested deeper (in admonitions, lists, nested tab sets)
   no longer get it ({pr}`278`).
 
+### Fixed
+
+- 🐛 `card` and `grid-item-card` `:link:` values ending in `_` now resolve
+  reStructuredText hyperlink targets, including external targets defined in `rst_epilog`
+  by {user}`draarivpatel-ui` in {issue}`164`
+
 ### New
 
 - ✨ `accordion` directive: groups `dropdown`s so that opening one closes the others,

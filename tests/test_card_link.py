@@ -503,3 +503,22 @@ def test_card_link_without_new_tab(fmt, sphinx_builder):
     for tag in _stretched_link_tags(html):
         assert "target=" not in tag, tag
         assert "rel=" not in tag, tag
+
+def test_card_rst_hyperlink_target(sphinx_builder):
+    """A ``:link:`` ending in an underscore resolves as a reStructuredText target."""
+    rst = """
+Heading
+-------
+
+.. _hyperlink-target: https://example.com/external
+
+.. grid:: 1
+
+    .. grid-item-card:: A grid card
+        :link: hyperlink-target_
+
+        Card body
+"""
+    builder = _build(sphinx_builder, "rst", rst, "")
+    html = (builder.out_path / "index.html").read_text(encoding="utf8")
+    assert "https://example.com/external" in _stretched_link_hrefs(html)

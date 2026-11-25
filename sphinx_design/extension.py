@@ -63,6 +63,7 @@ def setup_extension(app: Sphinx) -> None:
         "config-inited", partial(setup_custom_directives, directive_map=directive_map)
     )
     app.connect("doctree-resolved", _resolve_new_tab_refs)
+    app.connect("doctree-resolved", _resolve_card_rst_link_refs)
 
 
 @contextmanager
@@ -104,6 +105,30 @@ def _resolve_new_tab_refs(app: Sphinx, doctree: nodes.document, docname: str) ->
                 continue
             ref["target"] = "_blank"
             ref["rel"] = "noreferrer noopener"
+
+
+def _resolve_card_rst_link_refs(
+    app: Sphinx, doctree: nodes.document, docname: str
+) -> None:
+    """Resolve card references to reStructuredText external targets.
+
+    A ``refname`` reference normally resolves to the matching target node with
+    ``refid``. When that target itself is external (``refuri``), mirror the
+    behaviour of an inline reStructuredText reference and link directly to the
+    external URI instead.
+    """
+    for ref in doctree.findall(nodes.reference):
+        if "sd-stretched-link" not in ref.get("classes", []) or "refid" not in ref:
+            continue
+        target = doctree.ids.get(ref["refid"])
+        if target is None or "refuri" not in target:
+            continue
+        ref["refuri"] = target["refuri"]
+        del ref["refid"]
+        classes = [c for c in ref.get("classes", []) if c != "internal"]
+        if "external" not in classes:
+            classes.append("external")
+        ref["classes"] = classes
 
 
 def add_static_assets(app: Sphinx) -> None:

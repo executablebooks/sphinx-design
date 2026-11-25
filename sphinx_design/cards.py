@@ -220,13 +220,28 @@ class CardDirective(SdDirective):
         _rawtext = options.get("link-alt") or link_raw
         link: nodes.Element
         if link_type == "url":
-            link = nodes.reference(
-                _rawtext,
-                "",
-                nodes.inline(_rawtext, _rawtext),
-                refuri=link_target,
-                classes=_classes,
+            is_rst_reference = (
+                link_raw.endswith("_")
+                and not link_raw.startswith("#")
+                and not re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", link_raw)
             )
+            if is_rst_reference:
+                link = nodes.reference(
+                    _rawtext,
+                    "",
+                    nodes.inline(_rawtext, _rawtext),
+                    name=link_raw[:-1],
+                    refname=nodes.fully_normalize_name(link_raw[:-1]),
+                    classes=_classes,
+                )
+            else:
+                link = nodes.reference(
+                    _rawtext,
+                    "",
+                    nodes.inline(_rawtext, _rawtext),
+                    refuri=link_target,
+                    classes=_classes,
+                )
         else:
             ref_options = {
                 # TODO the presence of classes raises an error if the link cannot be found
