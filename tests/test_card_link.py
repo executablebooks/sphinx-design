@@ -504,6 +504,7 @@ def test_card_link_without_new_tab(fmt, sphinx_builder):
         assert "target=" not in tag, tag
         assert "rel=" not in tag, tag
 
+
 def test_card_rst_hyperlink_target(sphinx_builder):
     """A ``:link:`` ending in an underscore resolves as a reStructuredText target."""
     rst = """
